@@ -6,6 +6,8 @@ import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkEntity;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkQueue;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author: Zzz
  * @date: 2023/7/4 17:50
@@ -31,10 +33,21 @@ public class MetaDataReadWorker extends AbstractProcessWorker {
                 break;
             }
 
-            processWork = this.sourceWorkQueue.takeWork();
 
-            System.out.println(processWork.getMigrationObj().getObjId());
-            System.out.println("read worker...");
+
+            for (int i = 0; i < 10; i++) {
+                System.out.println("read worker...");
+                TimeUnit.SECONDS.sleep(1);
+                if (i == 9){
+                    stopWork = true;
+                }
+            }
+
+
+//            processWork = this.sourceWorkQueue.takeWork();
+//
+//            System.out.println(processWork.getMigrationObj().getObjId());
+
         }
         return "worker";
     }

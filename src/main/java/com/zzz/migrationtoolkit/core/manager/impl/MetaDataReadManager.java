@@ -19,7 +19,7 @@ public class MetaDataReadManager extends AbstractBaseProcessManager {
 
     public MetaDataReadManager(TaskDetail taskDetail, ProcessWorkQueue sourceWorkQueue, ProcessWorkQueue targetWorkQueue) {
         super(taskDetail, sourceWorkQueue, targetWorkQueue);
-        this.workerNum = 1;
+        this.workerNum = 2;
     }
 
     @Override
@@ -28,6 +28,7 @@ public class MetaDataReadManager extends AbstractBaseProcessManager {
             if (stopWork) {
                 break;
             }
+            System.out.println("++");
             //定义worker
             MetaDataReadWorker metaDataReadWorker = new MetaDataReadWorker(taskDetail, this.getSourceWorkQueue(), this.getTargetWorkQueue());
             FutureTask<String> futureTask = new FutureTask<>(metaDataReadWorker);
