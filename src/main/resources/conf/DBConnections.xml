@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dbs>
+    <db id="MySql" name="MySql" class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.MySqlConnInfo">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>z-resource</dbName>
+        <paramStr>?characterEncoding=utf-8;serverTimezone=Asia/Shanghai</paramStr>
+    </db>
+</dbs>
