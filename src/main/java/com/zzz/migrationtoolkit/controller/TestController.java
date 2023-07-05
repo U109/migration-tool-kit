@@ -15,9 +15,9 @@ import java.sql.Connection;
 @Controller
 public class TestController {
 
-    @RequestMapping("/test/{tableName}")
-    public void testAction(@PathVariable String tableName){
+    @RequestMapping("/test")
+    public String testAction(){
 
-
+        return "test";
     }
 }
