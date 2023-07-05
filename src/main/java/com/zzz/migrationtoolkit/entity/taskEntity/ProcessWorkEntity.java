@@ -19,6 +19,15 @@ public class ProcessWorkEntity {
     //任务块中封装的数据列表
     private List<List<Object>> dataList;
 
+    public ProcessWorkEntity() {
+    }
+
+    public ProcessWorkEntity(String workType, String workContentType, MigrationObj migrationObj) {
+        this.workType = workType;
+        this.workContentType = workContentType;
+        this.migrationObj = migrationObj;
+    }
+
     public String getWorkType() {
         return workType;
     }

@@ -4,9 +4,12 @@ import com.zzz.migrationtoolkit.core.executor.ITaskExecutor;
 import com.zzz.migrationtoolkit.core.manager.AbstractBaseProcessManager;
 import com.zzz.migrationtoolkit.core.worker.impl.TaskExecutorStarter;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkQueue;
+import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkResultEntity;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.FutureTask;
 
 /**
  * @author: Zzz
@@ -22,10 +25,16 @@ public abstract class AbstractTaskBaseExecutor implements ITaskExecutor {
     public TaskDetail taskDetail;
     //每个执行器具有自己启动的能力
     public TaskExecutorStarter starter;
+    public FutureTask<ProcessWorkResultEntity> starterFutureTask;
+
+    //Executor自身结果
+    public FutureTask<ProcessWorkResultEntity> executorFutureTask;
     //执行器读数据管理器
     protected AbstractBaseProcessManager readProcessManager;
+    protected FutureTask<ProcessWorkResultEntity> readFutureTask = null;
     //写数据管理器
     protected AbstractBaseProcessManager writeProcessManager;
+    protected FutureTask<ProcessWorkResultEntity> writeFutureTask = null;
     //中转队列
     protected ProcessWorkQueue readToWriteExecutorQueue = null;
 
@@ -45,8 +54,27 @@ public abstract class AbstractTaskBaseExecutor implements ITaskExecutor {
 
     @Override
     public String startExecutor() {
-        return null;
+        logger.info(executorName + " start ...");
+        String returnFlag = "SUCCESS";
+
+        if (!executorStop) {
+            //启动队列没有初始化，需要调用启动器
+            if (this.readProcessManager.getSourceWorkQueue() == null) {
+                starter = initStarter();
+                starterFutureTask = new FutureTask<>(starter);
+                Thread starterExecutorThread = new Thread(starterFutureTask);
+                starterExecutorThread.setName(starter.getStarterName());
+                starterExecutorThread.start();
+            }
+            executorFutureTask = new FutureTask<>(this);
+            Thread taskExecutorThread = new Thread(executorFutureTask);
+            taskExecutorThread.setName(this.executorName);
+            taskExecutorThread.start();
+        }
+        return returnFlag;
     }
+
+    public abstract TaskExecutorStarter initStarter();
 
     @Override
     public String stopExecutor() {
@@ -58,8 +86,23 @@ public abstract class AbstractTaskBaseExecutor implements ITaskExecutor {
         return null;
     }
 
-    public String startManager() {
-        return "ok";
+    /**
+     * 启动Executor中的Manager
+     */
+    public ProcessWorkResultEntity startManager() {
+        //启动读取Manager
+        if (!executorStop) {
+            readFutureTask = new FutureTask<ProcessWorkResultEntity>(readProcessManager);
+            new Thread(readFutureTask).start();
+        }
+        //启动写入Manager
+        if (writeProcessManager != null) {
+            if (!executorStop) {
+                writeFutureTask = new FutureTask<>(writeProcessManager);
+                new Thread(writeFutureTask).start();
+            }
+        }
+        return null;
     }
 
 

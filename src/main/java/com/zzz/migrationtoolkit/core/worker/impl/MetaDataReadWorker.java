@@ -4,6 +4,7 @@ import com.zzz.migrationtoolkit.core.worker.AbstractProcessWorker;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationTable;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkEntity;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkQueue;
+import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkResultEntity;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 
 import java.util.concurrent.TimeUnit;
@@ -21,7 +22,7 @@ public class MetaDataReadWorker extends AbstractProcessWorker {
     }
 
     @Override
-    public String call() throws Exception {
+    public ProcessWorkResultEntity call() throws Exception {
 
         while (true) {
             //任务块
@@ -49,6 +50,6 @@ public class MetaDataReadWorker extends AbstractProcessWorker {
 //            System.out.println(processWork.getMigrationObj().getObjId());
 
         }
-        return "worker";
+        return null;
     }
 }

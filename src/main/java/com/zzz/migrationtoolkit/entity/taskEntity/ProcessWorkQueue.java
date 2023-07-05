@@ -28,4 +28,8 @@ public class ProcessWorkQueue {
     public ProcessWorkEntity takeWork() throws Exception {
         return queue.take();
     }
+
+    public void clear() {
+        queue.clear();
+    }
 }

@@ -1,17 +1,22 @@
-# Getting Started
+# MigrationToolKit
 
-### Reference Documentation
+## 概述
 
-For further reference, please consider the following sections:
+迁移工具的一个样例Demo，采用多线程进行表和数据的迁移。
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.6.13/maven-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/2.6.13/maven-plugin/reference/html/#build-image)
-* [Thymeleaf](https://docs.spring.io/spring-boot/docs/2.6.13/reference/htmlsingle/#web.servlet.spring-mvc.template-engines)
+## 概念
 
-### Guides
+1、Executor（执行器）：Executor是一个接口，它定义了一种执行任务的机制。它提供了一种将任务提交给线程池执行的方式，隐藏了线程的创建和管理细节。
+通过使用Executor，我们可以将任务的执行与线程的创建和管理分离开来，提高了代码的可维护性和可扩展性。
 
-The following guides illustrate how to use some features concretely:
+2、Manager（管理器）：Manager通常是指线程池的管理器，它负责创建和管理线程池。线程池是一种管理和重用线程的机制，它包含一组线程，并提供了一种任务调度的方式。
+Manager负责创建线程池，并根据需要调整线程池的大小，以适应任务的执行需求。它还负责监控线程池的状态，并处理线程的异常情况。
 
-* [Handling Form Submission](https://spring.io/guides/gs/handling-form-submission/)
+3、Worker（工作线程）：Worker是线程池中的工作线程，它负责执行提交给线程池的任务。当任务提交给线程池后，Manager会从线程池中选择一个空闲的Worker线程来执行任务。
+Worker线程执行完任务后，会返回线程池并准备接受下一个任务。
 
+在多线程的情况下，Executor、Manager和Worker之间的关系如下：
+
+* Executor通过提供任务提交的方式，将任务交给Manager管理。
+* Manager负责创建和管理Worker线程，并将任务分配给空闲的Worker线程执行。
+* Worker线程执行任务，并将执行结果返回给Manager。

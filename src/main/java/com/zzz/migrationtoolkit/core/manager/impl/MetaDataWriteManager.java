@@ -2,6 +2,7 @@ package com.zzz.migrationtoolkit.core.manager.impl;
 
 import com.zzz.migrationtoolkit.core.manager.AbstractBaseProcessManager;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkQueue;
+import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkResultEntity;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 
 /**
@@ -20,7 +21,7 @@ public class MetaDataWriteManager extends AbstractBaseProcessManager {
     }
 
     @Override
-    public String call() throws Exception {
+    public ProcessWorkResultEntity call() throws Exception {
         return null;
     }
 }

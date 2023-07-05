@@ -22,9 +22,26 @@ public class TaskDetail implements Serializable {
     private Date startTime;
     private Date endTime;
     private String taskStatus;
-
+    private String failMsg;
     private Map<String, MigrationObj> tableDetailMap;
 
+    public String getFailMsg() {
+        return failMsg;
+    }
+
+    public void setFailMsg(String failMsg) {
+        this.failMsg = failMsg;
+    }
+
+    public void appendFailMsg(String failMsg) {
+        String oldFailMsg = getFailMsg();
+        if (failMsg != null && !"".equals(failMsg)) {
+            if (!"".equals(oldFailMsg)) {
+                oldFailMsg += "\n";
+            }
+            setFailMsg(oldFailMsg + failMsg);
+        }
+    }
 
     public String getTaskId() {
         return taskId;

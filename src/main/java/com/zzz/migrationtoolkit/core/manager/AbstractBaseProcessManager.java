@@ -1,7 +1,9 @@
 package com.zzz.migrationtoolkit.core.manager;
 
 import com.zzz.migrationtoolkit.core.worker.AbstractProcessWorker;
+import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkEntity;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkQueue;
+import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkResultEntity;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 
 import java.util.ArrayList;
@@ -15,16 +17,21 @@ import java.util.concurrent.FutureTask;
  */
 public abstract class AbstractBaseProcessManager implements IProcessManager {
 
+    protected String workType;
+
     protected TaskDetail taskDetail;
     protected int workerNum = 0;
+    //返回worker数量
+    protected int returnWorkNum = 0;
+    protected List<ProcessWorkResultEntity> results = new ArrayList<>();
     //worker工作的数据源队列
     protected ProcessWorkQueue sourceWorkQueue;
     //worker工作的数据目标队列，如果是末端队列，则为null
     protected ProcessWorkQueue targetWorkQueue = null;
 
     //manager启动的所有worker
-    protected List<AbstractProcessWorker> workerList = new ArrayList<AbstractProcessWorker>();
-    protected List<FutureTask<String>> futureTaskList = new ArrayList<>();
+    protected List<AbstractProcessWorker> workerList = new ArrayList<>();
+    protected List<FutureTask<ProcessWorkResultEntity>> futureTaskList = new ArrayList<>();
     public boolean stopWork = false;
 
     @Override
@@ -34,7 +41,17 @@ public abstract class AbstractBaseProcessManager implements IProcessManager {
 
     @Override
     public String stopWorker() {
-        return null;
+        String resultMsg = "RETURN_OK";
+        for (AbstractProcessWorker worker : workerList) {
+            worker.stopWorker();
+        }
+        if (sourceWorkQueue != null) {
+            sourceWorkQueue.clear();
+        }
+        if (targetWorkQueue != null) {
+            targetWorkQueue.clear();
+        }
+        return resultMsg;
     }
 
     public AbstractBaseProcessManager() {
@@ -62,6 +79,10 @@ public abstract class AbstractBaseProcessManager implements IProcessManager {
         this.sourceWorkQueue = sourceWorkQueue;
     }
 
+    public void setSourceWorkQueue() {
+        this.sourceWorkQueue = new ProcessWorkQueue(10);
+    }
+
     public ProcessWorkQueue getTargetWorkQueue() {
         return targetWorkQueue;
     }
@@ -76,5 +97,17 @@ public abstract class AbstractBaseProcessManager implements IProcessManager {
 
     public void setStopWork(boolean stopWork) {
         this.stopWork = stopWork;
+    }
+
+    @Override
+    public String finishedQueue() {
+        for (int i = 0; i < workerNum; i++) {
+            ProcessWorkEntity processWork = new ProcessWorkEntity();
+            processWork.setWorkType(this.workType);
+            processWork.setWorkContentType("WORK_FINISHED");
+
+            this.getSourceWorkQueue().putWork(processWork);
+        }
+        return "SUCCESS";
     }
 }
