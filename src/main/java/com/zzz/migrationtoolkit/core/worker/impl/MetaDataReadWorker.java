@@ -29,27 +29,23 @@ public class MetaDataReadWorker extends AbstractProcessWorker {
             ProcessWorkEntity processWork = null;
             MigrationTable migrationTable = null;
 
-
             if (stopWork) {
                 break;
             }
 
-
-
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 6; i++) {
                 System.out.println("read worker...");
                 TimeUnit.SECONDS.sleep(1);
-                if (i == 9){
+                if (i == 5){
                     stopWork = true;
                 }
             }
-
 
 //            processWork = this.sourceWorkQueue.takeWork();
 //
 //            System.out.println(processWork.getMigrationObj().getObjId());
 
         }
-        return null;
+        return new ProcessWorkResultEntity();
     }
 }

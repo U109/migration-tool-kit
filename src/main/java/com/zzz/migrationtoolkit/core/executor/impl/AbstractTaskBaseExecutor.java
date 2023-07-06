@@ -9,6 +9,7 @@ import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 /**
@@ -29,6 +30,16 @@ public abstract class AbstractTaskBaseExecutor implements ITaskExecutor {
 
     //Executor自身结果
     public FutureTask<ProcessWorkResultEntity> executorFutureTask;
+
+    //上一个执行器
+    public AbstractTaskBaseExecutor preExecutor;
+    //下一个执行器
+    public AbstractTaskBaseExecutor nextExecutor;
+    //执行器源队列，承自上一个执行器转交下来的任务
+    public ProcessWorkQueue sourceExecutorQueue;
+    //执行器的目标队列，交接给下一个执行器的任务
+    public ProcessWorkQueue targetExecutorQueue;
+
     //执行器读数据管理器
     protected AbstractBaseProcessManager readProcessManager;
     protected FutureTask<ProcessWorkResultEntity> readFutureTask = null;
@@ -81,9 +92,34 @@ public abstract class AbstractTaskBaseExecutor implements ITaskExecutor {
         return null;
     }
 
+    /**
+     * 等待返回结果
+     */
     @Override
     public String waitExecutor() {
-        return null;
+        String returnFlag = "";
+        if (starter != null) {
+            //对启动器进行启动判断
+            try {
+                ProcessWorkResultEntity starterResults = starterFutureTask.get();
+                if (!starterResults.isNormalFinished()) {
+                    returnFlag = "WARNING";
+                }
+            } catch (Exception e) {
+                returnFlag = "FAILED";
+                e.printStackTrace();
+            }
+        }
+        try {
+            ProcessWorkResultEntity executorResults = executorFutureTask.get();
+            if (!executorResults.isNormalFinished()) {
+                returnFlag = "".equals(returnFlag) ? "WARNING" : returnFlag;
+            }
+        } catch (Exception e) {
+            returnFlag = "FAILED";
+            e.printStackTrace();
+        }
+        return "".equals(returnFlag) ? "SUCCESS" : returnFlag;
     }
 
     /**
@@ -105,6 +141,97 @@ public abstract class AbstractTaskBaseExecutor implements ITaskExecutor {
         return null;
     }
 
+    public ProcessWorkQueue getTargetExecutorQueue() {
+        return targetExecutorQueue;
+    }
+
+    public void setTargetExecutorQueue(ProcessWorkQueue targetExecutorQueue) {
+        this.targetExecutorQueue = targetExecutorQueue;
+    }
+
+    public ProcessWorkQueue getSourceExecutorQueue() {
+        return sourceExecutorQueue;
+    }
+
+    public void setSourceExecutorQueue(ProcessWorkQueue sourceExecutorQueue) {
+        this.sourceExecutorQueue = sourceExecutorQueue;
+    }
+
+    public void setSourceExecutorQueue(int workQueueSize) {
+        this.sourceExecutorQueue = new ProcessWorkQueue(workQueueSize);
+    }
+
+    public FutureTask<ProcessWorkResultEntity> getStarterFutureTask() {
+        return starterFutureTask;
+    }
+
+    public void setStarterFutureTask(FutureTask<ProcessWorkResultEntity> starterFutureTask) {
+        this.starterFutureTask = starterFutureTask;
+    }
+
+    public FutureTask<ProcessWorkResultEntity> getExecutorFutureTask() {
+        return executorFutureTask;
+    }
+
+    public void setExecutorFutureTask(FutureTask<ProcessWorkResultEntity> executorFutureTask) {
+        this.executorFutureTask = executorFutureTask;
+    }
+
+    public AbstractTaskBaseExecutor getPreExecutor() {
+        return preExecutor;
+    }
+
+    public void setPreExecutor(AbstractTaskBaseExecutor preExecutor) {
+        this.preExecutor = preExecutor;
+    }
+
+    public AbstractTaskBaseExecutor getNextExecutor() {
+        return nextExecutor;
+    }
+
+    public void setNextExecutor(AbstractTaskBaseExecutor nextExecutor) {
+        this.nextExecutor = nextExecutor;
+    }
+
+    public AbstractBaseProcessManager getReadProcessManager() {
+        return readProcessManager;
+    }
+
+    public void setReadProcessManager(AbstractBaseProcessManager readProcessManager) {
+        this.readProcessManager = readProcessManager;
+    }
+
+    public FutureTask<ProcessWorkResultEntity> getReadFutureTask() {
+        return readFutureTask;
+    }
+
+    public void setReadFutureTask(FutureTask<ProcessWorkResultEntity> readFutureTask) {
+        this.readFutureTask = readFutureTask;
+    }
+
+    public AbstractBaseProcessManager getWriteProcessManager() {
+        return writeProcessManager;
+    }
+
+    public void setWriteProcessManager(AbstractBaseProcessManager writeProcessManager) {
+        this.writeProcessManager = writeProcessManager;
+    }
+
+    public FutureTask<ProcessWorkResultEntity> getWriteFutureTask() {
+        return writeFutureTask;
+    }
+
+    public void setWriteFutureTask(FutureTask<ProcessWorkResultEntity> writeFutureTask) {
+        this.writeFutureTask = writeFutureTask;
+    }
+
+    public ProcessWorkQueue getReadToWriteExecutorQueue() {
+        return readToWriteExecutorQueue;
+    }
+
+    public void setReadToWriteExecutorQueue(ProcessWorkQueue readToWriteExecutorQueue) {
+        this.readToWriteExecutorQueue = readToWriteExecutorQueue;
+    }
 
     public String getExecutorName() {
         return executorName;

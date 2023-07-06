@@ -1,6 +1,8 @@
 package com.zzz.migrationtoolkit;
 
 import com.zzz.migrationtoolkit.core.manager.impl.MetaDataReadManager;
+import com.zzz.migrationtoolkit.core.scheduler.TaskScheduler;
+import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationObj;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkQueue;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 import org.junit.jupiter.api.Test;
@@ -13,16 +15,15 @@ import java.util.concurrent.FutureTask;
 class MigrationToolkitApplicationTests {
 
     @Test
-    void contextLoads() throws Exception {
+    void contextLoads() {
 
         TaskDetail taskDetail = new TaskDetail();
-        taskDetail.setTaskId("taskDetail");
-        taskDetail.setTaskName("Test");
-        MetaDataReadManager manager = new MetaDataReadManager(taskDetail,new ProcessWorkQueue(10),new ProcessWorkQueue(10));
-        FutureTask<String> futureTask = new FutureTask<String>(manager);
-        Thread thread = new Thread(futureTask);
-        thread.start();
-        System.out.println(futureTask.get());
+        taskDetail.setTaskId("One001");
+        taskDetail.setTaskName("Test TaskDetail");
+        taskDetail.getMigrationObjTypeList().add("TABLE");
+        taskDetail.setTaskStatus("init...");
+        taskDetail.getTableDetailMap().put("table@@@test", new MigrationObj());
+        TaskScheduler.startTask(taskDetail);
     }
 
 }

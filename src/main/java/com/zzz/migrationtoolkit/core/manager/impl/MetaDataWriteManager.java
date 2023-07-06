@@ -22,6 +22,6 @@ public class MetaDataWriteManager extends AbstractBaseProcessManager {
 
     @Override
     public ProcessWorkResultEntity call() throws Exception {
-        return null;
+        return new ProcessWorkResultEntity();
     }
 }

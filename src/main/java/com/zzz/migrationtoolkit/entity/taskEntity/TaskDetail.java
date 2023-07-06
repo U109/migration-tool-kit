@@ -3,8 +3,7 @@ package com.zzz.migrationtoolkit.entity.taskEntity;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationObj;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: Zzz
@@ -24,6 +23,17 @@ public class TaskDetail implements Serializable {
     private String taskStatus;
     private String failMsg;
     private Map<String, MigrationObj> tableDetailMap;
+    //存储迁移对象的类型
+    private List<String> migrationObjTypeList = new ArrayList<>();
+
+
+    public List<String> getMigrationObjTypeList() {
+        return migrationObjTypeList;
+    }
+
+    public void setMigrationObjTypeList(List<String> migrationObjTypeList) {
+        this.migrationObjTypeList = migrationObjTypeList;
+    }
 
     public String getFailMsg() {
         return failMsg;
@@ -41,6 +51,11 @@ public class TaskDetail implements Serializable {
             }
             setFailMsg(oldFailMsg + failMsg);
         }
+    }
+
+    @Override
+    public String toString() {
+        return " [ TaskName : " + getTaskName() + " ] ";
     }
 
     public String getTaskId() {
@@ -84,6 +99,9 @@ public class TaskDetail implements Serializable {
     }
 
     public Map<String, MigrationObj> getTableDetailMap() {
+        if (tableDetailMap == null) {
+            tableDetailMap = new HashMap<>();
+        }
         return tableDetailMap;
     }
 
