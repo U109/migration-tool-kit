@@ -11,21 +11,36 @@
         </t-steps>
       </t-card>
 
-      <!-- 分步表单1 -->
+      <!-- 分步表单1 :rules="rules" -->
       <t-form
         v-show="activeForm === 0"
         class="step-form"
         :data="formData2"
-        :rules="rules"
+
         labelAlign="right"
         @submit="onSubmit1"
+        colon
       >
         <t-form-item label="任务名称" name="title">
           <t-input :style="{ width: '480px' }" v-model="formData2.title" placeholder="请输入任务名称"></t-input>
         </t-form-item>
-        <t-form-item label="任务描述" name="desc">
-          <t-input :style="{ width: '480px' }" v-model="formData2.address" placeholder="请输入任务描述"></t-input>
-          <t-textarea v-model="formData.description" placeholder="请用一句话介绍自己"></t-textarea>
+        <t-form-item label="任务描述" name="description">
+          <t-textarea :style="{ width: '480px' }" v-model="formData2.description"
+                      :maxcharacter="200" placeholder="请输入任务描述"></t-textarea>
+        </t-form-item>
+        <t-form-item label="源数" name="source">
+          <t-select :style="{ width: '390px' }" v-model="formData2.source" class="demo-select-base" clearable>
+            <t-option v-for="(item, index) in sourceOptions" :value="item.value" :label="item.name" :key="index">
+              {{ item.name }}
+            </t-option>
+          </t-select>
+        </t-form-item>
+        <t-form-item label="目标库" name="target">
+          <t-select :style="{ width: '390px' }" v-model="formData2.target" class="demo-select-base" clearable>
+            <t-option v-for="(item, index) in targetOptions" :value="item.value" :label="item.name" :key="index">
+              {{ item.name }}
+            </t-option>
+          </t-select>
         </t-form-item>
         <t-form-item>
           <t-button theme="primary" type="submit">下一步</t-button>
@@ -33,17 +48,6 @@
       </t-form>
 
       <!-- 分步表单2 -->
-      <div v-show="activeForm === 1" class="rule-tips">
-        <t-alert theme="info" title="发票开具规则：" :close="true">
-          <div slot="message">
-            <p class="span-txt">
-              1、申请开票后，电子发票在1～3个工作日内开具；增值税专用发票（纸质）如资质审核通过，将在电子发票开具后10个工作日内为您寄出；
-            </p>
-            <p class="span-txt">2、开票金额为您实际支付金额；</p>
-            <p class="span-txt">3、如有疑问请直接联系：13300001111。</p>
-          </div>
-        </t-alert>
-      </div>
       <t-form
         v-show="activeForm === 1"
         class="step-form"
@@ -52,22 +56,37 @@
         labelAlign="right"
         @reset="onReset2"
         @submit="onSubmit2"
+        colon
       >
-        <t-form-item label="合同名称" name="name">
-          <t-select :style="{ width: '390px' }" v-model="formData1.name" class="demo-select-base" clearable>
-            <t-option v-for="(item, index) in nameOptions" :value="item.value" :label="item.label" :key="index">
-              {{ item.label }}
-            </t-option>
-          </t-select>
+        <t-form-item class="amount-label" label="迁移表">
+            <span> 21/50</span>
+            <button>按钮</button>
+        </t-form-item>
+
+        <t-form-item label="迁移表设置" name="type">
+          <t-checkbox-group>
+            <t-checkbox value="1">迁移表结构</t-checkbox>
+            <t-checkbox value="2">迁移数据</t-checkbox>
+            <t-checkbox value="3">重建表</t-checkbox>
+          </t-checkbox-group>
+        </t-form-item>
+        <t-form-item label="迁移设置" name="name">
+          <t-checkbox-group v-model="value2" @change="onChange2">
+            <t-checkbox :checkAll="true" label="全选" />
+            <t-checkbox label="选项一" value="选项一" />
+            <t-checkbox label="选项二" value="选项二" />
+            <t-checkbox label="选项三" value="选项三" />
+          </t-checkbox-group>
         </t-form-item>
         <t-form-item label="发票类型" name="type">
-          <t-select :style="{ width: '390px' }" v-model="formData1.type" class="demo-select-base" clearable>
-            <t-option v-for="(item, index) in typeOptions" :value="item.value" :label="item.label" :key="index">
-              {{ item.label }}
-            </t-option>
-          </t-select>
+          <t-checkbox-group>
+            <t-checkbox value="1">语文</t-checkbox>
+            <t-checkbox value="2">数学</t-checkbox>
+            <t-checkbox value="3">英语</t-checkbox>
+            <t-checkbox value="4">体育</t-checkbox>
+          </t-checkbox-group>
         </t-form-item>
-        <t-form-item class="amount-label" label="开票金额"> {{ amount }} 元 </t-form-item>
+
         <t-form-item>
           <t-button type="reset" theme="default" variant="base">上一步</t-button>
           <t-button theme="primary" type="submit">下一步</t-button>
@@ -140,7 +159,9 @@ const INITIAL_DATA1 = {
 };
 const INITIAL_DATA2 = {
   title: '',
-  desc: ''
+  description: '',
+  source:'',
+  target:''
 };
 const INITIAL_DATA3 = {
   consignee: '',
@@ -160,16 +181,17 @@ export default {
       formData1: { ...INITIAL_DATA1 },
       formData2: { ...INITIAL_DATA2 },
       formData3: { ...INITIAL_DATA3 },
-      nameOptions: [
-        { label: '合同A', value: '1' },
-        { label: '合同B', value: '2' },
-        { label: '合同C', value: '3' },
+      sourceOptions: [
+        { name: 'MySql', value: '1' },
+        { name: 'Oracle', value: '2' },
+        { name: 'SqlServer', value: '3' },
       ],
-      typeOptions: [
-        { label: '类型A', value: '1' },
-        { label: '类型B', value: '2' },
-        { label: '类型C', value: '3' },
+      targetOptions: [
+        { name: 'MySql', value: '1' },
+        { name: 'Oracle', value: '2' },
+        { name: 'SqlServer', value: '3' },
       ],
+      value2: ['选项一'],
       addressOptions: [
         { label: '广东省深圳市南山区', value: '1' },
         { label: '北京市海淀区', value: '2' },
@@ -179,8 +201,8 @@ export default {
         { label: '陕西省西安市高新区', value: '6' },
       ],
       rules: {
-        name: [{ required: true, message: '请选择合同名称', type: 'error' }],
-        type: [{ required: true, message: '请选择发票类型', type: 'error' }],
+        source: [{ required: true, message: '请选择源数据库类型', type: 'error' }],
+        target: [{ required: true, message: '请选择目标数据库类型', type: 'error' }],
         title: [{ required: true, message: '请输入任务名称', type: 'error' }],
         taxNum: [{ required: true, message: '请输入纳税人识别号', type: 'error' }],
         consignee: [{ required: true, message: '请输入收货人', type: 'error' }],
