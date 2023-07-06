@@ -1,5 +1,24 @@
 <template>
   <t-card :bordered="false">
+    <t-dialog width="50%" maxHeight="100px" :visible.sync="visible">
+      <t-table
+        rowKey="index"
+        :data="data"
+        :footData="[{}]"
+        :columns="columns"
+        :table-layout="tableLayout"
+        :table-content-width="tableLayout === 'fixed' ? undefined : '1600px'"
+        :max-height="fixedTopAndBottomRows ? 500 : 300"
+        :fixedRows="fixedTopAndBottomRows ? [2, 2] : undefined"
+        :scroll="virtualScroll ? { type: 'virtual' } : undefined"
+        :stripe="stripe"
+        :selected-row-keys="selectedRowKeys"
+        @select-change="rehandleSelectChange"
+        bordered
+        size="small"
+      >
+      </t-table>
+    </t-dialog>
     <div class="form-step-container">
       <!-- 简单步骤条 -->
       <t-card :bordered="false">
@@ -16,7 +35,6 @@
         v-show="activeForm === 0"
         class="step-form"
         :data="formData2"
-
         labelAlign="right"
         @submit="onSubmit1"
         colon
@@ -59,8 +77,10 @@
         colon
       >
         <t-form-item class="amount-label" label="迁移表">
-            <span> 21/50</span>
-            <button>按钮</button>
+
+            <t-tag theme="primary" variant="light">21 / 50</t-tag>
+            <t-button @click="visible = true" style="margin-left: 50px">配置迁移表</t-button>
+
         </t-form-item>
 
         <t-form-item label="迁移表设置" name="type">
@@ -71,11 +91,11 @@
           </t-checkbox-group>
         </t-form-item>
         <t-form-item label="迁移设置" name="name">
-          <t-checkbox-group v-model="value2" @change="onChange2">
-            <t-checkbox :checkAll="true" label="全选" />
-            <t-checkbox label="选项一" value="选项一" />
-            <t-checkbox label="选项二" value="选项二" />
-            <t-checkbox label="选项三" value="选项三" />
+          <t-checkbox-group v-model="value2">
+            <t-checkbox :checkAll="true" label="全选"/>
+            <t-checkbox label="选项一" value="选项一"/>
+            <t-checkbox label="选项二" value="选项二"/>
+            <t-checkbox label="选项三" value="选项三"/>
           </t-checkbox-group>
         </t-form-item>
         <t-form-item label="发票类型" name="type">
@@ -99,7 +119,6 @@
         v-show="activeForm === 2"
         class="step-form"
         :data="formData3"
-        :rules="rules"
         labelAlign="left"
         @reset="onReset3"
         @submit="onSubmit3"
@@ -138,7 +157,7 @@
 
       <!-- 分步表单4 -->
       <div class="step-form-4" v-show="activeForm === 6">
-        <check-circle-filled-icon style="color: green" size="52px" />
+        <check-circle-filled-icon style="color: green" size="52px"/>
         <p class="text">完成开票申请</p>
         <p class="tips">预计1～3个工作日会将电子发票发至邮箱，发票邮寄请耐心等待</p>
         <div class="button-group">
@@ -149,10 +168,10 @@
     </div>
   </t-card>
 </template>
-<script>
-import { CheckCircleFilledIcon } from 'tdesign-icons-vue';
-import { prefix } from '@/config/global';
-
+<script lang="jsx">
+import {CheckCircleFilledIcon} from 'tdesign-icons-vue';
+import {prefix} from '@/config/global';
+import { ErrorCircleFilledIcon, CloseCircleFilledIcon } from 'tdesign-icons-vue';
 const INITIAL_DATA1 = {
   name: '',
   type: '',
@@ -160,8 +179,8 @@ const INITIAL_DATA1 = {
 const INITIAL_DATA2 = {
   title: '',
   description: '',
-  source:'',
-  target:''
+  source: '',
+  target: ''
 };
 const INITIAL_DATA3 = {
   consignee: '',
@@ -169,71 +188,113 @@ const INITIAL_DATA3 = {
   deliveryAddress: '',
   fullAddress: '',
 };
-
+const data = new Array(10).fill(null).map((_, i) => ({
+  index: i + 1,
+  sourceTableName: ['AA', 'BB', 'CC'][i % 3],
+  targetTableName: ['AA', 'BB', 'CC'][i % 3],
+  tableType: '普通表',
+  dataCount: '10000',
+}));
 export default {
   name: 'FormStep',
   components: {
     CheckCircleFilledIcon,
+    ErrorCircleFilledIcon,
+    CloseCircleFilledIcon
   },
   data() {
     return {
       prefix,
-      formData1: { ...INITIAL_DATA1 },
-      formData2: { ...INITIAL_DATA2 },
-      formData3: { ...INITIAL_DATA3 },
+      formData1: {...INITIAL_DATA1},
+      formData2: {...INITIAL_DATA2},
+      formData3: {...INITIAL_DATA3},
       sourceOptions: [
-        { name: 'MySql', value: '1' },
-        { name: 'Oracle', value: '2' },
-        { name: 'SqlServer', value: '3' },
+        {name: 'MySql', value: '1'},
+        {name: 'Oracle', value: '2'},
+        {name: 'SqlServer', value: '3'},
       ],
       targetOptions: [
-        { name: 'MySql', value: '1' },
-        { name: 'Oracle', value: '2' },
-        { name: 'SqlServer', value: '3' },
+        {name: 'MySql', value: '1'},
+        {name: 'Oracle', value: '2'},
+        {name: 'SqlServer', value: '3'},
       ],
       value2: ['选项一'],
       addressOptions: [
-        { label: '广东省深圳市南山区', value: '1' },
-        { label: '北京市海淀区', value: '2' },
-        { label: '上海市徐汇区', value: '3' },
-        { label: '四川省成都市高新区', value: '4' },
-        { label: '广东省广州市天河区', value: '5' },
-        { label: '陕西省西安市高新区', value: '6' },
+        {label: '广东省深圳市南山区', value: '1'},
+        {label: '北京市海淀区', value: '2'},
+        {label: '上海市徐汇区', value: '3'},
+        {label: '四川省成都市高新区', value: '4'},
+        {label: '广东省广州市天河区', value: '5'},
+        {label: '陕西省西安市高新区', value: '6'},
       ],
       rules: {
-        source: [{ required: true, message: '请选择源数据库类型', type: 'error' }],
-        target: [{ required: true, message: '请选择目标数据库类型', type: 'error' }],
-        title: [{ required: true, message: '请输入任务名称', type: 'error' }],
-        taxNum: [{ required: true, message: '请输入纳税人识别号', type: 'error' }],
-        consignee: [{ required: true, message: '请输入收货人', type: 'error' }],
-        mobileNum: [{ required: true, message: '请输入手机号码', type: 'error' }],
-        deliveryAddress: [{ required: true, message: '请选择收货地址', type: 'error' }],
-        fullAddress: [{ required: true, message: '请输入详细地址', type: 'error' }],
+        source: [{required: true, message: '请选择源数据库类型', type: 'error'}],
+        target: [{required: true, message: '请选择目标数据库类型', type: 'error'}],
+        title: [{required: true, message: '请输入任务名称', type: 'error'}],
+        taxNum: [{required: true, message: '请输入纳税人识别号', type: 'error'}],
+        consignee: [{required: true, message: '请输入收货人', type: 'error'}],
+        mobileNum: [{required: true, message: '请输入手机号码', type: 'error'}],
+        deliveryAddress: [{required: true, message: '请选择收货地址', type: 'error'}],
+        fullAddress: [{required: true, message: '请输入详细地址', type: 'error'}],
       },
       activeForm: 0,
+      visible:false,
+      virtualScroll: false,
+      fixedTopAndBottomRows: false,
+      stripe: false,
+      tableLayout: 'fixed',
+      data,
+      columns: [
+        {
+          colKey: 'row-select',
+          type: 'multiple',
+          width: 50,
+        },
+        {
+          colKey: 'sourceTableName',
+          title: '源表名',
+          width: '100',
+          foot: '共20条',
+        },
+        {
+          colKey: 'targetTableName',
+          title: '目标表名',
+          width: '100',
+          fixed: 'left',
+        },
+        {
+          colKey: 'tableType',
+          title: '类型',
+          width: '120',
+          foot: '-',
+        },
+        {
+          colKey: 'dataCount',
+          title: '表记录数',
+          width: '150',
+          foot: '-',
+        }
+      ],
+      selectedRowKeys:[]
     };
   },
   computed: {
-    amount() {
-      if (this.formData1.name === '1') {
-        return '565421';
-      }
-      if (this.formData1.name === '2') {
-        return '278821';
-      }
-      if (this.formData1.name === '3') {
-        return '109824';
-      }
-      return '--';
-    },
+
   },
   methods: {
-    onSubmit1({ validateResult }) {
+    rehandleClickOp(context) {
+      console.log(context);
+    },
+    rehandleSelectChange(value, { selectedRowData }) {
+      this.selectedRowKeys = value;
+      console.log(value, selectedRowData);
+    },
+    onSubmit1({validateResult}) {
       if (validateResult === true) {
         this.activeForm = 1;
       }
     },
-    onSubmit2({ validateResult }) {
+    onSubmit2({validateResult}) {
       if (validateResult === true) {
         this.activeForm = 2;
       }
@@ -241,7 +302,7 @@ export default {
     onReset2() {
       this.activeForm = 0;
     },
-    onSubmit3({ validateResult }) {
+    onSubmit3({validateResult}) {
       if (validateResult === true) {
         this.activeForm = 6;
       }
@@ -250,7 +311,7 @@ export default {
       this.activeForm = 1;
     },
     onSubmit4() {
-      this.$router.replace({ path: '/detail/advanced' });
+      this.$router.replace({path: '/detail/advanced'});
     },
     onReset4() {
       this.activeForm = 0;
@@ -260,4 +321,7 @@ export default {
 </script>
 <style lang="less" scoped>
 @import './index';
+.link {
+  cursor: pointer;
+}
 </style>

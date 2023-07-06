@@ -34,7 +34,7 @@ export default [
         path: 'base',
         name: 'FormBase',
         component: () => import('@/pages/form/base/index.vue'),
-        meta: { title: '基础表单页' },
+        meta: { title: '配置数据源' },
       },
       {
         path: 'step',
