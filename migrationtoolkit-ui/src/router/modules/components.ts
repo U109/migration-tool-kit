@@ -40,7 +40,7 @@ export default [
         path: 'step',
         name: 'FormStep',
         component: () => import('@/pages/form/step/index.vue'),
-        meta: { title: '分步表单页' },
+        meta: { title: '新建迁移任务' },
       },
     ],
   },

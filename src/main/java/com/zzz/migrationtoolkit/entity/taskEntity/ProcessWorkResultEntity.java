@@ -1,10 +1,13 @@
 package com.zzz.migrationtoolkit.entity.taskEntity;
 
+import lombok.Data;
+
 /**
  * @author: Zzz
  * @date: 2023/7/5 10:14
  * @description:
  */
+@Data
 public class ProcessWorkResultEntity {
 
     private boolean isNormalFinished = true;
@@ -19,19 +22,4 @@ public class ProcessWorkResultEntity {
         this.resultMsg = resultMsg;
     }
 
-    public boolean isNormalFinished() {
-        return isNormalFinished;
-    }
-
-    public void setNormalFinished(boolean normalFinished) {
-        isNormalFinished = normalFinished;
-    }
-
-    public String getResultMsg() {
-        return resultMsg;
-    }
-
-    public void setResultMsg(String resultMsg) {
-        this.resultMsg = resultMsg;
-    }
 }

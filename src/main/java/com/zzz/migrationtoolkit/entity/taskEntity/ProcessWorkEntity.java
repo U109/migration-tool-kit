@@ -1,6 +1,7 @@
 package com.zzz.migrationtoolkit.entity.taskEntity;
 
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationObj;
+import lombok.Data;
 
 import java.util.List;
 
@@ -9,6 +10,7 @@ import java.util.List;
  * @date: 2023/7/4 17:07
  * @description:
  */
+@Data
 public class ProcessWorkEntity {
 
     private String workType;
@@ -28,35 +30,4 @@ public class ProcessWorkEntity {
         this.migrationObj = migrationObj;
     }
 
-    public String getWorkType() {
-        return workType;
-    }
-
-    public void setWorkType(String workType) {
-        this.workType = workType;
-    }
-
-    public String getWorkContentType() {
-        return workContentType;
-    }
-
-    public void setWorkContentType(String workContentType) {
-        this.workContentType = workContentType;
-    }
-
-    public MigrationObj getMigrationObj() {
-        return migrationObj;
-    }
-
-    public void setMigrationObj(MigrationObj migrationObj) {
-        this.migrationObj = migrationObj;
-    }
-
-    public List<List<Object>> getDataList() {
-        return dataList;
-    }
-
-    public void setDataList(List<List<Object>> dataList) {
-        this.dataList = dataList;
-    }
 }

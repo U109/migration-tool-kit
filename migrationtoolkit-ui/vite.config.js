@@ -33,7 +33,7 @@ export default ({ mode }) => {
       }),
       viteMockServe({
         mockPath: 'mock',
-        localEnabled: true,
+        localEnabled: false,
       }),
       createSvgPlugin(),
     ],
@@ -43,13 +43,13 @@ export default ({ mode }) => {
     },
 
     server: {
-      host: '0.0.0.0',
+      host: '127.0.0.1',
       port: 3001,
       proxy: {
         '/api': {
           // 用于开发环境下的转发请求
           // 更多请参考：https://vitejs.dev/config/#server-proxy
-          target: 'https://service-exndqyuk-1257786608.gz.apigw.tencentcs.com',
+          target: 'http://localhost:9090/',
           changeOrigin: true,
         },
       },

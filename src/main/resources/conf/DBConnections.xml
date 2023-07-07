@@ -9,5 +9,6 @@
         <password>0507</password>
         <dbName>z-resource</dbName>
         <paramStr>?characterEncoding=utf-8;serverTimezone=Asia/Shanghai</paramStr>
+        <comment>备注</comment>
     </db>
 </dbs>

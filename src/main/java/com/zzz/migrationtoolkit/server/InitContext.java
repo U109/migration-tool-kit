@@ -14,14 +14,7 @@ public class InitContext {
 
     public static Map<String, DataBaseConnInfo> DBConnectionMap;
 
-
     public static void initContext() {
         DataSourceProcess.initDBConnections();
-    }
-
-    public static void main(String[] args) {
-        initContext();
-        DataBaseConnInfo mySql = DBConnectionMap.get("MySql");
-        System.out.println(mySql.getDbDriver());
     }
 }

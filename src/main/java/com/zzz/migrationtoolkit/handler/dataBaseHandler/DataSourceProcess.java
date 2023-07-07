@@ -2,6 +2,7 @@ package com.zzz.migrationtoolkit.handler.dataBaseHandler;
 
 import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
 import com.zzz.migrationtoolkit.server.InitContext;
+import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -20,6 +21,7 @@ import java.util.Map;
  * @date: 2023/7/4 14:12
  * @description: 管理系统缓存信息
  */
+@Slf4j
 public class DataSourceProcess {
 
     public static void initDBConnections() {
@@ -65,8 +67,9 @@ public class DataSourceProcess {
             }
 
         } catch (ParserConfigurationException | IOException | SAXException e) {
-            e.printStackTrace();
+            log.error("initContext error :: " + e.getMessage());
         }
+        log.info("initContext success");
         return dbMap;
     }
 
@@ -82,7 +85,7 @@ public class DataSourceProcess {
                 clazz.getDeclaredMethod(setMethod, String.class).invoke(obj, entry.getValue());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("initContext error :: " + e.getMessage());
         }
         return obj;
     }

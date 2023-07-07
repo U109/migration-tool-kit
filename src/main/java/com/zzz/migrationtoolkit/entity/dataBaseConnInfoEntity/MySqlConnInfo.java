@@ -122,4 +122,13 @@ public class MySqlConnInfo extends DataBaseConnInfo {
         this.schema = schema;
     }
 
+    @Override
+    public String getComment() {
+        return super.getComment();
+    }
+
+    @Override
+    public void setComment(String comment) {
+        super.setComment(comment);
+    }
 }
