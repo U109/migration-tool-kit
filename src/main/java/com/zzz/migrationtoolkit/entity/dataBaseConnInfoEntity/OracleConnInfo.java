@@ -4,20 +4,18 @@ import com.zzz.migrationtoolkit.common.constants.DataBaseConstant;
 import com.zzz.migrationtoolkit.common.vo.ConnectionVO;
 
 /**
- * @author: Zzz
- * @date: 2023/7/4 14:04
- * @description:
+ * @author zhangzhongzhen
  */
-public class MySqlConnInfo extends DataBaseConnInfo {
+public class OracleConnInfo extends DataBaseConnInfo {
 
-    private String connName = DataBaseConstant.MYSQL;
-    private String dbDriver = DataBaseConstant.MYSQL_DB_DRIVER;
-    private String dbUrl = DataBaseConstant.MYSQL_DB_URL;
+    private String connName = DataBaseConstant.ORACLE;
+    private String dbDriver = DataBaseConstant.ORACLE_DB_DRIVER;
+    private String dbUrl = DataBaseConstant.ORACLE_DB_URL;
 
-    public MySqlConnInfo() {
+    public OracleConnInfo() {
     }
 
-    public MySqlConnInfo(ConnectionVO connection) {
+    public OracleConnInfo(ConnectionVO connection) {
         this.paramStr = connection.getConnParam();
         this.host = connection.getHost();
         this.port = connection.getPort();
@@ -146,3 +144,4 @@ public class MySqlConnInfo extends DataBaseConnInfo {
         super.setComment(comment);
     }
 }
+

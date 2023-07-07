@@ -15,4 +15,17 @@ public class DataBaseConstant {
 
     public static String[] database = {MYSQL, ORACLE, SQLSERVER, POSTGRESQL, DB2};
 
+
+    public static final String MYSQL_DB_DRIVER = "com.mysql.cj.jdbc.Driver";
+    public static final String ORACLE_DB_DRIVER = "com.mysql.cj.jdbc.Driver";
+    public static final String SQLSERVER_DB_DRIVER = "com.mysql.cj.jdbc.Driver";
+    public static final String POSTGRESQL_DB_DRIVER = "com.mysql.cj.jdbc.Driver";
+    public static final String DB2_DB_DRIVER = "com.mysql.cj.jdbc.Driver";
+
+    public static final String MYSQL_DB_URL = "jdbc:mysql://";
+    public static final String ORACLE_DB_URL = "jdbc:mysql://";
+    public static final String SQLSERVER_DB_URL = "jdbc:mysql://";
+    public static final String POSTGRESQL_DB_URL = "jdbc:mysql://";
+    public static final String DB2_DB_URL = "jdbc:mysql://";
+
 }

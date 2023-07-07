@@ -47,4 +47,26 @@ public class ResultMessage<T> implements Serializable {
         this.result = result;
         return this;
     }
+
+    public ResultMessage<T> fail(T result) {
+        this.success = false;
+        this.code = 500;
+        this.message = "fail";
+        this.result = result;
+        return this;
+    }
+
+    public ResultMessage<T> fail() {
+        this.success = false;
+        this.code = 500;
+        this.message = "fail";
+        return this;
+    }
+
+    public ResultMessage<T> success() {
+        this.success = true;
+        this.code = 200;
+        this.message = "success";
+        return this;
+    }
 }

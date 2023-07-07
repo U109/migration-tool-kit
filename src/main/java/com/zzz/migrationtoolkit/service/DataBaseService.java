@@ -1,7 +1,10 @@
 package com.zzz.migrationtoolkit.service;
 
 import com.zzz.migrationtoolkit.common.constants.DataBaseConstant;
+import com.zzz.migrationtoolkit.common.vo.ConnectionVO;
 import com.zzz.migrationtoolkit.common.vo.ResultMessage;
+import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
+import com.zzz.migrationtoolkit.handler.dataBaseHandler.DataSourceProcess;
 import com.zzz.migrationtoolkit.server.InitContext;
 import org.springframework.stereotype.Service;
 
@@ -24,5 +27,17 @@ public class DataBaseService {
             }
         }
         return new ResultMessage<List<String>>().success(dbList);
+    }
+
+    public ResultMessage<String> testDataBaseConnection(ConnectionVO connectionVO) {
+        try {
+            boolean conn = DataSourceProcess.testConnection(connectionVO);
+            if (!conn) {
+                return new ResultMessage<String>().fail();
+            }
+            return new ResultMessage<String>().success();
+        } catch (Exception e) {
+            return new ResultMessage<String>().fail(e.getMessage());
+        }
     }
 }

@@ -1,6 +1,10 @@
 package com.zzz.migrationtoolkit.handler.dataBaseHandler;
 
+import com.zzz.migrationtoolkit.common.constants.DataBaseConstant;
+import com.zzz.migrationtoolkit.common.vo.ConnectionVO;
 import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
+import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.MySqlConnInfo;
+import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo;
 import com.zzz.migrationtoolkit.server.InitContext;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
@@ -13,6 +17,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +34,10 @@ public class DataSourceProcess {
         InitContext.DBConnectionMap = readDBConnection();
     }
 
+    /**
+     * 读取DB连接
+     * @return Map
+     */
     private static Map<String, DataBaseConnInfo> readDBConnection() {
         Map<String, DataBaseConnInfo> dbMap = new HashMap<>();
         DocumentBuilder docParser;
@@ -61,7 +71,6 @@ public class DataSourceProcess {
                     }
                 }
                 dbci = (DataBaseConnInfo) xmlToObj(clazzName, attrValueMap);
-                dbci.setConnName(dbElement.getAttribute("name"));
                 dbci.setDbType(dbType);
                 dbMap.put(dbType, dbci);
             }
@@ -69,7 +78,6 @@ public class DataSourceProcess {
         } catch (ParserConfigurationException | IOException | SAXException e) {
             log.error("initContext error :: " + e.getMessage());
         }
-        log.info("initContext success");
         return dbMap;
     }
 
@@ -88,5 +96,26 @@ public class DataSourceProcess {
             log.error("initContext error :: " + e.getMessage());
         }
         return obj;
+    }
+
+    /**
+     * 测试数据库连接
+     * @param connectionVO ConnectionVO
+     * @return boolean
+     * @throws Exception 异常
+     */
+    public static boolean testConnection(ConnectionVO connectionVO) throws Exception {
+        String dbType = connectionVO.getDbtype();
+        Connection connection = null;
+        if (DataBaseConstant.MYSQL.equals(dbType)) {
+            MySqlConnInfo connInfo = new MySqlConnInfo(connectionVO);
+            Class.forName(connInfo.getDbDriver());
+            connection = DriverManager.getConnection(connInfo.getUrl(), connInfo.getUsername(), connInfo.getPassword());
+        } else if (DataBaseConstant.ORACLE.equals(dbType)) {
+            OracleConnInfo connInfo = new OracleConnInfo(connectionVO);
+            Class.forName(connInfo.getDbDriver());
+            connection = DriverManager.getConnection(connInfo.getUrl(), connInfo.getUsername(), connInfo.getPassword());
+        }
+        return connection != null;
     }
 }

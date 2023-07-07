@@ -12,10 +12,7 @@ import java.io.Serializable;
 @Data
 public class DataBaseConnInfo implements Cloneable, Serializable {
 
-    String connName;
     String dbType;
-    String dbDriver;
-    String dbUrl;
     String host;
     String port;
     String username;
