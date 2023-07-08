@@ -9,6 +9,7 @@ import com.zzz.migrationtoolkit.server.InitContext;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -19,14 +20,9 @@ import java.util.List;
 @Service
 public class DataBaseService {
 
-    public ResultMessage<List<String>> dataBaseNotExist() {
-        List<String> dbList = new ArrayList<>();
-        for (String db : DataBaseConstant.database) {
-            if (!InitContext.DBConnectionMap.containsKey(db)) {
-                dbList.add(db);
-            }
-        }
-        return new ResultMessage<List<String>>().success(dbList);
+    public ResultMessage<List<String>> dataBaseType() {
+        List<String> databaseList = Arrays.asList(DataBaseConstant.database);
+        return new ResultMessage<List<String>>().success(databaseList);
     }
 
     public ResultMessage<String> testDataBaseConnection(ConnectionVO connectionVO) {
@@ -39,5 +35,13 @@ public class DataBaseService {
         } catch (Exception e) {
             return new ResultMessage<String>().fail(e.getMessage());
         }
+    }
+
+    public ResultMessage<String> saveDataBaseConnection(ConnectionVO connection) {
+        boolean save = DataSourceProcess.writeDataBaseConnection(connection);
+        if (!save) {
+            return new ResultMessage<String>().fail();
+        }
+        return new ResultMessage<String>().success();
     }
 }

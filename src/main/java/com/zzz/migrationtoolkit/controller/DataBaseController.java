@@ -21,17 +21,29 @@ public class DataBaseController {
     private DataBaseService dataBaseService;
 
     /**
-     * 获取没有添加数据源的数据库列表
+     * 获取数据库列表
      *
      * @return [Mysql, Oracle...]
      */
-    @GetMapping("/getDataBaseNotExist")
-    public ResultMessage<List<String>> getDataBaseNotExist() {
-        return dataBaseService.dataBaseNotExist();
+    @GetMapping("/dataBaseType")
+    public ResultMessage<List<String>> dataBaseType() {
+        return dataBaseService.dataBaseType();
     }
 
+    /**
+     * 测试连接
+     *
+     * @param connectionVO connectionVO
+     * @return ResultMessage
+     */
     @PostMapping("/testConnection")
     public ResultMessage<String> testDataBaseConnection(@RequestBody ConnectionVO connectionVO) {
         return dataBaseService.testDataBaseConnection(connectionVO);
     }
+
+    @PostMapping("/saveConnection")
+    public ResultMessage<String> saveDataBaseConnection(@RequestBody ConnectionVO connectionVO) {
+        return dataBaseService.saveDataBaseConnection(connectionVO);
+    }
+
 }

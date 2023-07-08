@@ -5,6 +5,7 @@ import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
 import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.MySqlConnInfo;
 import com.zzz.migrationtoolkit.handler.dataBaseHandler.DataSourceProcess;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,16 +15,10 @@ import java.util.Map;
  */
 public class InitContext {
 
-    public static Map<String, DataBaseConnInfo> DBConnectionMap;
+    public static Map<String, List<Map<String, DataBaseConnInfo>>> DBConnectionMap;
 
     public static void initContext() {
         DataSourceProcess.initDBConnections();
     }
 
-    public static void main(String[] args) {
-        InitContext.initContext();
-        DataBaseConnInfo dataBaseConnInfo = DBConnectionMap.get(DataBaseConstant.MYSQL);
-        MySqlConnInfo mySqlConnInfo = (MySqlConnInfo) dataBaseConnInfo;
-        System.out.println(mySqlConnInfo.getDbDriver());
-    }
 }

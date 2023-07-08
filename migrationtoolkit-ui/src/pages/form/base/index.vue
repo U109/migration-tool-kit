@@ -7,6 +7,7 @@
           <div class="form-basic-container-title">数据库信息</div>
           <!-- 表单内容 -->
           <t-row class="row-gap" :gutter="[16, 12]">
+
             <t-col :span="8">
               <t-form-item label="数据库类型" name="dbtype">
                 <t-select v-model="formData.dbtype" :style="{ width: '322px' }" placeholder="请选择类型"
@@ -15,6 +16,11 @@
                     {{ item.label }}
                   </t-option>
                 </t-select>
+              </t-form-item>
+            </t-col>
+            <t-col :span="8">
+              <t-form-item label="连接名称" name="connname">
+                <t-input v-model="formData.connname" placeholder="请输入连接名称" />
               </t-form-item>
             </t-col>
             <t-col :span="6">
@@ -77,6 +83,7 @@
 import { prefix } from '@/config/global';
 
 const FORM_RULES = {
+  connname: [{ required: true, message: '请输入连接名称', type: 'error' }],
   dbtype: [{ required: true, message: '请选择数据库类型', type: 'error' }],
   host: [{ required: true, message: '请输入服务器地址', type: 'error' }],
   port: [{ required: true, message: '请输入端口号', type: 'error' }],
@@ -91,6 +98,7 @@ export default {
       prefix,
       stepSuccess: true,
       formData: {
+        connname: '',
         dbtype: 'Oracle',
         host: 'localhost',
         port: '3306',
@@ -118,35 +126,48 @@ export default {
     },
     onSubmit({ validateResult }) {
       if (validateResult === true) {
-        this.$message.success('新建成功');
+        this.$request
+          .post("/data-base/saveConnection", this.formData)
+          .then((res) => {
+            if (res.data.code === 200) {
+              this.$message.success('保存成功！');
+            }
+            if (res.data.code === 500) {
+              this.$message.error("保存失败！请稍后再试！");
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+          })
+          .finally(() => { });
       }
     },
     testConn() {
       if (this.formData.dbtype != '' && this.formData.host != '' && this.formData.port != ''
         && this.formData.username != '' && this.formData.password != '' && this.formData.dbname != '') {
-          this.$request
-        .post("/data-base/testConnection", this.formData)
-        .then((res) => {
-          if(res.data.code === 200){
-            this.$message.success('连接成功！');
-          }
-          if(res.data.code === 500){
-            this.$message.error(res.data.result);
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-        })
-        .finally(() => { });
-      }else{
+        this.$request
+          .post("/data-base/testConnection", this.formData)
+          .then((res) => {
+            if (res.data.code === 200) {
+              this.$message.success('连接成功！');
+            }
+            if (res.data.code === 500) {
+              this.$message.error(res.data.result);
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+          })
+          .finally(() => { });
+      } else {
         this.$message.error('请填写必填项');
       }
-      
+
 
     },
     getDbTypeOptions() {
       this.$request
-        .get("/data-base/getDataBaseNotExist")
+        .get("/data-base/dataBaseType")
         .then((res) => {
           if (res.data.code === 200) {
             this.dbTypeOptions = res.data.result.map(option => ({

@@ -8,7 +8,6 @@ import com.zzz.migrationtoolkit.common.vo.ConnectionVO;
  */
 public class OracleConnInfo extends DataBaseConnInfo {
 
-    private String connName = DataBaseConstant.ORACLE;
     private String dbDriver = DataBaseConstant.ORACLE_DB_DRIVER;
     private String dbUrl = DataBaseConstant.ORACLE_DB_URL;
 
@@ -16,6 +15,7 @@ public class OracleConnInfo extends DataBaseConnInfo {
     }
 
     public OracleConnInfo(ConnectionVO connection) {
+        this.connName = connection.getConnname();
         this.paramStr = connection.getConnParam();
         this.host = connection.getHost();
         this.port = connection.getPort();
@@ -30,10 +30,11 @@ public class OracleConnInfo extends DataBaseConnInfo {
         return dbUrl + host + ":" + port + "/" + dbName + paramStr;
     }
 
+    @Override
     public String getConnName() {
         return connName;
     }
-
+    @Override
     public void setConnName(String connName) {
         this.connName = connName;
     }

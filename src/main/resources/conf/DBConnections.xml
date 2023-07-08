@@ -1,14 +1,25 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <dbs>
-    <db id="MySql" class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.MySqlConnInfo">
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="aaa">
         <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
         <dbUrl>jdbc:mysql://</dbUrl>
         <host>localhost</host>
         <port>3306</port>
         <username>root</username>
         <password>0507</password>
-        <dbName>z-resource</dbName>
-        <paramStr>?characterEncoding=utf-8;serverTimezone=Asia/Shanghai</paramStr>
-        <comment>备注</comment>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="bbb">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
     </db>
 </dbs>

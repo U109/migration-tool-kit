@@ -10,6 +10,7 @@ import java.io.Serializable;
 @Data
 public class ConnectionVO implements Serializable {
 
+    private String connname;
     private String dbtype;
     private String host;
     private String port;

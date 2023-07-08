@@ -1,5 +1,6 @@
 package com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity;
 
+import com.zzz.migrationtoolkit.common.constants.DataBaseConstant;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -11,7 +12,7 @@ import java.io.Serializable;
  */
 @Data
 public class DataBaseConnInfo implements Cloneable, Serializable {
-
+    String connName;
     String dbType;
     String host;
     String port;

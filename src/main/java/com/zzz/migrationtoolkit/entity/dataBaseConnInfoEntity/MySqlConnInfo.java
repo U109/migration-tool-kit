@@ -10,7 +10,7 @@ import com.zzz.migrationtoolkit.common.vo.ConnectionVO;
  */
 public class MySqlConnInfo extends DataBaseConnInfo {
 
-    private String connName = DataBaseConstant.MYSQL;
+
     private String dbDriver = DataBaseConstant.MYSQL_DB_DRIVER;
     private String dbUrl = DataBaseConstant.MYSQL_DB_URL;
 
@@ -18,6 +18,7 @@ public class MySqlConnInfo extends DataBaseConnInfo {
     }
 
     public MySqlConnInfo(ConnectionVO connection) {
+        this.connName = connection.getConnname();
         this.paramStr = connection.getConnParam();
         this.host = connection.getHost();
         this.port = connection.getPort();
@@ -32,10 +33,12 @@ public class MySqlConnInfo extends DataBaseConnInfo {
         return dbUrl + host + ":" + port + "/" + dbName + paramStr;
     }
 
+    @Override
     public String getConnName() {
         return connName;
     }
 
+    @Override
     public void setConnName(String connName) {
         this.connName = connName;
     }
