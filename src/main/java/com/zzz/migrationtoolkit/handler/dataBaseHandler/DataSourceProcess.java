@@ -118,6 +118,7 @@ public class DataSourceProcess {
      * @throws Exception 异常
      */
     public static boolean testConnection(ConnectionVO connectionVO) throws Exception {
+
         String dbType = connectionVO.getDbtype();
         Connection connection = null;
         if (DataBaseConstant.MYSQL.equals(dbType)) {
@@ -134,74 +135,98 @@ public class DataSourceProcess {
 
     /**
      * 写入xml文件
+     *
      * @param connection connection
-     * @return boolean
      */
-    public static boolean writeDataBaseConnection(ConnectionVO connection) {
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse("src/main/resources/conf/DBConnections.xml");
-            // 获取根元素
-            Element rootElement = doc.getDocumentElement();
-            String className = "com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity." + connection.getDbtype() + "ConnInfo";
-            // 创建 <db> 元素并设置属性
-            Element dbElement = doc.createElement("db");
-            dbElement.setAttribute("id", connection.getDbtype());
-            dbElement.setAttribute("name", connection.getConnname());
-            dbElement.setAttribute("class", className);
-            //设置子标签
-            Element dbDriverElement = doc.createElement("dbDriver");
-            //反射获取属性值
-            String driverName = connection.getDbtype().toUpperCase() + "_DB_DRIVER";
-            Field dbDriverField = DataBaseConstant.class.getField(driverName);
-            //此处是静态变量，所以不需要实例对象，因此传入的参数为 null
-            String dbDriverValue = (String) dbDriverField.get(null);
-            dbDriverElement.setTextContent(dbDriverValue);
-            Element dbUrlElement = doc.createElement("dbUrl");
-            String urlName = connection.getDbtype().toUpperCase() + "_DB_URL";
-            Field dbUrlField = DataBaseConstant.class.getField(urlName);
-            String dbUrlValue = (String) dbUrlField.get(null);
-            dbUrlElement.setTextContent(dbUrlValue);
-            Element hostElement = doc.createElement("host");
-            hostElement.setTextContent(connection.getHost());
-            Element portElement = doc.createElement("port");
-            portElement.setTextContent(connection.getPort());
-            Element usernameElement = doc.createElement("username");
-            usernameElement.setTextContent(connection.getUsername());
-            Element passwordElement = doc.createElement("password");
-            passwordElement.setTextContent(connection.getPassword());
-            Element dbNameElement = doc.createElement("dbName");
-            dbNameElement.setTextContent(connection.getDbname());
-            Element paramStrElement = doc.createElement("paramStr");
-            paramStrElement.setTextContent(connection.getConnParam());
-            Element commentElement = doc.createElement("comment");
-            commentElement.setTextContent(connection.getComment());
-            // 将元素添加到 <db> 元素中
-            dbElement.appendChild(dbDriverElement);
-            dbElement.appendChild(dbUrlElement);
-            dbElement.appendChild(hostElement);
-            dbElement.appendChild(portElement);
-            dbElement.appendChild(usernameElement);
-            dbElement.appendChild(passwordElement);
-            dbElement.appendChild(dbNameElement);
-            dbElement.appendChild(paramStrElement);
-            dbElement.appendChild(commentElement);
-            // 将 <db> 元素添加到 <dbs> 根元素中
-            rootElement.appendChild(dbElement);
-            // 将文档写回XML文件
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "no");
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult("src/main/resources/conf/DBConnections.xml");
-            transformer.transform(source, result);
-            log.info("database connection info save success!");
-        } catch (Exception e) {
-            log.error("database connection info save error : " + e);
-            return false;
+    public static void writeDataBaseConnection(ConnectionVO connection) throws Exception {
+
+        //判断name是否已存在
+        List<Map<String, DataBaseConnInfo>> mapList = InitContext.DBConnectionMap.get(connection.getDbtype());
+        for (Map<String, DataBaseConnInfo> dataBaseConnInfoMap : mapList) {
+            if (dataBaseConnInfoMap.containsKey(connection.getConnname())) {
+                throw new RuntimeException("该名称已存在，请更换！");
+            }
         }
-        return true;
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.parse("src/main/resources/conf/DBConnections.xml");
+        // 获取根元素
+        Element rootElement = doc.getDocumentElement();
+        String className = "com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity." + connection.getDbtype() + "ConnInfo";
+        // 创建 <db> 元素并设置属性
+        Element dbElement = doc.createElement("db");
+        dbElement.setAttribute("id", connection.getDbtype());
+        dbElement.setAttribute("name", connection.getConnname());
+        dbElement.setAttribute("class", className);
+        //设置子标签
+        Element dbDriverElement = doc.createElement("dbDriver");
+        //反射获取属性值
+        String driverName = connection.getDbtype().toUpperCase() + "_DB_DRIVER";
+        Field dbDriverField = DataBaseConstant.class.getField(driverName);
+        //此处是静态变量，所以不需要实例对象，因此传入的参数为 null
+        String dbDriverValue = (String) dbDriverField.get(null);
+        dbDriverElement.setTextContent(dbDriverValue);
+        Element dbUrlElement = doc.createElement("dbUrl");
+        String urlName = connection.getDbtype().toUpperCase() + "_DB_URL";
+        Field dbUrlField = DataBaseConstant.class.getField(urlName);
+        String dbUrlValue = (String) dbUrlField.get(null);
+        dbUrlElement.setTextContent(dbUrlValue);
+        Element hostElement = doc.createElement("host");
+        hostElement.setTextContent(connection.getHost());
+        Element portElement = doc.createElement("port");
+        portElement.setTextContent(connection.getPort());
+        Element usernameElement = doc.createElement("username");
+        usernameElement.setTextContent(connection.getUsername());
+        Element passwordElement = doc.createElement("password");
+        passwordElement.setTextContent(connection.getPassword());
+        Element dbNameElement = doc.createElement("dbName");
+        dbNameElement.setTextContent(connection.getDbname());
+        Element paramStrElement = doc.createElement("paramStr");
+        paramStrElement.setTextContent(connection.getConnParam());
+        Element commentElement = doc.createElement("comment");
+        commentElement.setTextContent(connection.getComment());
+        // 将元素添加到 <db> 元素中
+        dbElement.appendChild(dbDriverElement);
+        dbElement.appendChild(dbUrlElement);
+        dbElement.appendChild(hostElement);
+        dbElement.appendChild(portElement);
+        dbElement.appendChild(usernameElement);
+        dbElement.appendChild(passwordElement);
+        dbElement.appendChild(dbNameElement);
+        dbElement.appendChild(paramStrElement);
+        dbElement.appendChild(commentElement);
+        // 将 <db> 元素添加到 <dbs> 根元素中
+        rootElement.appendChild(dbElement);
+        // 将文档写回XML文件
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "no");
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult("src/main/resources/conf/DBConnections.xml");
+        transformer.transform(source, result);
+
     }
 
+    public static List<DataBaseConnInfo> getDataBaseConnectionInfo() {
+        List<DataBaseConnInfo> dataBaseConnInfoList = new ArrayList<>();
+        for (Map.Entry<String, List<Map<String, DataBaseConnInfo>>> listEntry : InitContext.DBConnectionMap.entrySet()) {
+            for (Map<String, DataBaseConnInfo> dataBaseConnInfoMap : listEntry.getValue()) {
+                for (Map.Entry<String, DataBaseConnInfo> dataBaseConnInfoEntry : dataBaseConnInfoMap.entrySet()) {
+                    DataBaseConnInfo dataBaseConnInfo = dataBaseConnInfoEntry.getValue();
+                    //因为对象有改动，需要使用新对象来存储变化，避免污染原来的数据
+                    DataBaseConnInfo resultDataBaseConnInfo = new DataBaseConnInfo(dataBaseConnInfo);
+                    //解析出来的databaseConnInfo是没有connName属性的
+                    String connName = dataBaseConnInfoEntry.getKey();
+
+                    resultDataBaseConnInfo.setConnName(connName);
+                    //前端需要dbName/Schema
+                    String dataName = dataBaseConnInfo.getDbName() + "/" + dataBaseConnInfo.getSchema();
+                    resultDataBaseConnInfo.setDbName(dataName);
+                    dataBaseConnInfoList.add(resultDataBaseConnInfo);
+                }
+            }
+        }
+        return dataBaseConnInfoList;
+    }
 }

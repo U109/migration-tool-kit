@@ -133,7 +133,7 @@ export default {
               this.$message.success('保存成功！');
             }
             if (res.data.code === 500) {
-              this.$message.error("保存失败！请稍后再试！");
+              this.$message.error("保存失败！" + res.data.result);
             }
           })
           .catch((e) => {

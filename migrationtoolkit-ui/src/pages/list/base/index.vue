@@ -3,9 +3,7 @@
     <t-card class="list-card-container" :bordered="false">
       <t-row justify="space-between">
         <div class="left-operation-container">
-          <t-button @click="handleSetupContract"> 新建合同 </t-button>
-          <t-button variant="base" theme="default" :disabled="!selectedRowKeys.length"> 导出合同 </t-button>
-          <p v-if="!!selectedRowKeys.length" class="selected-count">已选{{ selectedRowKeys.length }}项</p>
+          <t-button @click="handleSetupContract"> 新建数据源 </t-button>
         </div>
         <t-input v-model="searchValue" class="search-input" placeholder="请输入你需要搜索的内容" clearable>
           <template #suffix-icon>
@@ -15,44 +13,10 @@
       </t-row>
 
       <div class="table-container">
-        <t-table
-          :columns="columns"
-          :data="data"
-          :rowKey="rowKey"
-          :verticalAlign="verticalAlign"
-          :hover="hover"
-          :pagination="pagination"
-          :selected-row-keys="selectedRowKeys"
-          :loading="dataLoading"
-          @page-change="rehandlePageChange"
-          @change="rehandleChange"
-          @select-change="rehandleSelectChange"
-          :headerAffixedTop="true"
-          :headerAffixProps="{ offsetTop: offsetTop, container: getContainer }"
-        >
-          <template #status="{ row }">
-            <t-tag v-if="row.status === CONTRACT_STATUS.FAIL" theme="danger" variant="light">审核失败</t-tag>
-            <t-tag v-if="row.status === CONTRACT_STATUS.AUDIT_PENDING" theme="warning" variant="light">待审核</t-tag>
-            <t-tag v-if="row.status === CONTRACT_STATUS.EXEC_PENDING" theme="warning" variant="light">待履行</t-tag>
-            <t-tag v-if="row.status === CONTRACT_STATUS.EXECUTING" theme="success" variant="light">履行中</t-tag>
-            <t-tag v-if="row.status === CONTRACT_STATUS.FINISH" theme="success" variant="light">已完成</t-tag>
-          </template>
-          <template #contractType="{ row }">
-            <p v-if="row.contractType === CONTRACT_TYPES.MAIN">审核失败</p>
-            <p v-if="row.contractType === CONTRACT_TYPES.SUB">待审核</p>
-            <p v-if="row.contractType === CONTRACT_TYPES.SUPPLEMENT">待履行</p>
-          </template>
-          <template #paymentType="{ row }">
-            <p v-if="row.paymentType === CONTRACT_PAYMENT_TYPES.PAYMENT" class="payment-col">
-              付款
-              <trend class="dashboard-item-trend" type="up" />
-            </p>
-            <p v-if="row.paymentType === CONTRACT_PAYMENT_TYPES.RECIPT" class="payment-col">
-              收款
-              <trend class="dashboard-item-trend" type="down" />
-            </p>
-          </template>
-
+        <t-table :columns="columns" :data="data" :rowKey="rowKey" :verticalAlign="verticalAlign" :hover="hover"
+          :pagination="pagination" :loading="dataLoading"
+          @page-change="rehandlePageChange" @change="rehandleChange" @select-change="rehandleSelectChange"
+          :headerAffixedTop="true" :headerAffixProps="{ offsetTop: offsetTop, container: getContainer }">
           <template #op="slotProps">
             <a class="t-button-link" @click="handleClickDetail()">详情</a>
             <a class="t-button-link" @click="handleClickDelete(slotProps)">删除</a>
@@ -60,75 +24,59 @@
         </t-table>
       </div>
     </t-card>
-    <t-dialog
-      header="确认删除当前所选合同？"
-      :body="confirmBody"
-      :visible.sync="confirmVisible"
-      @confirm="onConfirmDelete"
-      :onCancel="onCancel"
-    >
+    <t-dialog header="确认删除当前所选数据源？" :body="confirmBody" :visible.sync="confirmVisible" @confirm="onConfirmDelete"
+      :onCancel="onCancel">
     </t-dialog>
   </div>
 </template>
 <script lang="ts">
 import Vue from 'vue';
 import { SearchIcon } from 'tdesign-icons-vue';
-import Trend from '@/components/trend/index.vue';
 import { prefix } from '@/config/global';
 
-import { CONTRACT_STATUS, CONTRACT_STATUS_OPTIONS, CONTRACT_TYPES, CONTRACT_PAYMENT_TYPES } from '@/constants';
 
 export default Vue.extend({
   name: 'ListBase',
   components: {
-    SearchIcon,
-    Trend,
+    SearchIcon
   },
   data() {
     return {
-      CONTRACT_STATUS,
-      CONTRACT_STATUS_OPTIONS,
-      CONTRACT_TYPES,
-      CONTRACT_PAYMENT_TYPES,
       prefix,
       dataLoading: false,
       data: [],
-      selectedRowKeys: [1, 2],
       value: 'first',
       columns: [
-        { colKey: 'row-select', type: 'multiple', width: 64, fixed: 'left' },
         {
-          title: '合同名称',
-          align: 'left',
-          width: 250,
-          ellipsis: true,
-          colKey: 'name',
-          fixed: 'left',
-        },
-        { title: '合同状态', colKey: 'status', width: 200, cell: { col: 'status' } },
-        {
-          title: '合同编号',
+          title: '连接名称',
           width: 200,
           ellipsis: true,
-          colKey: 'no',
+          colKey: 'connName',
         },
+        { title: '数据源类型', colKey: 'dbType', width: 200 },
         {
-          title: '合同类型',
+          title: '服务器地址',
           width: 200,
           ellipsis: true,
-          colKey: 'contractType',
+          colKey: 'host',
         },
         {
-          title: '合同收付类型',
-          width: 200,
+          title: '端口',
+          width: 150,
           ellipsis: true,
-          colKey: 'paymentType',
+          colKey: 'port',
         },
         {
-          title: '合同金额 (元)',
+          title: '数据库/Schema',
           width: 200,
           ellipsis: true,
-          colKey: 'amount',
+          colKey: 'dbName',
+        },
+        {
+          title: '用户名',
+          width: 200,
+          ellipsis: true,
+          colKey: 'username',
         },
         {
           align: 'left',
@@ -148,7 +96,9 @@ export default Vue.extend({
         defaultPageSize: 20,
         total: 0,
         defaultCurrent: 1,
+        current:1
       },
+      current: 1,
       searchValue: '',
       confirmVisible: false,
       deleteIdx: -1,
@@ -157,8 +107,8 @@ export default Vue.extend({
   computed: {
     confirmBody() {
       if (this.deleteIdx > -1) {
-        const { name } = this.data?.[this.deleteIdx];
-        return `删除后，${name}的所有合同信息将被清空，且无法恢复`;
+        const { connName } = this.data?.[this.deleteIdx];
+        return `删除后，${connName}的数据源信息将被删除，且无法恢复`;
       }
       return '';
     },
@@ -167,32 +117,41 @@ export default Vue.extend({
     },
   },
   mounted() {
-    this.dataLoading = true;
-    this.$request
-      .get('/api/get-list')
-      .then((res) => {
-        if (res.code === 0) {
-          const { list = [] } = res.data;
-          this.data = list;
-          this.pagination = {
-            ...this.pagination,
-            total: list.length,
-          };
-        }
-      })
-      .catch((e: Error) => {
-        console.log(e);
-      })
-      .finally(() => {
-        this.dataLoading = false;
-      });
-  },
 
+  },
+  created() {
+    this.getDataBaseConnInfoList();
+  },
+  activated() {
+    this.getDataBaseConnInfoList();
+  },
   methods: {
+    getDataBaseConnInfoList() {
+      this.dataLoading = true;
+      this.$request
+        .get("/data-base/getDataBaseConnInfoList")
+        .then((res) => {
+          if (res.data.code === 200) {
+            this.data = res.data.result;
+            this.pagination = {
+              ...this.pagination,
+              total: res.data.result.length,
+              current: this.current
+            };
+            console.log("this.current : ",this.current)
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        })
+        .finally(() => { this.dataLoading = false; });
+    },
     getContainer() {
       return document.querySelector('.tdesign-starter-layout');
     },
     rehandlePageChange(curr, pageInfo) {
+      this.pagination.current = curr.current
+      this.current = curr.current;
       console.log('分页变化', curr, pageInfo);
     },
     rehandleSelectChange(selectedRowKeys: number[]) {
@@ -261,7 +220,7 @@ export default Vue.extend({
   width: 360px;
 }
 
-.t-button + .t-button {
+.t-button+.t-button {
   margin-left: var(--td-comp-margin-s);
 }
 </style>

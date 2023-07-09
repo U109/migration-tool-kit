@@ -13,7 +13,7 @@ export default [
         path: 'base',
         name: 'ListBase',
         component: () => import('@/pages/list/base/index.vue'),
-        meta: { title: '基础列表页' },
+        meta: { title: '数据源列表' },
       },
       {
         path: 'filter',

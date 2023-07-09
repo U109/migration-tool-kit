@@ -34,6 +34,7 @@ public class OracleConnInfo extends DataBaseConnInfo {
     public String getConnName() {
         return connName;
     }
+
     @Override
     public void setConnName(String connName) {
         this.connName = connName;

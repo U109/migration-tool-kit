@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?>
-<dbs>
+<?xml version="1.0" encoding="utf-8" standalone="no"?><dbs>
     <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="aaa">
         <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
         <dbUrl>jdbc:mysql://</dbUrl>
@@ -22,4 +21,268 @@
         <paramStr/>
         <comment/>
     </db>
-</dbs>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="ccc">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="ddd">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="eee">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="fff">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="ggg">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="hhh">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="iii">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="jjj">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="kkk">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="lll">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="mmm">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="nnn">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="ooo">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="ppp">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="qqq">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="rrr">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="sss">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="ttt">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="uuu">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="vvv">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="www">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="xxx">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="yyy">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="zzz">
+        <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
+        <dbUrl>jdbc:mysql://</dbUrl>
+        <host>localhost</host>
+        <port>3306</port>
+        <username>root</username>
+        <password>0507</password>
+        <dbName>myblog</dbName>
+        <paramStr/>
+        <comment/>
+    </db>
+<db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="aaaa"><dbDriver>com.mysql.cj.jdbc.Driver</dbDriver><dbUrl>jdbc:mysql://</dbUrl><host>localhost</host><port>3306</port><username>root</username><password>0507</password><dbName>myblog</dbName><paramStr/><comment/></db><db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="a"><dbDriver>com.mysql.cj.jdbc.Driver</dbDriver><dbUrl>jdbc:mysql://</dbUrl><host>localhost</host><port>3306</port><username>root</username><password>0507</password><dbName>myblog</dbName><paramStr/><comment/></db></dbs>

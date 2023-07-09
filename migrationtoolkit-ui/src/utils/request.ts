@@ -13,7 +13,7 @@ const CODE = {
 
 const instance = axios.create({
   baseURL: API_HOST,
-  timeout: 1000,
+  timeout: 100000,
   withCredentials: true,
 });
 

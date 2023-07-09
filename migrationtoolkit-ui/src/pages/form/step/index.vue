@@ -30,13 +30,14 @@
         </t-steps>
       </t-card>
 
-      <!-- 分步表单1 :rules="rules" -->
+      <!-- 分步表单1  -->
       <t-form
         v-show="activeForm === 0"
         class="step-form"
         :data="formData2"
         labelAlign="right"
         @submit="onSubmit1"
+        :rules="rules"
         colon
       >
         <t-form-item label="任务名称" name="title">
@@ -46,17 +47,17 @@
           <t-textarea :style="{ width: '480px' }" v-model="formData2.description"
                       :maxcharacter="200" placeholder="请输入任务描述"></t-textarea>
         </t-form-item>
-        <t-form-item label="源数" name="source">
+        <t-form-item label="源数据库" name="source">
           <t-select :style="{ width: '390px' }" v-model="formData2.source" class="demo-select-base" clearable>
-            <t-option v-for="(item, index) in sourceOptions" :value="item.value" :label="item.name" :key="index">
-              {{ item.name }}
+            <t-option v-for="(item, index) in sourceOptions" :value="item.value" :label="item.value" :key="index">
+              {{ item.value }}
             </t-option>
           </t-select>
         </t-form-item>
-        <t-form-item label="目标库" name="target">
+        <t-form-item label="目标数据库" name="target">
           <t-select :style="{ width: '390px' }" v-model="formData2.target" class="demo-select-base" clearable>
-            <t-option v-for="(item, index) in targetOptions" :value="item.value" :label="item.name" :key="index">
-              {{ item.name }}
+            <t-option v-for="(item, index) in targetOptions" :value="item.value" :label="item.value" :key="index">
+              {{ item.value }}
             </t-option>
           </t-select>
         </t-form-item>
@@ -212,16 +213,8 @@ export default {
       prefix,
       formData1: {...INITIAL_DATA2},
       formData2: {...INITIAL_DATA2},
-      sourceOptions: [
-        {name: 'MySql', value: '1'},
-        {name: 'Oracle', value: '2'},
-        {name: 'SqlServer', value: '3'},
-      ],
-      targetOptions: [
-        {name: 'MySql', value: '1'},
-        {name: 'Oracle', value: '2'},
-        {name: 'SqlServer', value: '3'},
-      ],
+      sourceOptions: [],
+      targetOptions: [],
       value2: ['选项一'],
       rules: {
         source: [{required: true, message: '请选择源数据库类型', type: 'error'}],
@@ -272,6 +265,7 @@ export default {
 
     };
   },
+  
   computed: {
     typecolumns() {
       return [
@@ -367,6 +361,9 @@ export default {
       ];
     },
   },
+  created() {
+    this.getDbTypeOptions();
+  },
   methods: {
     onRowValidate(params) {
       console.log('validate:', params);
@@ -412,6 +409,22 @@ export default {
     onReset4() {
       this.activeForm = 0;
     },
+    getDbTypeOptions() {
+      this.$request
+        .get("/data-base/dataBaseType")
+        .then((res) => {
+          if (res.data.code === 200) {
+            this.targetOptions = this.sourceOptions = res.data.result.map(option => ({
+              label: option,
+              value: option,
+            }))
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        })
+        .finally(() => { });
+    }
   },
 };
 </script>

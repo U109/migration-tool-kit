@@ -1,6 +1,5 @@
 package com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity;
 
-import com.zzz.migrationtoolkit.common.constants.DataBaseConstant;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -22,6 +21,22 @@ public class DataBaseConnInfo implements Cloneable, Serializable {
     String paramStr;
     String schema;
     String comment;
+
+    public DataBaseConnInfo() {
+    }
+
+    public DataBaseConnInfo(DataBaseConnInfo dataBaseConnInfo) {
+        this.connName = dataBaseConnInfo.getConnName();
+        this.dbType = dataBaseConnInfo.getDbType();
+        this.host = dataBaseConnInfo.getHost();
+        this.port = dataBaseConnInfo.getPort();
+        this.username = dataBaseConnInfo.getUsername();
+        this.password = dataBaseConnInfo.getPassword();
+        this.dbName = dataBaseConnInfo.getDbName();
+        this.paramStr = dataBaseConnInfo.getParamStr();
+        this.schema = dataBaseConnInfo.getSchema();
+        this.comment = dataBaseConnInfo.getComment();
+    }
 
     @Override
     public DataBaseConnInfo clone() {

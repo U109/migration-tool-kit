@@ -17,7 +17,7 @@ public class InitRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args){
-        log.info("initRunner start :: { InitContext.initContext() }");
+        log.info("initRunner start");
         InitContext.initContext();
     }
 }
