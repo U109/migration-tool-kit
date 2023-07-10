@@ -1,5 +1,6 @@
 package com.zzz.migrationtoolkit.core.coreManager.context;
 
+import com.zzz.migrationtoolkit.core.persistence.TaskPersistence;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 
 import java.util.Hashtable;
@@ -16,7 +17,15 @@ public class TaskCache {
 
     private static Hashtable<String, TaskDetail> taskCache;
 
+    private static TaskPersistence taskPersistence;
 
-    public static void updateTaskDetail(String taskId, String 正在执行, Object o, Object o1) {
+    public synchronized static void updateTaskDetail(String taskId, String taskStatus, String taskResult, Integer deskMigrationObjCount) {
+        TaskDetail taskDetail = findTask(taskId);
+        taskDetail.updateTaskDetail(taskStatus, taskResult, deskMigrationObjCount);
+        taskPersistence.saveTaskInfo(taskDetail);
+    }
+
+    public static TaskDetail findTask(String taskId) {
+        return taskCache.get(taskId);
     }
 }

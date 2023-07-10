@@ -1,6 +1,9 @@
 package com.zzz.migrationtoolkit.entity.taskEntity;
 
+import com.zzz.migrationtoolkit.entity.dataTypeEntity.DataTypeMapping;
+import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationDBConnEntity;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationObj;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.*;
@@ -10,14 +13,18 @@ import java.util.*;
  * @date: 2023/7/4 16:18
  * @description: 迁移任务实体类
  */
+@Data
 public class TaskDetail implements Serializable {
 
     //任务id
     private String taskId;
-
     //任务名称
     private String taskName;
-
+    private String taskDesc;
+    //源数据库对象
+    private MigrationDBConnEntity sourceDataBase;
+    //目标数据库对象
+    private MigrationDBConnEntity targetDataBase;
     private Date startTime;
     private Date endTime;
     private String taskStatus;
@@ -26,21 +33,27 @@ public class TaskDetail implements Serializable {
     //存储迁移对象的类型
     private List<String> migrationObjTypeList = new ArrayList<>();
 
+    private boolean reCreateFlag = false;
+    //源库迁移对象个数
+    private int sourceMigrationObjCount;
 
-    public List<String> getMigrationObjTypeList() {
-        return migrationObjTypeList;
-    }
+    private int destMigrationObjCount;
+    //任务中数据对应类型
+    private DataTypeMapping dataTypeMapping;
 
-    public void setMigrationObjTypeList(List<String> migrationObjTypeList) {
-        this.migrationObjTypeList = migrationObjTypeList;
-    }
+    private CoreConfig coreConfig;
 
-    public String getFailMsg() {
-        return failMsg;
-    }
+    private Long totalCount = 0L;
+    //已完成的数据量
+    private Long finishDataCount;
 
-    public void setFailMsg(String failMsg) {
-        this.failMsg = failMsg;
+    private MigrationObj migrationObj;
+
+    private String taskResult;
+
+    public TaskDetail() {
+        this.taskId = String.valueOf(UUID.randomUUID());
+        this.migrationObjTypeList.add("TABLE");
     }
 
     public void appendFailMsg(String failMsg) {
@@ -58,46 +71,6 @@ public class TaskDetail implements Serializable {
         return " [ TaskName : " + getTaskName() + " ] ";
     }
 
-    public String getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(String taskId) {
-        this.taskId = taskId;
-    }
-
-    public String getTaskName() {
-        return taskName;
-    }
-
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
-    }
-
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
-    public String getTaskStatus() {
-        return taskStatus;
-    }
-
-    public void setTaskStatus(String taskStatus) {
-        this.taskStatus = taskStatus;
-    }
-
     public Map<String, MigrationObj> getTableDetailMap() {
         if (tableDetailMap == null) {
             tableDetailMap = new HashMap<>();
@@ -105,7 +78,15 @@ public class TaskDetail implements Serializable {
         return tableDetailMap;
     }
 
-    public void setTableDetailMap(Map<String, MigrationObj> tableDetailMap) {
-        this.tableDetailMap = tableDetailMap;
+    public void updateTaskDetail(String taskStatus, String taskResult, Integer deskMigrationObjCount) {
+        if (taskStatus != null) {
+            this.setTaskStatus(taskStatus);
+        }
+        if (taskResult != null) {
+            this.setTaskResult(taskResult);
+        }
+        if (deskMigrationObjCount != null) {
+            this.setDestMigrationObjCount(deskMigrationObjCount);
+        }
     }
 }

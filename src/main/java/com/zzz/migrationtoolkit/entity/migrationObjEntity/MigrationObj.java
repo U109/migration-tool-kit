@@ -14,6 +14,6 @@ public class MigrationObj implements Serializable {
     String objId;
     String objName;
     String objType;
+    String resultMsg;
     boolean isFinish = false;
-
 }

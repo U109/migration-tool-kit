@@ -75,7 +75,6 @@ public class TableMetaDataMigrationExecutor extends AbstractTaskBaseExecutor {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return new ProcessWorkResultEntity(resultFlag, resultMsg);
     }
 }

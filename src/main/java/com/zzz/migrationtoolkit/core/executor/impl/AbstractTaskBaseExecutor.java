@@ -6,6 +6,7 @@ import com.zzz.migrationtoolkit.core.worker.impl.TaskExecutorStarter;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkQueue;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkResultEntity;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +18,7 @@ import java.util.concurrent.FutureTask;
  * @date: 2023/7/4 16:46
  * @description: 基础执行器
  */
+@Data
 public abstract class AbstractTaskBaseExecutor implements ITaskExecutor {
 
     public final static Logger logger = LoggerFactory.getLogger(AbstractTaskBaseExecutor.class);
@@ -89,7 +91,17 @@ public abstract class AbstractTaskBaseExecutor implements ITaskExecutor {
 
     @Override
     public String stopExecutor() {
-        return null;
+        String returnMsg = "OK";
+        this.executorStop = true;
+        if (null != starter) {
+            starter.setStop(true);
+        }
+        String readStopReturnMsg = readProcessManager.stopWorker();
+        String writeStopReturnMsg = writeProcessManager.stopWorker();
+        if (!readStopReturnMsg.equals(returnMsg) || !writeStopReturnMsg.equals(returnMsg)) {
+            returnMsg = "FAIL";
+        }
+        return returnMsg;
     }
 
     /**
@@ -141,135 +153,7 @@ public abstract class AbstractTaskBaseExecutor implements ITaskExecutor {
         return null;
     }
 
-    public ProcessWorkQueue getTargetExecutorQueue() {
-        return targetExecutorQueue;
-    }
-
-    public void setTargetExecutorQueue(ProcessWorkQueue targetExecutorQueue) {
-        this.targetExecutorQueue = targetExecutorQueue;
-    }
-
-    public ProcessWorkQueue getSourceExecutorQueue() {
-        return sourceExecutorQueue;
-    }
-
-    public void setSourceExecutorQueue(ProcessWorkQueue sourceExecutorQueue) {
-        this.sourceExecutorQueue = sourceExecutorQueue;
-    }
-
     public void setSourceExecutorQueue(int workQueueSize) {
         this.sourceExecutorQueue = new ProcessWorkQueue(workQueueSize);
-    }
-
-    public FutureTask<ProcessWorkResultEntity> getStarterFutureTask() {
-        return starterFutureTask;
-    }
-
-    public void setStarterFutureTask(FutureTask<ProcessWorkResultEntity> starterFutureTask) {
-        this.starterFutureTask = starterFutureTask;
-    }
-
-    public FutureTask<ProcessWorkResultEntity> getExecutorFutureTask() {
-        return executorFutureTask;
-    }
-
-    public void setExecutorFutureTask(FutureTask<ProcessWorkResultEntity> executorFutureTask) {
-        this.executorFutureTask = executorFutureTask;
-    }
-
-    public AbstractTaskBaseExecutor getPreExecutor() {
-        return preExecutor;
-    }
-
-    public void setPreExecutor(AbstractTaskBaseExecutor preExecutor) {
-        this.preExecutor = preExecutor;
-    }
-
-    public AbstractTaskBaseExecutor getNextExecutor() {
-        return nextExecutor;
-    }
-
-    public void setNextExecutor(AbstractTaskBaseExecutor nextExecutor) {
-        this.nextExecutor = nextExecutor;
-    }
-
-    public AbstractBaseProcessManager getReadProcessManager() {
-        return readProcessManager;
-    }
-
-    public void setReadProcessManager(AbstractBaseProcessManager readProcessManager) {
-        this.readProcessManager = readProcessManager;
-    }
-
-    public FutureTask<ProcessWorkResultEntity> getReadFutureTask() {
-        return readFutureTask;
-    }
-
-    public void setReadFutureTask(FutureTask<ProcessWorkResultEntity> readFutureTask) {
-        this.readFutureTask = readFutureTask;
-    }
-
-    public AbstractBaseProcessManager getWriteProcessManager() {
-        return writeProcessManager;
-    }
-
-    public void setWriteProcessManager(AbstractBaseProcessManager writeProcessManager) {
-        this.writeProcessManager = writeProcessManager;
-    }
-
-    public FutureTask<ProcessWorkResultEntity> getWriteFutureTask() {
-        return writeFutureTask;
-    }
-
-    public void setWriteFutureTask(FutureTask<ProcessWorkResultEntity> writeFutureTask) {
-        this.writeFutureTask = writeFutureTask;
-    }
-
-    public ProcessWorkQueue getReadToWriteExecutorQueue() {
-        return readToWriteExecutorQueue;
-    }
-
-    public void setReadToWriteExecutorQueue(ProcessWorkQueue readToWriteExecutorQueue) {
-        this.readToWriteExecutorQueue = readToWriteExecutorQueue;
-    }
-
-    public String getExecutorName() {
-        return executorName;
-    }
-
-    public void setExecutorName(String executorName) {
-        this.executorName = executorName;
-    }
-
-    public String getExecutorType() {
-        return executorType;
-    }
-
-    public void setExecutorType(String executorType) {
-        this.executorType = executorType;
-    }
-
-    public TaskDetail getTaskDetail() {
-        return taskDetail;
-    }
-
-    public void setTaskDetail(TaskDetail taskDetail) {
-        this.taskDetail = taskDetail;
-    }
-
-    public TaskExecutorStarter getStarter() {
-        return starter;
-    }
-
-    public void setStarter(TaskExecutorStarter starter) {
-        this.starter = starter;
-    }
-
-    public boolean isExecutorStop() {
-        return executorStop;
-    }
-
-    public void setExecutorStop(boolean executorStop) {
-        this.executorStop = executorStop;
     }
 }

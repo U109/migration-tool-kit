@@ -20,7 +20,8 @@ public class MetaDataReadManager extends AbstractBaseProcessManager {
 
     public MetaDataReadManager(TaskDetail taskDetail, ProcessWorkQueue sourceWorkQueue, ProcessWorkQueue targetWorkQueue) {
         super(taskDetail, sourceWorkQueue, targetWorkQueue);
-        this.workerNum = 2;
+        //TODO 1
+        this.workerNum = taskDetail.getCoreConfig().getReadDataThreadSize();
         this.workType = "READ_TABLE_METADATA";
     }
 
@@ -51,11 +52,7 @@ public class MetaDataReadManager extends AbstractBaseProcessManager {
                 resultMsg = "".equals(resultMsg) ? "ERROR_READ_OBJ" + " " + result.getResultMsg() : "";
             }
         }
-        if (returnWorkNum == workerList.size()) {
-            processWorkResultEntity.setNormalFinished(true);
-        } else {
-            processWorkResultEntity.setNormalFinished(false);
-        }
+        processWorkResultEntity.setNormalFinished(returnWorkNum == workerList.size());
         processWorkResultEntity.setResultMsg(resultMsg);
         return new ProcessWorkResultEntity();
     }

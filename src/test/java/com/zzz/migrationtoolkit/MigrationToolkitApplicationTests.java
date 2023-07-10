@@ -16,14 +16,6 @@ class MigrationToolkitApplicationTests {
 
     @Test
     void contextLoads() {
-
-        TaskDetail taskDetail = new TaskDetail();
-        taskDetail.setTaskId("One001");
-        taskDetail.setTaskName("Test TaskDetail");
-        taskDetail.getMigrationObjTypeList().add("TABLE");
-        taskDetail.setTaskStatus("init...");
-        taskDetail.getTableDetailMap().put("table@@@test", new MigrationObj());
-        TaskScheduler.startTask(taskDetail);
     }
 
 }

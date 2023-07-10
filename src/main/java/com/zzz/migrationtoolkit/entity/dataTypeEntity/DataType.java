@@ -9,6 +9,7 @@ import lombok.Data;
  */
 @Data
 public class DataType {
+
     //数据类型的值
     private String dataTypeValue;
     //长度

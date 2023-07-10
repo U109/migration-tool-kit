@@ -6,6 +6,8 @@ import com.zzz.migrationtoolkit.core.executor.impl.tableExecutor.TableMetaDataMi
 import com.zzz.migrationtoolkit.core.executor.impl.tableExecutor.TableUserDataMigrationExecutor;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkResultEntity;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,9 +20,9 @@ import java.util.concurrent.FutureTask;
  * @date: 2023/7/4 16:40
  * @description:
  */
+@Data
+@Slf4j
 public class TaskExecutorManager implements Runnable {
-
-    private final Logger logger = LoggerFactory.getLogger(TaskExecutorManager.class);
 
     private String taskExecutorManagerId;
     private String taskExecutorManagerName;
@@ -48,7 +50,7 @@ public class TaskExecutorManager implements Runnable {
 
     private void initExecutorList() {
         if (taskDetail == null) {
-            logger.error("任务启动器初始化失败");
+            log.error("任务启动器初始化失败");
             return;
         }
         this.executorList = new ArrayList<>();
@@ -93,7 +95,7 @@ public class TaskExecutorManager implements Runnable {
         if (!executorStop) {
             //进入该方法，Executor初始化完毕，任务开始执行
             TaskCache.updateTaskDetail(taskDetail.getTaskId(), "正在执行", null, null);
-            logger.info("TaskExecutorManager star...");
+            log.info("TaskExecutorManager star...");
         }
         //一级执行器启动
         if (tableMetaDataMigrationExecutor != null && !executorStop) {
@@ -107,82 +109,46 @@ public class TaskExecutorManager implements Runnable {
         //一级执行器返回结果
         if (tableMetaDataMigrationExecutor != null && startFlag && !executorStop) {
             if ("SUCCESS".equals(tableMetaDataMigrationExecutor.waitExecutor())) {
-                logger.info("任务执行完成！");
+                log.info("任务执行完成！");
+            }
+        }
+
+        if (!startFlag) {
+            throw new RuntimeException("Task migration has error!");
+        } else {
+            if (!executorStop) {
+                TaskCache.updateTaskDetail(taskDetail.getTaskId(), "已完成", "成功", null);
             }
         }
     }
 
+    /**
+     * 管理器收到停止指令
+     *
+     * @return String
+     */
+    public String stopTask() {
+        String returnMsg = "OK";
+        executorStop = true;
 
-
-    public String getTaskExecutorManagerId() {
-        return taskExecutorManagerId;
+        for (AbstractTaskBaseExecutor executor : executorList) {
+            String stopResultMsg = executor.stopExecutor();
+            if (!"OK".equals(stopResultMsg)) {
+                if ("OK".equals(returnMsg)) {
+                    returnMsg = stopResultMsg;
+                } else {
+                    returnMsg += "\n" + stopResultMsg;
+                }
+            }
+        }
+        if ("OK".equals(returnMsg)) {
+            TaskCache.updateTaskDetail(taskDetail.getTaskId(), "已停止", "success", null);
+            log.info(taskDetail.toString() + " stop success !");
+        } else {
+            TaskCache.updateTaskDetail(taskDetail.getTaskId(), "异常状态", "停止失败", null);
+            log.error(taskDetail.toString() + " stop fail !");
+        }
+        return returnMsg;
     }
 
-    public void setTaskExecutorManagerId(String taskExecutorManagerId) {
-        this.taskExecutorManagerId = taskExecutorManagerId;
-    }
-
-    public String getTaskExecutorManagerName() {
-        return taskExecutorManagerName;
-    }
-
-    public void setTaskExecutorManagerName(String taskExecutorManagerName) {
-        this.taskExecutorManagerName = taskExecutorManagerName;
-    }
-
-    public TaskDetail getTaskDetail() {
-        return taskDetail;
-    }
-
-    public void setTaskDetail(TaskDetail taskDetail) {
-        this.taskDetail = taskDetail;
-    }
-
-    public List<AbstractTaskBaseExecutor> getExecutorList() {
-        return executorList;
-    }
-
-    public void setExecutorList(List<AbstractTaskBaseExecutor> executorList) {
-        this.executorList = executorList;
-    }
-
-    public TableMetaDataMigrationExecutor getTableMetaDataMigrationExecutor() {
-        return tableMetaDataMigrationExecutor;
-    }
-
-    public void setTableMetaDataMigrationExecutor(TableMetaDataMigrationExecutor tableMetaDataMigrationExecutor) {
-        this.tableMetaDataMigrationExecutor = tableMetaDataMigrationExecutor;
-    }
-
-    public FutureTask<ProcessWorkResultEntity> getTableMetaDataFutureTask() {
-        return tableMetaDataFutureTask;
-    }
-
-    public void setTableMetaDataFutureTask(FutureTask<ProcessWorkResultEntity> tableMetaDataFutureTask) {
-        this.tableMetaDataFutureTask = tableMetaDataFutureTask;
-    }
-
-    public TableUserDataMigrationExecutor getTableUserDataMigrationExecutor() {
-        return tableUserDataMigrationExecutor;
-    }
-
-    public void setTableUserDataMigrationExecutor(TableUserDataMigrationExecutor tableUserDataMigrationExecutor) {
-        this.tableUserDataMigrationExecutor = tableUserDataMigrationExecutor;
-    }
-
-    public FutureTask<ProcessWorkResultEntity> getTableUserDataFutureTask() {
-        return tableUserDataFutureTask;
-    }
-
-    public void setTableUserDataFutureTask(FutureTask<ProcessWorkResultEntity> tableUserDataFutureTask) {
-        this.tableUserDataFutureTask = tableUserDataFutureTask;
-    }
-
-    public boolean isExecutorStop() {
-        return executorStop;
-    }
-
-    public void setExecutorStop(boolean executorStop) {
-        this.executorStop = executorStop;
-    }
 }
