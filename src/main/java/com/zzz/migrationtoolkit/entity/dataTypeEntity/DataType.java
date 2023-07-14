@@ -1,6 +1,8 @@
 package com.zzz.migrationtoolkit.entity.dataTypeEntity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author: Zzz
@@ -8,6 +10,8 @@ import lombok.Data;
  * @description:
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DataType {
 
     //数据类型的值
@@ -18,3 +22,4 @@ public class DataType {
     private Integer columnPrecision;
 
 }
+

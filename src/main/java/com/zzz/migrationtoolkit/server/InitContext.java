@@ -21,7 +21,7 @@ import java.util.Properties;
  */
 public class InitContext {
 
-    public static Map<String, List<Map<String, DataBaseConnInfo>>> DBConnectionMap;
+    public static Map<String, Map<String, DataBaseConnInfo>> DBConnectionMap;
     public static CoreConfig coreConfig = new CoreConfig();
 
     public static void initContext() {
@@ -43,5 +43,12 @@ public class InitContext {
         }
     }
 
+    public static DataBaseConnInfo getDataBaseInfoFromName(String typename,String dataBaseName){
+        if (DBConnectionMap.containsKey(typename)){
+            Map<String, DataBaseConnInfo> dataBaseConnInfoMap = DBConnectionMap.get(typename);
+           return dataBaseConnInfoMap.get("aaa");
+        }
+        return null;
+    }
 
 }

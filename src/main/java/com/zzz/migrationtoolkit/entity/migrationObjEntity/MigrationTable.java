@@ -1,11 +1,13 @@
 package com.zzz.migrationtoolkit.entity.migrationObjEntity;
 
 import com.zzz.migrationtoolkit.dataBase.IDataBaseExecutor;
+import com.zzz.migrationtoolkit.entity.dataBaseElementEntity.ColumnEntity;
 import com.zzz.migrationtoolkit.entity.dataBaseElementEntity.TableEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author: Zzz
@@ -20,6 +22,7 @@ public class MigrationTable extends MigrationObj {
     private TableEntity destTable;
 
     public void setColumnDetailForMigrationTable(IDataBaseExecutor dataBaseExecutor) {
+        List<ColumnEntity> columnEntityList = dataBaseExecutor.getColumnEntityList(getSourceTable().getTableName());
 
     }
 }

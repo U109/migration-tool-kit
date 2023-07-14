@@ -5,10 +5,7 @@ import com.zzz.migrationtoolkit.dataBase.DataBaseExecutorFactory;
 import com.zzz.migrationtoolkit.dataBase.IDataBaseExecutor;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationObj;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationTable;
-import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkEntity;
-import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkQueue;
-import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkResultEntity;
-import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
+import com.zzz.migrationtoolkit.entity.taskEntity.*;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,7 +15,6 @@ import java.util.concurrent.TimeUnit;
  * @description:
  */
 public class MetaDataReadWorker extends AbstractProcessWorker {
-
 
     public MetaDataReadWorker(TaskDetail taskDetail, ProcessWorkQueue sourceWorkQueue, ProcessWorkQueue targetWorkQueue) {
         super(taskDetail, sourceWorkQueue, targetWorkQueue, "MetaDataReadWorker");
@@ -56,19 +52,10 @@ public class MetaDataReadWorker extends AbstractProcessWorker {
 
             //补充列信息
             migrationTable.setColumnDetailForMigrationTable(dataBaseExecutor);
-            for (int i = 0; i < 6; i++) {
-                System.out.println("read worker...");
-                TimeUnit.SECONDS.sleep(1);
-                if (i == 5) {
-                    stopWork = true;
-                }
-            }
 
-//            processWork = this.sourceWorkQueue.takeWork();
-//
-//            System.out.println(processWork.getMigrationObj().getObjId());
-
+            processWork.setWorkType(WorkType.WRITE_TABLE_METADATA);
+            targetWorkQueue.putWork(processWork);
         }
-        return new ProcessWorkResultEntity();
+        return processWorkResultEntity;
     }
 }

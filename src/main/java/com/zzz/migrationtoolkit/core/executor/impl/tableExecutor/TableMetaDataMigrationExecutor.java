@@ -6,6 +6,8 @@ import com.zzz.migrationtoolkit.core.manager.impl.MetaDataWriteManager;
 import com.zzz.migrationtoolkit.core.worker.impl.TaskExecutorStarter;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkResultEntity;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
+import com.zzz.migrationtoolkit.entity.taskEntity.WorkContentType;
+import com.zzz.migrationtoolkit.entity.taskEntity.WorkType;
 
 import java.util.concurrent.ExecutionException;
 
@@ -32,7 +34,7 @@ public class TableMetaDataMigrationExecutor extends AbstractTaskBaseExecutor {
 
     @Override
     public TaskExecutorStarter initStarter() {
-        starter = new TaskExecutorStarter(taskDetail.getTableDetailMap(), this.readProcessManager, "READ_TABLE_METADATA", "TABLE_START");
+        starter = new TaskExecutorStarter(taskDetail.getTableDetailMap(), this.readProcessManager, WorkType.READ_TABLE_METADATA, WorkContentType.TABLE_STARTED);
         starter.setStarterName("TableMetaDataStarter");
         this.readProcessManager.setSourceWorkQueue();
         return starter;

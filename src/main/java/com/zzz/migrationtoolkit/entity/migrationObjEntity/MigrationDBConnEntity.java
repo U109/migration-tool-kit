@@ -23,4 +23,10 @@ public class MigrationDBConnEntity {
 
     DataBaseConnInfo dbci;
 
+    public MigrationDBConnEntity() {
+    }
+
+    public MigrationDBConnEntity(String databaseType) {
+        this.databaseType = databaseType;
+    }
 }

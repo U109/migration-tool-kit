@@ -4,6 +4,9 @@ import com.zzz.migrationtoolkit.core.manager.AbstractBaseProcessManager;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationObj;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkEntity;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkResultEntity;
+import com.zzz.migrationtoolkit.entity.taskEntity.WorkContentType;
+import com.zzz.migrationtoolkit.entity.taskEntity.WorkType;
+import lombok.Data;
 
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -13,6 +16,7 @@ import java.util.concurrent.Callable;
  * @date: 2023/7/4 16:53
  * @description:
  */
+@Data
 public class TaskExecutorStarter implements Callable<ProcessWorkResultEntity> {
 
     private String starterName;
@@ -21,16 +25,16 @@ public class TaskExecutorStarter implements Callable<ProcessWorkResultEntity> {
     //下一个流程管理器
     private AbstractBaseProcessManager manager;
 
-    private String workType;
+    private WorkType workType;
 
-    private String workContentType;
+    private WorkContentType workContentType;
 
     private boolean isStop = false;
 
     public TaskExecutorStarter() {
     }
 
-    public TaskExecutorStarter(Map<String, MigrationObj> detailMap, AbstractBaseProcessManager manager, String workType, String workContentType) {
+    public TaskExecutorStarter(Map<String, MigrationObj> detailMap, AbstractBaseProcessManager manager, WorkType workType, WorkContentType workContentType) {
         this.detailMap = detailMap;
         this.manager = manager;
         this.workContentType = workContentType;
@@ -60,51 +64,4 @@ public class TaskExecutorStarter implements Callable<ProcessWorkResultEntity> {
         return result;
     }
 
-    public String getStarterName() {
-        return starterName;
-    }
-
-    public void setStarterName(String starterName) {
-        this.starterName = starterName;
-    }
-
-    public Map<String, MigrationObj> getDetailMap() {
-        return detailMap;
-    }
-
-    public void setDetailMap(Map<String, MigrationObj> detailMap) {
-        this.detailMap = detailMap;
-    }
-
-    public AbstractBaseProcessManager getManager() {
-        return manager;
-    }
-
-    public void setManager(AbstractBaseProcessManager manager) {
-        this.manager = manager;
-    }
-
-    public String getWorkType() {
-        return workType;
-    }
-
-    public void setWorkType(String workType) {
-        this.workType = workType;
-    }
-
-    public String getWorkContentType() {
-        return workContentType;
-    }
-
-    public void setWorkContentType(String workContentType) {
-        this.workContentType = workContentType;
-    }
-
-    public boolean isStop() {
-        return isStop;
-    }
-
-    public void setStop(boolean stop) {
-        isStop = stop;
-    }
 }

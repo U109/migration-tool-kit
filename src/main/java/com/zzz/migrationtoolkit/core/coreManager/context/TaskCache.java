@@ -28,4 +28,11 @@ public class TaskCache {
     public static TaskDetail findTask(String taskId) {
         return taskCache.get(taskId);
     }
+
+    public static void createTask(TaskDetail task) {
+        TaskDetail taskDetail = task.clone();
+        taskDetail.setFailMsg("");
+        taskCache.put(taskDetail.getTaskId(), taskDetail);
+        taskPersistence.saveTaskInfo(taskDetail);
+    }
 }

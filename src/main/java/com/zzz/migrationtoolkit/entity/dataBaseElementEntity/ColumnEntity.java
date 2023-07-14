@@ -1,7 +1,9 @@
 package com.zzz.migrationtoolkit.entity.dataBaseElementEntity;
 
 import com.zzz.migrationtoolkit.entity.dataTypeEntity.DataType;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author: Zzz
@@ -9,6 +11,8 @@ import lombok.Data;
  * @description:
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ColumnEntity {
 
     private String columnId;
@@ -16,4 +20,8 @@ public class ColumnEntity {
     private DataType columnType;
     private boolean isAutoIncrement = false;
 
+    public ColumnEntity(String columnName, DataType dataType) {
+        this.columnName = columnName;
+        this.columnType = dataType;
+    }
 }

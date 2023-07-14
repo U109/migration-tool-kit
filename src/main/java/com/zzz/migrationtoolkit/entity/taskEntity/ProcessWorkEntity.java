@@ -13,9 +13,9 @@ import java.util.List;
 @Data
 public class ProcessWorkEntity {
 
-    private String workType;
+    private WorkType workType;
 
-    private String workContentType;
+    private WorkContentType workContentType;
     //任务块中封装的迁移对象
     private MigrationObj migrationObj;
     //任务块中封装的数据列表
@@ -24,7 +24,7 @@ public class ProcessWorkEntity {
     public ProcessWorkEntity() {
     }
 
-    public ProcessWorkEntity(String workType, String workContentType, MigrationObj migrationObj) {
+    public ProcessWorkEntity(WorkType workType, WorkContentType workContentType, MigrationObj migrationObj) {
         this.workType = workType;
         this.workContentType = workContentType;
         this.migrationObj = migrationObj;

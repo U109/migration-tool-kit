@@ -21,7 +21,7 @@ public class TaskScheduler {
     public static void startTask(String taskId) {
         TaskDetail taskDetail = TaskCache.findTask(taskId);
 
-        taskDetail.setTaskStatus("启动中。。。");
+        TaskCache.updateTaskDetail(taskId,"启动中",null,null);
 
         TaskExecutorManager taskExecutorManager = new TaskExecutorManager(taskDetail);
         //更新executor管理器中最新执行器

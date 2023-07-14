@@ -28,4 +28,19 @@ public class DataBaseExecutorFactory {
         }
         return executor;
     }
+
+    public static IDataBaseExecutor getDestInstance(TaskDetail taskDetail) {
+        String className = "com.zzz.migrationtoolkit.dataBase.dbExecutor." +
+                taskDetail.getTargetDataBase().getDbci().getDbType() + "DataBaseExecutor";
+
+        Object obj = ReflectUtil.getObjByClass(className, taskDetail.getSourceDataBase().getDbci(),
+                ConvertFactory.getSourceInstance(taskDetail.getSourceDataBase().getDbci().getDbType(),
+                        taskDetail.getTargetDataBase().getDatabaseType()));
+        if (obj instanceof IDataBaseExecutor) {
+            executor = (IDataBaseExecutor) obj;
+        } else {
+            executor = null;
+        }
+        return executor;
+    }
 }

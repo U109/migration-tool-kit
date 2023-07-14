@@ -14,7 +14,7 @@ import java.util.*;
  * @description: 迁移任务实体类
  */
 @Data
-public class TaskDetail implements Serializable {
+public class TaskDetail implements Serializable,Cloneable {
 
     //任务id
     private String taskId;
@@ -87,6 +87,17 @@ public class TaskDetail implements Serializable {
         }
         if (deskMigrationObjCount != null) {
             this.setDestMigrationObjCount(deskMigrationObjCount);
+        }
+    }
+
+    @Override
+    public TaskDetail clone() {
+        try {
+            TaskDetail clone = (TaskDetail) super.clone();
+            // TODO: copy mutable state here, so the clone can't change the internals of the original
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
         }
     }
 }

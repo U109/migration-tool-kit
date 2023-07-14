@@ -47,8 +47,13 @@ public class DataSourceProcess {
      *
      * @return Map
      */
-    private static Map<String, List<Map<String, DataBaseConnInfo>>> readDataBaseConnection() {
-        Map<String, List<Map<String, DataBaseConnInfo>>> result = new HashMap<>();
+    private static Map<String, Map<String, DataBaseConnInfo>> readDataBaseConnection() {
+        /**
+         *         |--
+         *  Oracle |
+         *         |--
+         */
+        Map<String, Map<String, DataBaseConnInfo>> result = new HashMap<>();
         DocumentBuilder docParser;
         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
         try {
@@ -79,12 +84,15 @@ public class DataSourceProcess {
                 }
                 DataBaseConnInfo dbci = (DataBaseConnInfo) xmlToObj(clazzName, attrValueMap);
                 dbci.setDbType(dbType);
-
-                Map<String, DataBaseConnInfo> dbMap = new HashMap<>();
-                dbMap.put(connName, dbci);
                 //计算如果不存在
-                List<Map<String, DataBaseConnInfo>> mapList = result.computeIfAbsent(dbType, k -> new ArrayList<>());
-                mapList.add(dbMap);
+                if (result.containsKey(dbType)) {
+                    Map<String, DataBaseConnInfo> baseConnInfoMap = result.get(dbType);
+                    baseConnInfoMap.put(connName, dbci);
+                } else {
+                    Map<String, DataBaseConnInfo> dbMap = new HashMap<>();
+                    dbMap.put(connName, dbci);
+                    result.put(dbType, dbMap);
+                }
             }
         } catch (ParserConfigurationException | IOException | SAXException e) {
             log.error("initContext error :: " + e.getMessage());
@@ -141,12 +149,12 @@ public class DataSourceProcess {
     public static void writeDataBaseConnection(ConnectionVO connection) throws Exception {
 
         //判断name是否已存在
-        List<Map<String, DataBaseConnInfo>> mapList = InitContext.DBConnectionMap.get(connection.getDbtype());
-        for (Map<String, DataBaseConnInfo> dataBaseConnInfoMap : mapList) {
-            if (dataBaseConnInfoMap.containsKey(connection.getConnname())) {
-                throw new RuntimeException("该名称已存在，请更换！");
-            }
+        Map<String, DataBaseConnInfo> dataBaseConnInfoMap = InitContext.DBConnectionMap.get(connection.getDbtype());
+
+        if (dataBaseConnInfoMap.containsKey(connection.getConnname())) {
+            throw new RuntimeException("该名称已存在，请更换！");
         }
+
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -210,21 +218,20 @@ public class DataSourceProcess {
 
     public static List<DataBaseConnInfo> getDataBaseConnectionInfo() {
         List<DataBaseConnInfo> dataBaseConnInfoList = new ArrayList<>();
-        for (Map.Entry<String, List<Map<String, DataBaseConnInfo>>> listEntry : InitContext.DBConnectionMap.entrySet()) {
-            for (Map<String, DataBaseConnInfo> dataBaseConnInfoMap : listEntry.getValue()) {
-                for (Map.Entry<String, DataBaseConnInfo> dataBaseConnInfoEntry : dataBaseConnInfoMap.entrySet()) {
-                    DataBaseConnInfo dataBaseConnInfo = dataBaseConnInfoEntry.getValue();
-                    //因为对象有改动，需要使用新对象来存储变化，避免污染原来的数据
-                    DataBaseConnInfo resultDataBaseConnInfo = new DataBaseConnInfo(dataBaseConnInfo);
-                    //解析出来的databaseConnInfo是没有connName属性的
-                    String connName = dataBaseConnInfoEntry.getKey();
+        for (Map.Entry<String, Map<String, DataBaseConnInfo>> listEntry : InitContext.DBConnectionMap.entrySet()) {
+            Map<String, DataBaseConnInfo> dataBaseConnInfoMap = listEntry.getValue();
+            for (Map.Entry<String, DataBaseConnInfo> dataBaseConnInfoEntry : dataBaseConnInfoMap.entrySet()) {
+                DataBaseConnInfo dataBaseConnInfo = dataBaseConnInfoEntry.getValue();
+                //因为对象有改动，需要使用新对象来存储变化，避免污染原来的数据
+                DataBaseConnInfo resultDataBaseConnInfo = new DataBaseConnInfo(dataBaseConnInfo);
+                //解析出来的databaseConnInfo是没有connName属性的
+                String connName = dataBaseConnInfoEntry.getKey();
 
-                    resultDataBaseConnInfo.setConnName(connName);
-                    //前端需要dbName/Schema
-                    String dataName = dataBaseConnInfo.getDbName() + "/" + dataBaseConnInfo.getSchema();
-                    resultDataBaseConnInfo.setDbName(dataName);
-                    dataBaseConnInfoList.add(resultDataBaseConnInfo);
-                }
+                resultDataBaseConnInfo.setConnName(connName);
+                //前端需要dbName/Schema
+                String dataName = dataBaseConnInfo.getDbName() + "/" + dataBaseConnInfo.getSchema();
+                resultDataBaseConnInfo.setDbName(dataName);
+                dataBaseConnInfoList.add(resultDataBaseConnInfo);
             }
         }
         return dataBaseConnInfoList;
