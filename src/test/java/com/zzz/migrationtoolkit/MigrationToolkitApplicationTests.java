@@ -3,8 +3,10 @@ package com.zzz.migrationtoolkit;
 import com.zzz.migrationtoolkit.common.constants.DataBaseConstant;
 import com.zzz.migrationtoolkit.core.manager.impl.MetaDataReadManager;
 import com.zzz.migrationtoolkit.core.scheduler.TaskScheduler;
+import com.zzz.migrationtoolkit.entity.dataBaseElementEntity.TableEntity;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationDBConnEntity;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationObj;
+import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationTable;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkQueue;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 import com.zzz.migrationtoolkit.handler.taskHandler.TaskOperator;
@@ -20,7 +22,10 @@ class MigrationToolkitApplicationTests {
 
     @Test
     void contextLoads() {
+        InitContext.initContext();
+
         TaskDetail taskDetail = new TaskDetail();
+
         taskDetail.setTaskName("测试迁移任务");
         taskDetail.setCoreConfig(InitContext.coreConfig);
         MigrationDBConnEntity sourceDB = new MigrationDBConnEntity(DataBaseConstant.MYSQL);
@@ -37,7 +42,22 @@ class MigrationToolkitApplicationTests {
         taskDetail.setSourceDataBase(sourceDB);
         taskDetail.setTargetDataBase(destDB);
 
-        TaskOperator.createTask()
+
+        MigrationTable migrationTable = new MigrationTable();
+        TableEntity source = new TableEntity();
+        source.setTableId("sourceTable");
+        source.setTableName("mb_user");
+        migrationTable.setSourceTable(source);
+        TableEntity dest = new TableEntity();
+        dest.setTableId("sourceTable");
+        dest.setTableName("mb_user");
+        migrationTable.setDestTable(dest);
+
+        taskDetail.getTableDetailMap().put("TABLE",migrationTable);
+
+        String task = TaskOperator.createTask(taskDetail);
+        TaskOperator.startTask(taskDetail.getTaskId());
+        System.out.println(task);
     }
 
 }

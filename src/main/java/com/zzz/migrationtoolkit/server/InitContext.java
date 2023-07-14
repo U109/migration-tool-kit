@@ -33,14 +33,18 @@ public class InitContext {
         Properties properties = new Properties();
         try {
             properties.load(new FileInputStream(FilePathContent.CORE_CONFIG_PATH));
-            coreConfig.setReadDataThreadSize((int) properties.get("readDataThreadSize"));
-            coreConfig.setWriteDataThreadSize((int) properties.get("writeDataThreadSize"));
-            coreConfig.setWriteDataCommitSize((int) properties.get("writeDataCommitSize"));
-            coreConfig.setFetchDataSize((int) properties.get("fetchDataSize"));
-            coreConfig.setWorkQueueSize((int) properties.get("workQueueSize"));
+            coreConfig.setReadDataThreadSize(Integer.parseInt((String) properties.get("readDataThreadSize")));
+            coreConfig.setWriteDataThreadSize(Integer.parseInt((String)properties.get("writeDataThreadSize")));
+            coreConfig.setWriteDataCommitSize(Integer.parseInt((String) properties.get("writeDataCommitSize")));
+            coreConfig.setFetchDataSize(Integer.parseInt((String)properties.get("fetchDataSize")));
+            coreConfig.setWorkQueueSize(Integer.parseInt((String) properties.get("workQueueSize")));
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        initCoreConfig();
     }
 
     public static DataBaseConnInfo getDataBaseInfoFromName(String typename,String dataBaseName){

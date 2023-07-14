@@ -15,9 +15,9 @@ import java.util.Hashtable;
  */
 public class TaskCache {
 
-    private static Hashtable<String, TaskDetail> taskCache;
+    private static Hashtable<String, TaskDetail> taskCache = new Hashtable<>();
 
-    private static TaskPersistence taskPersistence;
+    private static TaskPersistence taskPersistence = new TaskPersistence();
 
     public synchronized static void updateTaskDetail(String taskId, String taskStatus, String taskResult, Integer deskMigrationObjCount) {
         TaskDetail taskDetail = findTask(taskId);

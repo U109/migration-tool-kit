@@ -8,9 +8,10 @@ import com.zzz.migrationtoolkit.common.utils.ReflectUtil;
  * @description:
  */
 public class ConvertFactory {
+
     public static ISourceDataTypeConvert getSourceInstance(String sourceDBType, String targetDBType) {
         ISourceDataTypeConvert convert = null;
-        String className = "com.zzz.migrationtoolkit.core.convert." + sourceDBType + "TO" + targetDBType + "DataTypeConvert";
+        String className = "com.zzz.migrationtoolkit.core.convert." + sourceDBType + "To" + targetDBType + "DataTypeConvert";
         Object obj = ReflectUtil.getObjByClass(className);
         if (obj instanceof ISourceDataTypeConvert) {
             convert = (ISourceDataTypeConvert) obj;

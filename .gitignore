@@ -35,3 +35,5 @@ build/
 ### migrationtoolkit-ui ###
 /migrationtoolkit-ui/node_modules
 /migrationtoolkit-ui/package-lock.json
+
+/resources/task

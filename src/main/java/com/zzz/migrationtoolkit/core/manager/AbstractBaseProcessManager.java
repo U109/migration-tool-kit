@@ -1,10 +1,7 @@
 package com.zzz.migrationtoolkit.core.manager;
 
 import com.zzz.migrationtoolkit.core.worker.AbstractProcessWorker;
-import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkEntity;
-import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkQueue;
-import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkResultEntity;
-import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
+import com.zzz.migrationtoolkit.entity.taskEntity.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,8 +100,8 @@ public abstract class AbstractBaseProcessManager implements IProcessManager {
     public String finishedQueue() {
         for (int i = 0; i < workerNum; i++) {
             ProcessWorkEntity processWork = new ProcessWorkEntity();
-            processWork.setWorkType(this.workType);
-            processWork.setWorkContentType("WORK_FINISHED");
+            processWork.setWorkType(WorkType.READ_TABLE_METADATA);
+            processWork.setWorkContentType(WorkContentType.WORK_FINISHED);
 
             this.getSourceWorkQueue().putWork(processWork);
         }

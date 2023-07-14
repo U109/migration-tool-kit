@@ -42,19 +42,23 @@ public class MetaDataReadWorker extends AbstractProcessWorker {
                 dataBaseExecutor = DataBaseExecutorFactory.getSourceInstance(taskDetail);
             }
 
+
             migrationTable = (MigrationTable) processWork.getMigrationObj();
+
 
             migrationTable.setResultMsg("");
 
 //            processWork.setWorkType("READ_TABLE_USERDATA");
 //            targetWorkQueue.putWork(processWork);
 
+            System.out.println("执行worker");
 
             //补充列信息
             migrationTable.setColumnDetailForMigrationTable(dataBaseExecutor);
 
             processWork.setWorkType(WorkType.WRITE_TABLE_METADATA);
             targetWorkQueue.putWork(processWork);
+            processWorkResultEntity.setResultMsg("SUCCESS");
         }
         return processWorkResultEntity;
     }

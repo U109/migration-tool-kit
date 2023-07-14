@@ -34,4 +34,9 @@ public abstract class AbstractDataBaseExecutor implements IDataBaseExecutor {
         return ConnectionManager.getConnection(dataBaseConnInfo);
     }
 
+    @Override
+    public void closeExecutor(){
+
+    };
+
 }

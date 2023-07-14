@@ -1,8 +1,10 @@
 package com.zzz.migrationtoolkit.dataBase.dbExecutor;
 
 import com.zzz.migrationtoolkit.common.utils.CloseObjUtil;
+import com.zzz.migrationtoolkit.core.convert.MySqlToMySqlDataTypeConvert;
 import com.zzz.migrationtoolkit.dataBase.IDataBaseExecutor;
 import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
+import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.MySqlConnInfo;
 import com.zzz.migrationtoolkit.entity.dataBaseElementEntity.ColumnEntity;
 import com.zzz.migrationtoolkit.entity.dataTypeEntity.DataType;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,17 @@ import java.util.List;
 public class MySqlDataBaseExecutor extends AbstractDataBaseExecutor {
 
 
+    private MySqlConnInfo mySqlConnInfo;
+    private MySqlToMySqlDataTypeConvert mySqlToMySqlDataTypeConvert;
+
+    public MySqlDataBaseExecutor(){
+
+    }
+    public MySqlDataBaseExecutor(MySqlConnInfo mySqlConnInfo,MySqlToMySqlDataTypeConvert mySqlToMySqlDataTypeConvert){
+        super(mySqlConnInfo);
+        this.mySqlConnInfo = mySqlConnInfo;
+        this.mySqlToMySqlDataTypeConvert = mySqlToMySqlDataTypeConvert;
+    }
 
 
     @Override

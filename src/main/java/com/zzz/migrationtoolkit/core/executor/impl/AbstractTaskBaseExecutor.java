@@ -49,7 +49,7 @@ public abstract class AbstractTaskBaseExecutor implements ITaskExecutor {
     protected AbstractBaseProcessManager writeProcessManager;
     protected FutureTask<ProcessWorkResultEntity> writeFutureTask = null;
     //中转队列
-    protected ProcessWorkQueue readToWriteExecutorQueue = null;
+    protected ProcessWorkQueue readToWriteExecutorQueue = new ProcessWorkQueue(10);
 
     public boolean executorStop = false;
 

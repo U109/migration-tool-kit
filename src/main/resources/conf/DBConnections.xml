@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?><dbs>
-    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="aaa">
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.MySqlConnInfo" id="MySql" name="aaa">
         <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
         <dbUrl>jdbc:mysql://</dbUrl>
         <host>localhost</host>
@@ -10,14 +10,14 @@
         <paramStr/>
         <comment/>
     </db>
-    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo" id="Oracle" name="bbb">
+    <db class="com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.MySqlConnInfo" id="MySql" name="bbb">
         <dbDriver>com.mysql.cj.jdbc.Driver</dbDriver>
         <dbUrl>jdbc:mysql://</dbUrl>
         <host>localhost</host>
         <port>3306</port>
         <username>root</username>
         <password>0507</password>
-        <dbName>myblog</dbName>
+        <dbName>mtk</dbName>
         <paramStr/>
         <comment/>
     </db>

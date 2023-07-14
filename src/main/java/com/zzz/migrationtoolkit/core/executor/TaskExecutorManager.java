@@ -27,9 +27,13 @@ public class TaskExecutorManager implements Runnable {
     private String taskExecutorManagerId;
     private String taskExecutorManagerName;
     private TaskDetail taskDetail;
-    //执行任务所有执行器
+    /**
+     * 执行任务所有执行器
+     */
     private List<AbstractTaskBaseExecutor> executorList;
-    //一级执行器
+    /**
+     * 一级执行器
+     */
     private TableMetaDataMigrationExecutor tableMetaDataMigrationExecutor;
     protected FutureTask<ProcessWorkResultEntity> tableMetaDataFutureTask;
 

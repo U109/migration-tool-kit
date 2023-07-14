@@ -30,21 +30,29 @@ public class TaskDetail implements Serializable,Cloneable {
     private String taskStatus;
     private String failMsg;
     private Map<String, MigrationObj> tableDetailMap;
-    //存储迁移对象的类型
+    /**
+     * 存储迁移对象的类型
+     */
     private List<String> migrationObjTypeList = new ArrayList<>();
 
     private boolean reCreateFlag = false;
-    //源库迁移对象个数
+    /**
+     * 源库迁移对象个数
+     */
     private int sourceMigrationObjCount;
 
     private int destMigrationObjCount;
-    //任务中数据对应类型
+    /**
+     * 任务中数据对应类型
+     */
     private DataTypeMapping dataTypeMapping;
 
     private CoreConfig coreConfig;
 
     private Long totalCount = 0L;
-    //已完成的数据量
+    /**
+     * 已完成的数据量
+     */
     private Long finishDataCount;
 
     private MigrationObj migrationObj;

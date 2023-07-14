@@ -15,4 +15,5 @@ public interface IDataBaseExecutor extends AutoCloseable{
 
     void executeSQL(String executeSQL) throws Exception;
 
+    void closeExecutor();
 }

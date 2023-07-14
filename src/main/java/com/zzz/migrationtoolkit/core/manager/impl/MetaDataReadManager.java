@@ -6,6 +6,7 @@ import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkQueue;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkResultEntity;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 /**
@@ -26,7 +27,7 @@ public class MetaDataReadManager extends AbstractBaseProcessManager {
     }
 
     @Override
-    public ProcessWorkResultEntity call() throws Exception {
+    public ProcessWorkResultEntity call() {
         ProcessWorkResultEntity processWorkResultEntity = new ProcessWorkResultEntity();
         for (int i = 0; i < workerNum; i++) {
             if (stopWork) {
@@ -44,7 +45,12 @@ public class MetaDataReadManager extends AbstractBaseProcessManager {
         }
         String resultMsg = "";
         for (FutureTask<ProcessWorkResultEntity> futureTask : futureTaskList) {
-            ProcessWorkResultEntity result = futureTask.get();
+            ProcessWorkResultEntity result = null;
+            try {
+                result = futureTask.get();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             results.add(result);
             if (result.isNormalFinished()) {
                 returnWorkNum++;
@@ -54,7 +60,7 @@ public class MetaDataReadManager extends AbstractBaseProcessManager {
         }
         processWorkResultEntity.setNormalFinished(returnWorkNum == workerList.size());
         processWorkResultEntity.setResultMsg(resultMsg);
-        return new ProcessWorkResultEntity();
+        return processWorkResultEntity;
     }
 
 }
