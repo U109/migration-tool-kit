@@ -1,5 +1,6 @@
 package com.zzz.migrationtoolkit.entity.taskEntity;
 
+import java.io.Serializable;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -8,7 +9,7 @@ import java.util.concurrent.BlockingQueue;
  * @date: 2023/7/4 17:05
  * @description:
  */
-public class ProcessWorkQueue {
+public class ProcessWorkQueue implements Serializable {
 
     private BlockingQueue<ProcessWorkEntity> queue;
 

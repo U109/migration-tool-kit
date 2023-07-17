@@ -3,6 +3,7 @@ package com.zzz.migrationtoolkit.entity.taskEntity;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationObj;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  * @description:
  */
 @Data
-public class ProcessWorkEntity {
+public class ProcessWorkEntity implements Serializable {
 
     private WorkType workType;
 

@@ -2,8 +2,6 @@ package com.zzz.migrationtoolkit.dataBase.dbExecutor;
 
 import com.zzz.migrationtoolkit.common.utils.CloseObjUtil;
 import com.zzz.migrationtoolkit.core.convert.MySqlToMySqlDataTypeConvert;
-import com.zzz.migrationtoolkit.dataBase.IDataBaseExecutor;
-import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
 import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.MySqlConnInfo;
 import com.zzz.migrationtoolkit.entity.dataBaseElementEntity.ColumnEntity;
 import com.zzz.migrationtoolkit.entity.dataTypeEntity.DataType;
@@ -86,6 +84,11 @@ public class MySqlDataBaseExecutor extends AbstractDataBaseExecutor {
         }finally {
             CloseObjUtil.closeAll(statement);
         }
+    }
+
+    @Override
+    public void closeExecutor() {
+
     }
 
     @Override

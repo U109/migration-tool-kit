@@ -2,6 +2,7 @@ package com.zzz.migrationtoolkit.entity.dataBaseElementEntity;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  * @description: 数据量表实体
  */
 @Data
-public class TableEntity {
+public class TableEntity implements Serializable {
 
     private String tableId;
     private String tableName;

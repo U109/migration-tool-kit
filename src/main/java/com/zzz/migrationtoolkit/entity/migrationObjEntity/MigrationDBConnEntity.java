@@ -3,13 +3,15 @@ package com.zzz.migrationtoolkit.entity.migrationObjEntity;
 import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author: Zzz
  * @date: 2023/7/10 10:58
  * @description: 数据库连接实体类
  */
 @Data
-public class MigrationDBConnEntity {
+public class MigrationDBConnEntity implements Serializable {
 
     String connectionId;
     String connectionName;

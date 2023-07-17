@@ -49,7 +49,7 @@ public abstract class AbstractTaskBaseExecutor implements ITaskExecutor {
     protected AbstractBaseProcessManager writeProcessManager;
     protected FutureTask<ProcessWorkResultEntity> writeFutureTask = null;
     //中转队列
-    protected ProcessWorkQueue readToWriteExecutorQueue = new ProcessWorkQueue(10);
+    protected ProcessWorkQueue readToWriteExecutorQueue = null;
 
     public boolean executorStop = false;
 
@@ -58,6 +58,7 @@ public abstract class AbstractTaskBaseExecutor implements ITaskExecutor {
 
     public AbstractTaskBaseExecutor(TaskDetail taskDetail) {
         this.taskDetail = taskDetail;
+        this.setReadToWriteExecutorQueue(taskDetail.getCoreConfig().getWorkQueueSize());
     }
 
     @Override
@@ -155,5 +156,9 @@ public abstract class AbstractTaskBaseExecutor implements ITaskExecutor {
 
     public void setSourceExecutorQueue(int workQueueSize) {
         this.sourceExecutorQueue = new ProcessWorkQueue(workQueueSize);
+    }
+
+    public void setReadToWriteExecutorQueue(int workQueueSize) {
+        this.readToWriteExecutorQueue = new ProcessWorkQueue(workQueueSize);
     }
 }

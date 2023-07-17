@@ -33,15 +33,24 @@ public class MetaDataWriteWorker extends AbstractProcessWorker {
         IDataBaseExecutor dataBaseExecutor = null;
 
         while (true) {
+
             String executeSQL = "";
             MigrationTable migrationTable = null;
             try {
                 if (stopWork) {
                     break;
                 }
-                ProcessWorkEntity processWork = null;
-
-                processWork = this.sourceWorkQueue.takeWork();
+                ProcessWorkEntity processWork = this.sourceWorkQueue.takeWork();
+                if (!processWork.getWorkType().equals(WorkType.WRITE_TABLE_METADATA)) {
+                    if (processWork.getWorkType().equals(WorkType.READ_TABLE_USERDATA)) {
+                        processWork.setWorkType(WorkType.READ_TABLE_USERDATA);
+                        targetWorkQueue.putWork(processWork);
+                    }
+                    continue;
+                }
+                if (processWork.getWorkContentType().equals(WorkContentType.WORK_FINISHED)) {
+                    break;
+                }
 
                 migrationTable = (MigrationTable) processWork.getMigrationObj();
 
@@ -50,25 +59,27 @@ public class MetaDataWriteWorker extends AbstractProcessWorker {
                 }
 
                 ISQLGenerator sqlGenerator = SQLGeneratorFactory.newDestInstance(taskDetail);
+                //TODO 重建表操作
 
-                executeSQL = sqlGenerator.getTableCreateSQL(destDbci, migrationTable, taskDetail);
+//                executeSQL = sqlGenerator.getTableCreateSQL(destDbci, migrationTable, taskDetail);
                 log.info(executeSQL);
                 dataBaseExecutor.executeSQL(executeSQL);
 
 
                 if (targetWorkQueue != null) {
-                    processWork.setWorkType(WorkType.WRITE_TABLE_USERDATA);
+                    processWork.setWorkType(WorkType.READ_TABLE_USERDATA);
                     targetWorkQueue.putWork(processWork);
                 } else {
                     migrationTable.setFinish(true);
                 }
 
             } catch (Exception e) {
-               log.error("存在异常 ： " + e.getMessage());
+                log.error("存在异常 ： " + e.getMessage());
             }
         }
-
-        dataBaseExecutor.closeExecutor();
+        if (dataBaseExecutor != null) {
+            dataBaseExecutor.closeExecutor();
+        }
         return processWorkResultEntity;
     }
 }

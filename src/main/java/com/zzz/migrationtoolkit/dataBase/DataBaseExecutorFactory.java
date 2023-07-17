@@ -33,8 +33,8 @@ public class DataBaseExecutorFactory {
         String className = "com.zzz.migrationtoolkit.dataBase.dbExecutor." +
                 taskDetail.getTargetDataBase().getDbci().getDbType() + "DataBaseExecutor";
 
-        Object obj = ReflectUtil.getObjByClass(className, taskDetail.getSourceDataBase().getDbci(),
-                ConvertFactory.getSourceInstance(taskDetail.getSourceDataBase().getDbci().getDbType(),
+        Object obj = ReflectUtil.getObjByClass(className, taskDetail.getTargetDataBase().getDbci(),
+                ConvertFactory.getSourceInstance(taskDetail.getTargetDataBase().getDbci().getDbType(),
                         taskDetail.getTargetDataBase().getDatabaseType()));
         if (obj instanceof IDataBaseExecutor) {
             executor = (IDataBaseExecutor) obj;

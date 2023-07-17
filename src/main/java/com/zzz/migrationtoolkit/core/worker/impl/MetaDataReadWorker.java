@@ -38,6 +38,13 @@ public class MetaDataReadWorker extends AbstractProcessWorker {
 
             processWork = this.sourceWorkQueue.takeWork();
 
+            if (!processWork.getWorkType().equals(WorkType.READ_TABLE_METADATA)){
+                continue;
+            }
+            if (processWork.getWorkContentType().equals(WorkContentType.WORK_FINISHED)){
+                break;
+            }
+
             if (dataBaseExecutor == null) {
                 dataBaseExecutor = DataBaseExecutorFactory.getSourceInstance(taskDetail);
             }

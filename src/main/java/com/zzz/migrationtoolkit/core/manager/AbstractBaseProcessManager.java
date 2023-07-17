@@ -2,6 +2,7 @@ package com.zzz.migrationtoolkit.core.manager;
 
 import com.zzz.migrationtoolkit.core.worker.AbstractProcessWorker;
 import com.zzz.migrationtoolkit.entity.taskEntity.*;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +13,10 @@ import java.util.concurrent.FutureTask;
  * @date: 2023/7/4 17:11
  * @description:
  */
+@Data
 public abstract class AbstractBaseProcessManager implements IProcessManager {
 
-    protected String workType;
+    protected WorkType workType;
 
     protected TaskDetail taskDetail;
     protected int workerNum = 0;
@@ -60,47 +62,16 @@ public abstract class AbstractBaseProcessManager implements IProcessManager {
         this.setTargetWorkQueue(targetWorkQueue);
     }
 
-    public TaskDetail getTaskDetail() {
-        return taskDetail;
-    }
-
-    public void setTaskDetail(TaskDetail taskDetail) {
-        this.taskDetail = taskDetail;
-    }
-
-    public ProcessWorkQueue getSourceWorkQueue() {
-        return sourceWorkQueue;
-    }
-
-    public void setSourceWorkQueue(ProcessWorkQueue sourceWorkQueue) {
-        this.sourceWorkQueue = sourceWorkQueue;
-    }
-
     public void setSourceWorkQueue() {
-        this.sourceWorkQueue = new ProcessWorkQueue(10);
-    }
-
-    public ProcessWorkQueue getTargetWorkQueue() {
-        return targetWorkQueue;
-    }
-
-    public void setTargetWorkQueue(ProcessWorkQueue targetWorkQueue) {
-        this.targetWorkQueue = targetWorkQueue;
-    }
-
-    public boolean isStopWork() {
-        return stopWork;
-    }
-
-    public void setStopWork(boolean stopWork) {
-        this.stopWork = stopWork;
+        this.sourceWorkQueue = new ProcessWorkQueue(taskDetail.getCoreConfig().getWorkQueueSize());
     }
 
     @Override
     public String finishedQueue() {
         for (int i = 0; i < workerNum; i++) {
             ProcessWorkEntity processWork = new ProcessWorkEntity();
-            processWork.setWorkType(WorkType.READ_TABLE_METADATA);
+
+            processWork.setWorkType(this.workType);
             processWork.setWorkContentType(WorkContentType.WORK_FINISHED);
 
             this.getSourceWorkQueue().putWork(processWork);

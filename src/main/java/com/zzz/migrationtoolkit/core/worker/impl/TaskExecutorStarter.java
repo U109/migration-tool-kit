@@ -63,5 +63,4 @@ public class TaskExecutorStarter implements Callable<ProcessWorkResultEntity> {
         result.setNormalFinished(true);
         return result;
     }
-
 }

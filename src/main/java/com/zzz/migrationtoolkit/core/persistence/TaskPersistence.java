@@ -29,6 +29,7 @@ public class TaskPersistence {
             oos.writeObject(taskDetail);
         } catch (Exception e) {
             log.error("saveTaskInfo error : " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
         return true;

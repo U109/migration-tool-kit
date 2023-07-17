@@ -64,6 +64,9 @@ public class TaskExecutorManager implements Runnable {
             //表迁移类型：结构、数据
             tableMetaDataMigrationExecutor = new TableMetaDataMigrationExecutor(taskDetail);
             addToExecutorList(tableMetaDataMigrationExecutor);
+
+            tableUserDataMigrationExecutor = new TableUserDataMigrationExecutor(taskDetail);
+            addToExecutorList(tableMetaDataMigrationExecutor, true);
         }
     }
 
@@ -78,10 +81,10 @@ public class TaskExecutorManager implements Runnable {
         if (executorList.size() > 0) {
             AbstractTaskBaseExecutor preExecutor = executorList.get(executorList.size() - 1);
             executor.setPreExecutor(preExecutor);
-            executor.setNextExecutor(executor);
+            preExecutor.setNextExecutor(executor);
             if (isCascade) {
                 //当前执行器设置队列
-                executor.setSourceExecutorQueue(2);
+                executor.setSourceExecutorQueue(taskDetail.getCoreConfig().getWorkQueueSize());
                 //将执行器初始化给readManager
                 executor.getReadProcessManager().setSourceWorkQueue(executor.getSourceExecutorQueue());
                 //初始化前一个执行器

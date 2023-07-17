@@ -5,6 +5,7 @@ import com.zzz.migrationtoolkit.core.worker.impl.MetaDataReadWorker;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkQueue;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkResultEntity;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
+import com.zzz.migrationtoolkit.entity.taskEntity.WorkType;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
@@ -21,9 +22,8 @@ public class MetaDataReadManager extends AbstractBaseProcessManager {
 
     public MetaDataReadManager(TaskDetail taskDetail, ProcessWorkQueue sourceWorkQueue, ProcessWorkQueue targetWorkQueue) {
         super(taskDetail, sourceWorkQueue, targetWorkQueue);
-        //TODO 1
         this.workerNum = taskDetail.getCoreConfig().getReadDataThreadSize();
-        this.workType = "READ_TABLE_METADATA";
+        this.workType = WorkType.READ_TABLE_METADATA;
     }
 
     @Override
@@ -58,6 +58,7 @@ public class MetaDataReadManager extends AbstractBaseProcessManager {
                 resultMsg = "".equals(resultMsg) ? "ERROR_READ_OBJ" + " " + result.getResultMsg() : "";
             }
         }
+
         processWorkResultEntity.setNormalFinished(returnWorkNum == workerList.size());
         processWorkResultEntity.setResultMsg(resultMsg);
         return processWorkResultEntity;

@@ -1,5 +1,6 @@
 package com.zzz.migrationtoolkit.entity.dataTypeEntity;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Map;
  * @date: 2023/7/10 11:22
  * @description: 从源库到目标库中数据的匹配类型
  */
-public class DataTypeMapping {
+public class DataTypeMapping implements Serializable {
 
     private String mappingId;
     private String mappingName;

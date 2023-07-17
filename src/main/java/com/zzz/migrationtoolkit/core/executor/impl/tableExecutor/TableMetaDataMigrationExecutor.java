@@ -25,7 +25,7 @@ public class TableMetaDataMigrationExecutor extends AbstractTaskBaseExecutor {
     public TableMetaDataMigrationExecutor(TaskDetail taskDetail) {
         super(taskDetail);
         super.executorType = "TableMetaDataExecutor";
-        super.executorName = taskDetail.toString() + "[表结构执行器]";
+        super.executorName = taskDetail + "[表结构执行器]";
         //初始化读表结构
         this.readProcessManager = new MetaDataReadManager(taskDetail, null, this.readToWriteExecutorQueue);
         //初始化写Manager
@@ -65,6 +65,8 @@ public class TableMetaDataMigrationExecutor extends AbstractTaskBaseExecutor {
             taskDetail.appendFailMsg(resultMsg);
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            writeProcessManager.finishedQueue();
         }
         //写入元数据Manager返回结果，所有的源数据已经读取完毕，结束该manager下所有线程
         try {
@@ -76,6 +78,11 @@ public class TableMetaDataMigrationExecutor extends AbstractTaskBaseExecutor {
             taskDetail.appendFailMsg(resultMsg);
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            //告知后续流程结束
+            if (writeProcessManager.getTargetWorkQueue() != null){
+                this.nextExecutor.getReadProcessManager().finishedQueue();
+            }
         }
         return new ProcessWorkResultEntity(resultFlag, resultMsg);
     }
