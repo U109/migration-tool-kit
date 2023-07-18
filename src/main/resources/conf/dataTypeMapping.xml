@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <dtms>
-    <dtm id="" source="" target="">
+    <dtm id="MySql_MySql" source="MySql" target="MySql">
         <dt id="bigint" length="" precision="" target="bigint"/>
     </dtm>
 </dtms>

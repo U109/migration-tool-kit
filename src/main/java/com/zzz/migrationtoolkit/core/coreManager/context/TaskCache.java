@@ -1,9 +1,11 @@
 package com.zzz.migrationtoolkit.core.coreManager.context;
 
+import com.zzz.migrationtoolkit.common.constants.CommonConstant;
 import com.zzz.migrationtoolkit.core.persistence.TaskPersistence;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 
 import java.util.Hashtable;
+import java.util.List;
 
 /**
  * @author: Zzz
@@ -15,9 +17,9 @@ import java.util.Hashtable;
  */
 public class TaskCache {
 
-    private static Hashtable<String, TaskDetail> taskCache = new Hashtable<>();
+    private static Hashtable<String, TaskDetail> taskCache;
 
-    private static TaskPersistence taskPersistence = new TaskPersistence();
+    private static TaskPersistence taskPersistence;
 
     public synchronized static void updateTaskDetail(String taskId, String taskStatus, String taskResult, Integer deskMigrationObjCount) {
         TaskDetail taskDetail = findTask(taskId);
@@ -34,5 +36,25 @@ public class TaskCache {
         taskDetail.setFailMsg("");
         taskCache.put(taskDetail.getTaskId(), taskDetail);
         taskPersistence.saveTaskInfo(taskDetail);
+    }
+
+    public synchronized String init(String taskPersistenceFolder){
+        String returnMsg = CommonConstant.RETURN_CODE_OK;
+        try{
+            if (taskCache == null){
+                taskCache = new Hashtable<>();
+            }
+            taskPersistence = new TaskPersistence();
+            taskPersistence.setFolder(taskPersistenceFolder);
+
+            List<TaskDetail> allTaskInfo = taskPersistence.getAllTaskInfo();
+
+            for (TaskDetail taskDetail : allTaskInfo) {
+                taskCache.put(taskDetail.getTaskId(),taskDetail);
+            }
+        }catch (Exception e){
+            returnMsg = CommonConstant.RETURN_CODE_ERROR;
+        }
+        return returnMsg;
     }
 }

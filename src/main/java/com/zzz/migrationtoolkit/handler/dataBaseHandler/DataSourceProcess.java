@@ -42,6 +42,7 @@ public class DataSourceProcess {
         InitContext.DBConnectionMap = readDataBaseConnection();
     }
 
+
     /**
      * 读取DB连接
      *
@@ -49,9 +50,9 @@ public class DataSourceProcess {
      */
     private static Map<String, Map<String, DataBaseConnInfo>> readDataBaseConnection() {
         /**
-         *         |--
+         *         |-- nameA:DataBaseInfo
          *  Oracle |
-         *         |--
+         *         |-- nameB:DataBaseInfo
          */
         Map<String, Map<String, DataBaseConnInfo>> result = new HashMap<>();
         DocumentBuilder docParser;

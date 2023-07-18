@@ -4,6 +4,7 @@ import com.zzz.migrationtoolkit.common.constants.DataBaseConstant;
 import com.zzz.migrationtoolkit.common.constants.FilePathContent;
 import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
 import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.MySqlConnInfo;
+import com.zzz.migrationtoolkit.entity.dataTypeEntity.DataTypeMapping;
 import com.zzz.migrationtoolkit.entity.taskEntity.CoreConfig;
 import com.zzz.migrationtoolkit.handler.dataBaseHandler.DataSourceProcess;
 
@@ -23,6 +24,7 @@ public class InitContext {
 
     public static Map<String, Map<String, DataBaseConnInfo>> DBConnectionMap;
     public static CoreConfig coreConfig = new CoreConfig();
+    public static Map<String,DataTypeMapping> DataTypeMapping;
 
     public static void initContext() {
         DataSourceProcess.initDBConnections();

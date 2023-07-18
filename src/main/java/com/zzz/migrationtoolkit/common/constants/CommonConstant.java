@@ -9,4 +9,7 @@ public class CommonConstant {
 
     public static final String RETURN_CODE_OF = "0";
 
+    public static final String RETURN_CODE_ERROR = "ERROR";
+    public static final String RETURN_CODE_OK = "OK";
+
 }

@@ -38,31 +38,23 @@ public class MetaDataReadWorker extends AbstractProcessWorker {
 
             processWork = this.sourceWorkQueue.takeWork();
 
-            if (!processWork.getWorkType().equals(WorkType.READ_TABLE_METADATA)){
+            if (!processWork.getWorkType().equals(WorkType.READ_TABLE_METADATA)) {
                 continue;
             }
-            if (processWork.getWorkContentType().equals(WorkContentType.WORK_FINISHED)){
+            if (processWork.getWorkContentType().equals(WorkContentType.WORK_FINISHED)) {
                 break;
             }
 
             if (dataBaseExecutor == null) {
                 dataBaseExecutor = DataBaseExecutorFactory.getSourceInstance(taskDetail);
             }
-
-
             migrationTable = (MigrationTable) processWork.getMigrationObj();
-
-
             migrationTable.setResultMsg("");
-
-//            processWork.setWorkType("READ_TABLE_USERDATA");
-//            targetWorkQueue.putWork(processWork);
-
+//          processWork.setWorkType("READ_TABLE_USERDATA");
+//          targetWorkQueue.putWork(processWork);
             System.out.println("执行worker");
-
             //补充列信息
             migrationTable.setColumnDetailForMigrationTable(dataBaseExecutor);
-
             processWork.setWorkType(WorkType.WRITE_TABLE_METADATA);
             targetWorkQueue.putWork(processWork);
             processWorkResultEntity.setResultMsg("SUCCESS");
