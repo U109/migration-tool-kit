@@ -60,11 +60,9 @@ public class MetaDataWriteWorker extends AbstractProcessWorker {
 
                 ISQLGenerator sqlGenerator = SQLGeneratorFactory.newDestInstance(taskDetail);
                 //TODO 重建表操作
-
 //                executeSQL = sqlGenerator.getTableCreateSQL(destDbci, migrationTable, taskDetail);
                 log.info(executeSQL);
                 dataBaseExecutor.executeSQL(executeSQL);
-
 
                 if (targetWorkQueue != null) {
                     processWork.setWorkType(WorkType.READ_TABLE_USERDATA);
@@ -72,7 +70,6 @@ public class MetaDataWriteWorker extends AbstractProcessWorker {
                 } else {
                     migrationTable.setFinish(true);
                 }
-
             } catch (Exception e) {
                 log.error("存在异常 ： " + e.getMessage());
             }
