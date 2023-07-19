@@ -1,6 +1,8 @@
 package com.zzz.migrationtoolkit.core.coreManager.context;
 
+import com.zzz.migrationtoolkit.common.constants.FilePathContent;
 import com.zzz.migrationtoolkit.core.coreManager.TaskManager;
+import com.zzz.migrationtoolkit.entity.taskEntity.CoreConfig;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,8 +18,25 @@ public class TaskContext {
      */
     public TaskManager taskManager;
 
+    private static String currentPersistPath = "";
     /**
      * 存放任务缓存信息
      */
-    public static Map<String,TaskCache> taskCacheMap = new HashMap<>();
+    public static Map<String, TaskCache> taskCacheMap = new HashMap<>();
+
+
+    public TaskCache getTaskCache() {
+        if ((taskCacheMap.containsKey(currentPersistPath)) && taskCacheMap.get(currentPersistPath) != null) {
+            return taskCacheMap.get(currentPersistPath);
+        } else {
+            TaskCache taskCache = new TaskCache();
+            taskCache.init(currentPersistPath);
+            taskCacheMap.put(currentPersistPath, taskCache);
+            return taskCache;
+        }
+    }
+
+    public void initTaskContext() {
+        currentPersistPath = FilePathContent.TASK_FILE_FOLDER;
+    }
 }

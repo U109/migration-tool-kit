@@ -1,7 +1,9 @@
 package com.zzz.migrationtoolkit.core.coreManager;
 
+import com.zzz.migrationtoolkit.core.coreManager.context.TaskCache;
 import com.zzz.migrationtoolkit.core.coreManager.context.TaskContext;
 import com.zzz.migrationtoolkit.core.executor.TaskExecutorManager;
+import com.zzz.migrationtoolkit.entity.taskEntity.CoreConfig;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +27,19 @@ public class TaskManager {
     public TaskManager() {
         taskContext = new TaskContext();
         taskContext.taskManager = this;
+    }
+
+    public void initTaskContext() {
+        taskContext.initTaskContext();
+    }
+
+    /**
+     * 获取当前任务管理器
+     *
+     * @return
+     */
+    public static TaskCache getTaskCache() {
+        return taskContext.getTaskCache();
     }
 
 

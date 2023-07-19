@@ -12,7 +12,6 @@ import com.zzz.migrationtoolkit.server.InitContext;
  */
 public class TaskOperator {
 
-
     public static void startTask(String taskId) {
         TaskScheduler.startTask(taskId);
     }

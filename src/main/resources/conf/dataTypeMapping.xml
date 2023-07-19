@@ -2,5 +2,39 @@
 <dtms>
     <dtm id="MySql_MySql" source="MySql" target="MySql">
         <dt id="bigint" length="" precision="" target="bigint"/>
+        <dt id="bigint2" length="" precision="" target="bigint2"/>
+        <dt id="smallint" length="" precision="" target="smallint"/>
+        <dt id="smallint2" length="" precision="" target="smallint2"/>
+        <dt id="tinyint" length="" precision="" target="tinyint"/>
+        <dt id="tinyint2" length="" precision="" target="tinyint2"/>
+        <dt id="mediumint" length="" precision="" target="mediumint"/>
+        <dt id="mediumint2" length="" precision="" target="mediumint2"/>
+        <dt id="int" length="" precision="" target="int"/>
+        <dt id="int2" length="" precision="" target="int2"/>
+        <dt id="integer" length="" precision="" target="integer"/>
+        <dt id="decimal" length="" precision="" target="decimal"/>
+        <dt id="dec" length="" precision="" target="dec"/>
+        <dt id="float" length="" precision="" target="float"/>
+        <dt id="double" length="" precision="" target="double"/>
+        <dt id="date" length="" precision="" target="date"/>
+        <dt id="datetime" length="" precision="" target="datetime"/>
+        <dt id="timestamp" length="" precision="" target="timestamp"/>
+        <dt id="time" length="" precision="" target="time"/>
+        <dt id="year" length="" precision="" target="year"/>
+        <dt id="char" length="" precision="" target="char"/>
+        <dt id="varchar" length="" precision="" target="varchar"/>
+        <dt id="binary" length="" precision="" target="binary"/>
+        <dt id="tblob" length="" precision="" target="tblob"/>
+        <dt id="blob" length="" precision="" target="blob"/>
+        <dt id="mblob" length="" precision="" target="mblob"/>
+        <dt id="lblob" length="" precision="" target="lblob"/>
+        <dt id="tinytext" length="" precision="" target="tinytext"/>
+        <dt id="text" length="" precision="" target="text"/>
+        <dt id="mediumtext" length="" precision="" target="mediumtext"/>
+        <dt id="longtext" length="" precision="" target="longtext"/>
+        <dt id="enum" length="" precision="" target="enum"/>
+        <dt id="set" length="" precision="" target="set"/>
+        <dt id="bool" length="" precision="" target="bool"/>
+        <dt id="bit" length="" precision="" target="bit"/>
     </dtm>
 </dtms>

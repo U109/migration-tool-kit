@@ -4,9 +4,11 @@ import com.zzz.migrationtoolkit.common.constants.DataBaseConstant;
 import com.zzz.migrationtoolkit.common.constants.FilePathContent;
 import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
 import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.MySqlConnInfo;
+import com.zzz.migrationtoolkit.entity.dataTypeEntity.DataType;
 import com.zzz.migrationtoolkit.entity.dataTypeEntity.DataTypeMapping;
 import com.zzz.migrationtoolkit.entity.taskEntity.CoreConfig;
 import com.zzz.migrationtoolkit.handler.dataBaseHandler.DataSourceProcess;
+import com.zzz.migrationtoolkit.handler.dataTypeHandler.DataTypeMappingProcess;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,10 +26,13 @@ public class InitContext {
 
     public static Map<String, Map<String, DataBaseConnInfo>> DBConnectionMap;
     public static CoreConfig coreConfig = new CoreConfig();
-    public static Map<String,DataTypeMapping> DataTypeMapping;
+    public static Map<String, List<DataType>> DataTypeMapping;
+    public static Map<String, DataTypeMapping> SourceDataTypeMapping;
+    public static Map<String, DataTypeMapping> UserDataTypeMapping;
 
     public static void initContext() {
         DataSourceProcess.initDBConnections();
+        DataTypeMappingProcess.initDataTypeMapping();
         initCoreConfig();
     }
 
@@ -36,23 +41,19 @@ public class InitContext {
         try {
             properties.load(new FileInputStream(FilePathContent.CORE_CONFIG_PATH));
             coreConfig.setReadDataThreadSize(Integer.parseInt((String) properties.get("readDataThreadSize")));
-            coreConfig.setWriteDataThreadSize(Integer.parseInt((String)properties.get("writeDataThreadSize")));
+            coreConfig.setWriteDataThreadSize(Integer.parseInt((String) properties.get("writeDataThreadSize")));
             coreConfig.setWriteDataCommitSize(Integer.parseInt((String) properties.get("writeDataCommitSize")));
-            coreConfig.setFetchDataSize(Integer.parseInt((String)properties.get("fetchDataSize")));
+            coreConfig.setFetchDataSize(Integer.parseInt((String) properties.get("fetchDataSize")));
             coreConfig.setWorkQueueSize(Integer.parseInt((String) properties.get("workQueueSize")));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void main(String[] args) {
-        initCoreConfig();
-    }
-
-    public static DataBaseConnInfo getDataBaseInfoFromName(String typename,String dataBaseName){
-        if (DBConnectionMap.containsKey(typename)){
+    public static DataBaseConnInfo getDataBaseInfoFromName(String typename, String dataBaseName) {
+        if (DBConnectionMap.containsKey(typename)) {
             Map<String, DataBaseConnInfo> dataBaseConnInfoMap = DBConnectionMap.get(typename);
-           return dataBaseConnInfoMap.get("aaa");
+            return dataBaseConnInfoMap.get("aaa");
         }
         return null;
     }

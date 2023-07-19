@@ -9,6 +9,6 @@ public class FilePathContent {
 
 
     public static final String CORE_CONFIG_PATH = "src\\main\\resources\\conf\\coreConfig.properties";
-
     public static final String TASK_FILE_FOLDER = "src\\main\\resources\\task";
+    public static final String DATATYPEMAPPING_PATH = "src\\main\\resources\\conf\\dataTypeMapping.xml";
 }
