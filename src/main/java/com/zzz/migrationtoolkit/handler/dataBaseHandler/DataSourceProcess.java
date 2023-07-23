@@ -1,6 +1,7 @@
 package com.zzz.migrationtoolkit.handler.dataBaseHandler;
 
 import com.zzz.migrationtoolkit.common.constants.DataBaseConstant;
+import com.zzz.migrationtoolkit.common.constants.FilePathContent;
 import com.zzz.migrationtoolkit.common.vo.ConnectionVO;
 import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
 import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.MySqlConnInfo;
@@ -59,7 +60,7 @@ public class DataSourceProcess {
         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
         try {
             docParser = domFactory.newDocumentBuilder();
-            Document doc = docParser.parse("src/main/resources/conf/DBConnections.xml");
+            Document doc = docParser.parse(FilePathContent.TASK_DB_CONNECTION);
             // 获取根节点
             Element root = (Element) doc.getElementsByTagName("dbs").item(0);
 
@@ -159,7 +160,7 @@ public class DataSourceProcess {
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        Document doc = builder.parse("src/main/resources/conf/DBConnections.xml");
+        Document doc = builder.parse(FilePathContent.TASK_DB_CONNECTION);
         // 获取根元素
         Element rootElement = doc.getDocumentElement();
         String className = "com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity." + connection.getDbtype() + "ConnInfo";
@@ -212,7 +213,7 @@ public class DataSourceProcess {
         Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "no");
         DOMSource source = new DOMSource(doc);
-        StreamResult result = new StreamResult("src/main/resources/conf/DBConnections.xml");
+        StreamResult result = new StreamResult(FilePathContent.TASK_DB_CONNECTION);
         transformer.transform(source, result);
 
     }

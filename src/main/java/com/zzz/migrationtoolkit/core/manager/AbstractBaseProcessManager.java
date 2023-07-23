@@ -1,5 +1,6 @@
 package com.zzz.migrationtoolkit.core.manager;
 
+import com.zzz.migrationtoolkit.common.constants.CommonConstant;
 import com.zzz.migrationtoolkit.core.worker.AbstractProcessWorker;
 import com.zzz.migrationtoolkit.entity.taskEntity.*;
 import lombok.Data;
@@ -40,7 +41,7 @@ public abstract class AbstractBaseProcessManager implements IProcessManager {
 
     @Override
     public String stopWorker() {
-        String resultMsg = "RETURN_OK";
+        String resultMsg = CommonConstant.OK;
         for (AbstractProcessWorker worker : workerList) {
             worker.stopWorker();
         }
@@ -76,6 +77,6 @@ public abstract class AbstractBaseProcessManager implements IProcessManager {
 
             this.getSourceWorkQueue().putWork(processWork);
         }
-        return "SUCCESS";
+        return CommonConstant.SUCCESS;
     }
 }

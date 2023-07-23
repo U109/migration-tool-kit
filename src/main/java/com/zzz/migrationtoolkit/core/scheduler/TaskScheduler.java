@@ -1,5 +1,6 @@
 package com.zzz.migrationtoolkit.core.scheduler;
 
+import com.zzz.migrationtoolkit.common.constants.TaskStatusConstant;
 import com.zzz.migrationtoolkit.core.coreManager.TaskManager;
 import com.zzz.migrationtoolkit.core.coreManager.context.TaskCache;
 import com.zzz.migrationtoolkit.core.executor.TaskExecutorManager;
@@ -18,19 +19,25 @@ public class TaskScheduler {
 
     private static Map<String, TaskExecutorManager> taskExecutorContext = TaskManager.taskExecutorContextMap;
 
+    /**
+     * 启动任务
+     * @param taskId 任务ID
+     */
     public static void startTask(String taskId) {
+        //从缓存中读取Task
         TaskDetail taskDetail = TaskCache.findTask(taskId);
-
-        TaskCache.updateTaskDetail(taskId,"启动中",null,null);
-
+        //更新任务状态
+        TaskCache.updateTaskDetail(taskId, TaskStatusConstant.TASK_STARTING, null, null);
+        //创建任务执行器管理者，用来启动任务
         TaskExecutorManager taskExecutorManager = new TaskExecutorManager(taskDetail);
-        //更新executor管理器中最新执行器
+        //更新任务执行器管理器中最新执行器
         taskExecutorContext.put(taskDetail.getTaskId(), taskExecutorManager);
         //启动执行器管理者
         Thread taskExecutorThread = new Thread(taskExecutorManager);
         taskExecutorThread.setName(taskExecutorManager.getTaskExecutorManagerName());
         taskExecutorThread.start();
         try {
+            //等待任务执行器线程（taskExecutorThread）执行完毕。
             taskExecutorThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -43,9 +50,9 @@ public class TaskScheduler {
         String returnMsg = "OK";
         try {
             taskDetail = TaskCache.findTask(taskId);
-            TaskCache.updateTaskDetail(taskId, "未开始", null, null);
+            TaskCache.updateTaskDetail(taskId, TaskStatusConstant.TASK_NO_START, null, null);
             //执行器立即进入停止中
-            taskDetail.setTaskStatus("停止中");
+            taskDetail.setTaskStatus(TaskStatusConstant.TASK_STOPPING);
             //获取执行器管理器，执行停止任务
             returnMsg = taskExecutorContext.get(taskDetail.getTaskId()).stopTask();
         } catch (Exception e) {

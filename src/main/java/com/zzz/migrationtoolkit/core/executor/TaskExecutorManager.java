@@ -1,5 +1,8 @@
 package com.zzz.migrationtoolkit.core.executor;
 
+import com.zzz.migrationtoolkit.common.constants.CommonConstant;
+import com.zzz.migrationtoolkit.common.constants.TaskResultConstant;
+import com.zzz.migrationtoolkit.common.constants.TaskStatusConstant;
 import com.zzz.migrationtoolkit.core.coreManager.context.TaskCache;
 import com.zzz.migrationtoolkit.core.executor.impl.AbstractTaskBaseExecutor;
 import com.zzz.migrationtoolkit.core.executor.impl.tableExecutor.TableMetaDataMigrationExecutor;
@@ -49,9 +52,13 @@ public class TaskExecutorManager implements Runnable {
         this.taskDetail = taskDetail;
         this.taskExecutorManagerId = taskDetail.getTaskId();
         this.taskExecutorManagerName = "{" + taskDetail + " executorManager}";
+        //根据不同需求，进行不同执行器选兵点将
         initExecutorList();
     }
 
+    /**
+     * 初始化执行器列表
+     */
     private void initExecutorList() {
         if (taskDetail == null) {
             log.error("任务启动器初始化失败");
@@ -60,7 +67,7 @@ public class TaskExecutorManager implements Runnable {
         this.executorList = new ArrayList<>();
         //迁移对象列表
         List<String> kinds = taskDetail.getMigrationObjTypeList();
-        if (kinds.contains("TABLE")) {
+        if (kinds.contains(CommonConstant.MIGRATION_OBJ_TABLE)) {
             //表迁移类型：结构、数据
             tableMetaDataMigrationExecutor = new TableMetaDataMigrationExecutor(taskDetail);
             addToExecutorList(tableMetaDataMigrationExecutor);
@@ -101,12 +108,12 @@ public class TaskExecutorManager implements Runnable {
         boolean startFlag = true;
         if (!executorStop) {
             //进入该方法，Executor初始化完毕，任务开始执行
-            TaskCache.updateTaskDetail(taskDetail.getTaskId(), "正在执行", null, null);
-            log.info("TaskExecutorManager star...");
+            TaskCache.updateTaskDetail(taskDetail.getTaskId(), TaskStatusConstant.TASK_RUNNING, null, null);
+            log.info("TaskExecutorManager starting...");
         }
         //一级执行器启动
         if (tableMetaDataMigrationExecutor != null && !executorStop) {
-            startFlag = "SUCCESS".equals(tableMetaDataMigrationExecutor.startExecutor());
+            startFlag = CommonConstant.SUCCESS.equals(tableMetaDataMigrationExecutor.startExecutor());
         }
 
 //        if (tableUserDataMigrationExecutor != null && startFlag && !executorStop) {
@@ -115,7 +122,7 @@ public class TaskExecutorManager implements Runnable {
 
         //一级执行器返回结果
         if (tableMetaDataMigrationExecutor != null && startFlag && !executorStop) {
-            if ("SUCCESS".equals(tableMetaDataMigrationExecutor.waitExecutor())) {
+            if (CommonConstant.SUCCESS.equals(tableMetaDataMigrationExecutor.waitExecutor())) {
                 log.info("任务执行完成！");
             }
         }
@@ -124,7 +131,7 @@ public class TaskExecutorManager implements Runnable {
             throw new RuntimeException("Task migration has error!");
         } else {
             if (!executorStop) {
-                TaskCache.updateTaskDetail(taskDetail.getTaskId(), "已完成", "成功", null);
+                TaskCache.updateTaskDetail(taskDetail.getTaskId(), TaskStatusConstant.TASK_FINISHED, TaskResultConstant.SUCCESS, null);
             }
         }
     }
@@ -135,24 +142,24 @@ public class TaskExecutorManager implements Runnable {
      * @return String
      */
     public String stopTask() {
-        String returnMsg = "OK";
+        String returnMsg = CommonConstant.RETURN_CODE_OK;
         executorStop = true;
 
         for (AbstractTaskBaseExecutor executor : executorList) {
             String stopResultMsg = executor.stopExecutor();
-            if (!"OK".equals(stopResultMsg)) {
-                if ("OK".equals(returnMsg)) {
+            if (!CommonConstant.RETURN_CODE_OK.equals(stopResultMsg)) {
+                if (CommonConstant.RETURN_CODE_OK.equals(returnMsg)) {
                     returnMsg = stopResultMsg;
                 } else {
                     returnMsg += "\n" + stopResultMsg;
                 }
             }
         }
-        if ("OK".equals(returnMsg)) {
-            TaskCache.updateTaskDetail(taskDetail.getTaskId(), "已停止", "success", null);
+        if (CommonConstant.RETURN_CODE_OK.equals(returnMsg)) {
+            TaskCache.updateTaskDetail(taskDetail.getTaskId(), TaskStatusConstant.TASK_STOPPED, TaskResultConstant.STOP_SUCCESS, null);
             log.info(taskDetail.toString() + " stop success !");
         } else {
-            TaskCache.updateTaskDetail(taskDetail.getTaskId(), "异常状态", "停止失败", null);
+            TaskCache.updateTaskDetail(taskDetail.getTaskId(), TaskStatusConstant.TASK_EXCEPTION, TaskResultConstant.STOP_FAIL, null);
             log.error(taskDetail.toString() + " stop fail !");
         }
         return returnMsg;

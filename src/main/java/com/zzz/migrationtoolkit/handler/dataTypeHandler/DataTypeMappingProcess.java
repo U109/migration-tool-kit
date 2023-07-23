@@ -42,7 +42,7 @@ public class DataTypeMappingProcess {
         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
         try {
             docParser = domFactory.newDocumentBuilder();
-            Document doc = docParser.parse(FilePathContent.DATATYPEMAPPING_PATH);
+            Document doc = docParser.parse(FilePathContent.DATATYPE_MAPPING_PATH);
             // 获取根节点
             Element root = (Element) doc.getElementsByTagName("dtms").item(0);
             NodeList dtmList = root.getElementsByTagName("dtm");
@@ -86,7 +86,7 @@ public class DataTypeMappingProcess {
             List<DataType> dataTypeList = new ArrayList<>();
 
             docParser = domFactory.newDocumentBuilder();
-            Document doc = docParser.parse(FilePathContent.DATATYPEMAPPING_PATH);
+            Document doc = docParser.parse(FilePathContent.DATATYPE_MAPPING_PATH);
             // 获取根节点
             Element root = (Element) doc.getElementsByTagName("dbs").item(0);
             NodeList dbList = root.getElementsByTagName("db");

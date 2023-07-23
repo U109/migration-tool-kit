@@ -1,5 +1,6 @@
 package com.zzz.migrationtoolkit.entity.taskEntity;
 
+import com.zzz.migrationtoolkit.common.constants.CommonConstant;
 import com.zzz.migrationtoolkit.entity.dataTypeEntity.DataTypeMapping;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationDBConnEntity;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationObj;
@@ -61,7 +62,8 @@ public class TaskDetail implements Serializable,Cloneable {
 
     public TaskDetail() {
         this.taskId = String.valueOf(UUID.randomUUID());
-        this.migrationObjTypeList.add("TABLE");
+        //默认迁移表
+        this.migrationObjTypeList.add(CommonConstant.MIGRATION_OBJ_TABLE);
     }
 
     public void appendFailMsg(String failMsg) {

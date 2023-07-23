@@ -34,7 +34,7 @@ public class MetaDataWriteWorker extends AbstractProcessWorker {
 
         while (true) {
 
-            String executeSQL = "";
+            String executeSql = "";
             MigrationTable migrationTable = null;
             try {
                 if (stopWork) {
@@ -60,9 +60,9 @@ public class MetaDataWriteWorker extends AbstractProcessWorker {
 
                 ISQLGenerator sqlGenerator = SQLGeneratorFactory.newDestInstance(taskDetail);
                 //TODO 重建表操作
-//                executeSQL = sqlGenerator.getTableCreateSQL(destDbci, migrationTable, taskDetail);
-                log.info(executeSQL);
-                dataBaseExecutor.executeSQL(executeSQL);
+                executeSql = sqlGenerator.getTableCreateSQL(destDbci, migrationTable, taskDetail);
+                log.info(executeSql);
+                dataBaseExecutor.executeSQL(executeSql);
 
                 if (targetWorkQueue != null) {
                     processWork.setWorkType(WorkType.READ_TABLE_USERDATA);

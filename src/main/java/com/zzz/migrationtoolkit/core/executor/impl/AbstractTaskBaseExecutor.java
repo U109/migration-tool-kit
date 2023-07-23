@@ -1,5 +1,6 @@
 package com.zzz.migrationtoolkit.core.executor.impl;
 
+import com.zzz.migrationtoolkit.common.constants.CommonConstant;
 import com.zzz.migrationtoolkit.core.executor.ITaskExecutor;
 import com.zzz.migrationtoolkit.core.manager.AbstractBaseProcessManager;
 import com.zzz.migrationtoolkit.core.worker.impl.TaskExecutorStarter;
@@ -69,7 +70,7 @@ public abstract class AbstractTaskBaseExecutor implements ITaskExecutor {
     @Override
     public String startExecutor() {
         logger.info(executorName + " start ...");
-        String returnFlag = "SUCCESS";
+        String returnFlag = CommonConstant.SUCCESS;
 
         if (!executorStop) {
             //启动队列没有初始化，需要调用启动器
@@ -92,7 +93,7 @@ public abstract class AbstractTaskBaseExecutor implements ITaskExecutor {
 
     @Override
     public String stopExecutor() {
-        String returnMsg = "OK";
+        String returnMsg = CommonConstant.OK;
         this.executorStop = true;
         if (null != starter) {
             starter.setStop(true);
@@ -100,7 +101,7 @@ public abstract class AbstractTaskBaseExecutor implements ITaskExecutor {
         String readStopReturnMsg = readProcessManager.stopWorker();
         String writeStopReturnMsg = writeProcessManager.stopWorker();
         if (!readStopReturnMsg.equals(returnMsg) || !writeStopReturnMsg.equals(returnMsg)) {
-            returnMsg = "FAIL";
+            returnMsg = CommonConstant.FAIL;
         }
         return returnMsg;
     }
@@ -116,23 +117,23 @@ public abstract class AbstractTaskBaseExecutor implements ITaskExecutor {
             try {
                 ProcessWorkResultEntity starterResults = starterFutureTask.get();
                 if (!starterResults.isNormalFinished()) {
-                    returnFlag = "WARNING";
+                    returnFlag = CommonConstant.WARNING;
                 }
             } catch (Exception e) {
-                returnFlag = "FAILED";
+                returnFlag = CommonConstant.FAIL;
                 e.printStackTrace();
             }
         }
         try {
             ProcessWorkResultEntity executorResults = executorFutureTask.get();
             if (!executorResults.isNormalFinished()) {
-                returnFlag = "".equals(returnFlag) ? "WARNING" : returnFlag;
+                returnFlag = "".equals(returnFlag) ? CommonConstant.WARNING : returnFlag;
             }
         } catch (Exception e) {
-            returnFlag = "FAILED";
+            returnFlag = CommonConstant.FAIL;
             e.printStackTrace();
         }
-        return "".equals(returnFlag) ? "SUCCESS" : returnFlag;
+        return "".equals(returnFlag) ? CommonConstant.SUCCESS : returnFlag;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.zzz.migrationtoolkit.core.worker;
 
+import com.zzz.migrationtoolkit.common.constants.CommonConstant;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkQueue;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 import lombok.Data;
@@ -37,7 +38,7 @@ public abstract class AbstractProcessWorker implements IProcessWorker {
     @Override
     public String stopWorker() {
         this.stopWork = true;
-        return "stop";
+        return CommonConstant.STOP;
     }
 
     public String getWorkName(int i) {

@@ -25,8 +25,8 @@ public class TableMetaDataMigrationExecutor extends AbstractTaskBaseExecutor {
     public TableMetaDataMigrationExecutor(TaskDetail taskDetail) {
         super(taskDetail);
         super.executorType = "TableMetaDataExecutor";
-        super.executorName = taskDetail + "[表结构执行器]";
-        //初始化读表结构
+        super.executorName = taskDetail + "--[表结构执行器]";
+        //初始化读表结构   TODO 这里source放置的null，target放置中转队列的目的
         this.readProcessManager = new MetaDataReadManager(taskDetail, null, this.readToWriteExecutorQueue);
         //初始化写Manager
         this.writeProcessManager = new MetaDataWriteManager(taskDetail, this.readToWriteExecutorQueue, null);
