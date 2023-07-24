@@ -80,6 +80,7 @@ public class MetaDataWriteWorker extends AbstractProcessWorker {
                 }
             } catch (Exception e) {
                 log.error("存在异常 ： " + e.getMessage());
+                e.printStackTrace();
             }
         }
         if (dataBaseExecutor != null) {

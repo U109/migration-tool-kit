@@ -21,15 +21,11 @@ import java.util.List;
 @Slf4j
 public class UserDataWriteWorker extends AbstractProcessWorker {
 
-    //是否为最后一个工作流
-    private boolean isLastWorker = true;
-
     private String dbName;
     private String dbType;
 
     public UserDataWriteWorker(TaskDetail taskDetail, ProcessWorkQueue sourceWorkQueue, ProcessWorkQueue targetWorkQueue) {
         super(taskDetail, sourceWorkQueue, targetWorkQueue, "UserDataWriteWorker");
-        isLastWorker = true;
         this.dbName = taskDetail.getTargetDataBase().getDbci().getDbName();
         this.dbType = taskDetail.getTargetDataBase().getDbci().getDbType();
     }
@@ -74,17 +70,18 @@ public class UserDataWriteWorker extends AbstractProcessWorker {
                     synchronized (UserDataWriteWorker.class) {
                         String message = "";
                         if (dataCount - errDataCount > 0) {
-                            migrationTable.updateSuccessDataCount(dataCount, false, isLastWorker);
+                            migrationTable.updateSuccessDataCount(dataCount, false, true);
                             message = Thread.currentThread().getName() + " : insert into " + tableName + " : " + (dataCount - errDataCount) + " datas success!";
                         }
                         if (errDataCount != 0) {
-                            migrationTable.updateFailedDataCount(errDataCount, isLastWorker);
+                            migrationTable.updateFailedDataCount(errDataCount, true);
                         }
                     }
                 } catch (Exception e) {
                     synchronized (UserDataWriteWorker.class) {
-                        migrationTable.updateFailedDataCount(dataCount, isLastWorker);
+                        migrationTable.updateFailedDataCount(dataCount, true);
                     }
+                    e.printStackTrace();
                 } finally {
                     dataList = null;
                 }
@@ -98,8 +95,11 @@ public class UserDataWriteWorker extends AbstractProcessWorker {
                 }
                 processWorkResultEntity.setResultMsg("write data has error");
                 processWorkResultEntity.setNormalFinished(false);
+                e.printStackTrace();
             } finally {
-                dataBaseExecutor.closeExecutor();
+                if (dataBaseExecutor != null){
+                    dataBaseExecutor.closeExecutor();
+                }
             }
         }
         return processWorkResultEntity;

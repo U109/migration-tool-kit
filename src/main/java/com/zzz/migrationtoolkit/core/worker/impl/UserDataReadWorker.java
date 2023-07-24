@@ -73,8 +73,7 @@ public class UserDataReadWorker extends AbstractProcessWorker {
                 //只迁移数据情况
                 if (taskDetail.getMigrationTableType().equals(MigrationConstant.MIGRATION_ONLY_METADATA)) {
                     //因为只迁移了表数据，导致没有执行表结构迁移，所以taskDetail的表列信息是空的
-                    if (migrationTable != null && migrationTable.getMigrationColumnList() != null
-                            && migrationTable.getMigrationColumnList().size() == 0) {
+                    if (migrationTable.getMigrationColumnList() != null && migrationTable.getMigrationColumnList().size() == 0) {
                         //补充列信息
                         migrationTable.setColumnDetailForMigrationTable(dataBaseExecutor);
                     }
@@ -96,11 +95,11 @@ public class UserDataReadWorker extends AbstractProcessWorker {
                     ColumnEntity destColumnInfo = null;
                     sourceTypeList = new ArrayList<>();
                     destTypeList = new ArrayList<>();
-                    for (int i = 0; i < columnList.size(); i++) {
-                        sourceColumnInfo = columnList.get(i).getSourceColumn();
+                    for (MigrationColumn migrationColumn : columnList) {
+                        sourceColumnInfo = migrationColumn.getSourceColumn();
                         sourceTypeList.add(sourceColumnInfo.getColumnType().getDataTypeName().toUpperCase());
 
-                        destColumnInfo = columnList.get(i).getDestColumn();
+                        destColumnInfo = migrationColumn.getDestColumn();
                         destTypeList.add(destColumnInfo.getColumnType().getDataTypeName().toUpperCase());
                     }
                     //进行迁移
@@ -118,14 +117,12 @@ public class UserDataReadWorker extends AbstractProcessWorker {
                             batchSize = totalDataCount - start;
                         }
                         String sql = sqlGenerator.getSourceLimitSelectSql(readDataSql, start, batchSize);
-                        ITask task = new ExpDataParallaTask(sql, migrationTable, taskDetail, stopWork, targetWorkQueue);
+                        ITask<Long> task = new ExpDataParallaTask(sql, migrationTable, taskDetail, stopWork, targetWorkQueue);
                         taskRunner.syncRun(task);
                         taskList.add(task);
                     }
-                    if (taskList != null) {
-                        //等待所有线程执行完毕
-                        taskRunner.waitThreadRun(taskList);
-                    }
+                    //等待所有线程执行完毕
+                    taskRunner.waitThreadRun(taskList);
                 }
                 tableNum++;
             } catch (Exception e) {
@@ -135,8 +132,11 @@ public class UserDataReadWorker extends AbstractProcessWorker {
                 processWorkResultEntity.setResultMsg("read data has error !");
                 processWorkResultEntity.setNormalFinished(false);
                 log.error(e.getMessage());
+                e.printStackTrace();
             } finally {
-                dataBaseExecutor.closeExecutor();
+                if (dataBaseExecutor != null){
+                    dataBaseExecutor.closeExecutor();
+                }
                 sourceTypeList = null;
                 destTypeList = null;
             }

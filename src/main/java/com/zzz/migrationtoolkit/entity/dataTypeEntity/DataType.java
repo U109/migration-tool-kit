@@ -30,8 +30,8 @@ public class DataType implements Serializable {
         this.dataTypeName = dataTypeName;
     }
 
-    public DataType(String columnType, long columnLength, int columnPosition) {
-        this.dataTypeValue = columnType;
+    public DataType(String dataTypeName, long columnLength, int columnPosition) {
+        this.dataTypeName = dataTypeName;
         this.columnLength = columnLength;
         this.columnPrecision = columnPosition;
     }

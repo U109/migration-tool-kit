@@ -38,7 +38,7 @@ public class TaskManager {
      *
      * @return
      */
-    public static TaskCache getTaskCache() {
+    public TaskCache getTaskCache() {
         return taskContext.getTaskCache();
     }
 

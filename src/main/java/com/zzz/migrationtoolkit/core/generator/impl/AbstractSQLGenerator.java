@@ -21,7 +21,7 @@ public abstract class AbstractSQLGenerator implements ISQLGenerator {
         StringBuilder sb = new StringBuilder();
         String columnName = column.getColumnName();
         DataType columnType = column.getColumnType();
-        String dataTypeName = columnType.getDataTypeValue();
+        String dataTypeName = columnType.getDataTypeName();
         long length = columnType.getColumnLength();
         Integer precision = columnType.getColumnPrecision();
         sb.append(columnName).append(" ");
@@ -48,8 +48,8 @@ public abstract class AbstractSQLGenerator implements ISQLGenerator {
     public String makeColumnContract(String identifier, List<MigrationColumn> columnList) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < columnList.size(); i++) {
-            sb.append(makeIdentifier(identifier, columnList.get(i - 1).getSourceColumn().getColumnName()));
-            if (i < columnList.size()) {
+            sb.append(makeIdentifier(identifier, columnList.get(i).getSourceColumn().getColumnName()));
+            if (i < columnList.size() - 1) {
                 sb.append(SystemConstant.COMMA);
             }
         }
@@ -66,7 +66,7 @@ public abstract class AbstractSQLGenerator implements ISQLGenerator {
      */
     public String makeIdentifier(String identifier, String dbName, String tableName) {
         StringBuffer sb = new StringBuffer();
-        sb.append(makeIdentifier(identifier, dbName)).append(makeIdentifier(identifier, SystemConstant.DOT))
+        sb.append(makeIdentifier(identifier, dbName)).append(SystemConstant.DOT)
                 .append(makeIdentifier(identifier, tableName));
         return sb.toString();
     }
@@ -94,7 +94,7 @@ public abstract class AbstractSQLGenerator implements ISQLGenerator {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < columnList.size(); i++) {
             sb.append(makeIdentifier(identifier, columnList.get(i).getDestColumn().getColumnName()));
-            if (i < columnList.size()) {
+            if (i < columnList.size() - 1) {
                 sb.append(SystemConstant.COMMA);
             }
         }

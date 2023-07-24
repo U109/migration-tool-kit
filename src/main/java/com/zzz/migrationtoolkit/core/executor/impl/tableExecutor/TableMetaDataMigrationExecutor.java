@@ -81,6 +81,7 @@ public class TableMetaDataMigrationExecutor extends AbstractTaskBaseExecutor {
         }finally {
             //告知后续流程结束
             if (writeProcessManager.getTargetWorkQueue() != null){
+                System.out.println(writeProcessManager.getTargetWorkQueue());
                 this.nextExecutor.getReadProcessManager().finishedQueue();
             }
         }

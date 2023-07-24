@@ -2,6 +2,7 @@ package com.zzz.migrationtoolkit.server;
 
 import com.zzz.migrationtoolkit.common.constants.DataBaseConstant;
 import com.zzz.migrationtoolkit.common.constants.FilePathContent;
+import com.zzz.migrationtoolkit.core.coreManager.TaskManager;
 import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
 import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.MySqlConnInfo;
 import com.zzz.migrationtoolkit.entity.dataTypeEntity.DataType;
@@ -34,6 +35,9 @@ public class InitContext {
         DataSourceProcess.initDBConnections();
         DataTypeMappingProcess.initDataTypeMapping();
         initCoreConfig();
+        TaskManager taskManager = new TaskManager();
+        taskManager.initTaskContext();
+        taskManager.getTaskCache();
     }
 
     private static void initCoreConfig() {

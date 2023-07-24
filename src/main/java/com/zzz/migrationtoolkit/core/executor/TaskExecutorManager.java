@@ -73,7 +73,7 @@ public class TaskExecutorManager implements Runnable {
             addToExecutorList(tableMetaDataMigrationExecutor);
 
             tableUserDataMigrationExecutor = new TableUserDataMigrationExecutor(taskDetail);
-            addToExecutorList(tableMetaDataMigrationExecutor, true);
+            addToExecutorList(tableUserDataMigrationExecutor, true);
         }
     }
 
@@ -117,13 +117,13 @@ public class TaskExecutorManager implements Runnable {
     @Override
     public void run() {
         boolean startFlag = true;
-        if (startFlag && !executorStop) {
+        if (!executorStop) {
             //进入该方法，Executor初始化完毕，任务开始执行
             TaskCache.updateTaskDetail(taskDetail.getTaskId(), TaskStatusConstant.TASK_RUNNING, null, null);
             log.info("TaskExecutorManager starting...");
         }
         //一级执行器启动
-        if (tableMetaDataMigrationExecutor != null && startFlag && !executorStop) {
+        if (tableMetaDataMigrationExecutor != null && !executorStop) {
             startFlag = CommonConstant.SUCCESS.equals(tableMetaDataMigrationExecutor.startExecutor());
         }
         //启动数据迁移执行器

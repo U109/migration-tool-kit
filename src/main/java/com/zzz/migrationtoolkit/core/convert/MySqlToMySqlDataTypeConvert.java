@@ -22,16 +22,16 @@ public class MySqlToMySqlDataTypeConvert implements ISourceDataTypeConvert {
         List<Object> data = new ArrayList<>();
 
         try {
-            for (int i = 0; i < colCount; i++) {
-                ColumnEntity columnInfo = columnList.get(i).getSourceColumn();
+            for (int i = 1; i <= colCount; i++) {
+                ColumnEntity columnInfo = columnList.get(i - 1).getSourceColumn();
 
                 String type = columnInfo.getColumnType().getDataTypeName().toUpperCase();
 
                 if (type.equals(ColumnConstant.TYPE_BIT)) {
                     if (rs.getString(i) != null) {
-                        if (rs.getString(i).equals("0")) {
+                        if ("0".equals(rs.getString(i))) {
                             data.add(0);
-                        } else if (rs.getString(i).equals("1")) {
+                        } else if ("1".equals(rs.getString(i))) {
                             data.add(1);
                         } else {
                             data.add(new String(rs.getBytes(i)));

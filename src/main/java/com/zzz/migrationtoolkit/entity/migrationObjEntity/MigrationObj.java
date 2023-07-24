@@ -16,7 +16,7 @@ public class MigrationObj implements Serializable {
     String objId;
     String objName;
     String objType;
-    String resultMsg;
+    String resultMsg = "";
     String migrationResult = MigrationConstant.MIGRATION_NO_RESULT;
     boolean isFinish = false;
 
@@ -24,6 +24,9 @@ public class MigrationObj implements Serializable {
     Date endTime = MigrationConstant.TASK_DEFAULT_DATE;
 
     public void appendResultMsg(String resultMsg) {
+        if (resultMsg == null){
+            resultMsg = "";
+        }
         if (this.resultMsg != null && this.resultMsg.contains(resultMsg)) {
             return;
         }

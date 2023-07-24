@@ -76,7 +76,7 @@ public class MySqlSQLGenerator extends AbstractSQLGenerator {
         List<MigrationColumn> columnList = migrationTable.getMigrationColumnList();
         for (int i = 0; i < columnList.size(); i++) {
             sb.append("?");
-            if (i < columnList.size()) {
+            if (i < columnList.size() - 1) {
                 sb.append(SystemConstant.COMMA);
             }
         }
