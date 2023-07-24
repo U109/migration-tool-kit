@@ -52,7 +52,7 @@ public class TaskExecutorManager implements Runnable {
         this.taskDetail = taskDetail;
         this.taskExecutorManagerId = taskDetail.getTaskId();
         this.taskExecutorManagerName = "{" + taskDetail + " executorManager}";
-        //根据不同需求，进行不同执行器选兵点将
+        //根据不同需求，选兵点将
         initExecutorList();
     }
 
@@ -77,10 +77,21 @@ public class TaskExecutorManager implements Runnable {
         }
     }
 
+    /**
+     * 注册执行器
+     *
+     * @param executor 需要注册的执行器
+     */
     private void addToExecutorList(AbstractTaskBaseExecutor executor) {
         addToExecutorList(executor, false);
     }
 
+    /**
+     * 注册执行器
+     *
+     * @param executor  需要注册的执行器
+     * @param isCascade 是否缓存
+     */
     private void addToExecutorList(AbstractTaskBaseExecutor executor, boolean isCascade) {
         if (executorList == null) {
             executorList = new ArrayList<>();
@@ -106,29 +117,40 @@ public class TaskExecutorManager implements Runnable {
     @Override
     public void run() {
         boolean startFlag = true;
-        if (!executorStop) {
+        if (startFlag && !executorStop) {
             //进入该方法，Executor初始化完毕，任务开始执行
             TaskCache.updateTaskDetail(taskDetail.getTaskId(), TaskStatusConstant.TASK_RUNNING, null, null);
             log.info("TaskExecutorManager starting...");
         }
         //一级执行器启动
-        if (tableMetaDataMigrationExecutor != null && !executorStop) {
+        if (tableMetaDataMigrationExecutor != null && startFlag && !executorStop) {
             startFlag = CommonConstant.SUCCESS.equals(tableMetaDataMigrationExecutor.startExecutor());
         }
-
-//        if (tableUserDataMigrationExecutor != null && startFlag && !executorStop) {
-//            startFlag = "SUCCESS".equals(tableUserDataMigrationExecutor.startExecutor());
-//        }
+        //启动数据迁移执行器
+        if (tableUserDataMigrationExecutor != null && startFlag && !executorStop) {
+            startFlag = CommonConstant.SUCCESS.equals(tableUserDataMigrationExecutor.startExecutor());
+        }
 
         //一级执行器返回结果
         if (tableMetaDataMigrationExecutor != null && startFlag && !executorStop) {
             if (CommonConstant.SUCCESS.equals(tableMetaDataMigrationExecutor.waitExecutor())) {
-                log.info("任务执行完成！");
+                log.info("migration " + tableMetaDataMigrationExecutor.getExecutorType() + " success !");
+            } else {
+                log.error("migration " + tableMetaDataMigrationExecutor.getExecutorType() + " fail !");
+            }
+        }
+
+        //一级执行器迁移数据返回结果
+        if (tableUserDataMigrationExecutor != null && startFlag && !executorStop) {
+            if (CommonConstant.SUCCESS.equals(tableUserDataMigrationExecutor.waitExecutor())) {
+                log.info("migration " + tableUserDataMigrationExecutor.getExecutorType() + " success !");
+            } else {
+                log.error("migration " + tableUserDataMigrationExecutor.getExecutorType() + " fail !");
             }
         }
 
         if (!startFlag) {
-            throw new RuntimeException("Task migration has error!");
+            throw new RuntimeException("Task migration has error! Migration Task execute failed!");
         } else {
             if (!executorStop) {
                 TaskCache.updateTaskDetail(taskDetail.getTaskId(), TaskStatusConstant.TASK_FINISHED, TaskResultConstant.SUCCESS, null);

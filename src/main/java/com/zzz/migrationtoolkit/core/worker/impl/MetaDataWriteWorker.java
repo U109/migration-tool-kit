@@ -59,9 +59,17 @@ public class MetaDataWriteWorker extends AbstractProcessWorker {
                 }
 
                 ISQLGenerator sqlGenerator = SQLGeneratorFactory.newDestInstance(taskDetail);
-                //TODO 重建表操作
+                //重建表操作
+                if (taskDetail.isRebuildTable()) {
+                    executeSql = sqlGenerator.dropTargetTable(migrationTable.getDestTable().getTableName(), destDbci.getDbName());
+                    log.info("rebuild table : " + executeSql);
+                    //串行执行drop，防止系统锁表
+                    synchronized (MetaDataWriteWorker.class) {
+                        dataBaseExecutor.executeSQL(executeSql);
+                    }
+                }
                 executeSql = sqlGenerator.getTableCreateSQL(destDbci, migrationTable, taskDetail);
-                log.info(executeSql);
+                log.info("create table : " + executeSql);
                 dataBaseExecutor.executeSQL(executeSql);
 
                 if (targetWorkQueue != null) {

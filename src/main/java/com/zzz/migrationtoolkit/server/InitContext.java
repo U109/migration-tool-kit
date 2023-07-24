@@ -26,7 +26,7 @@ public class InitContext {
 
     public static Map<String, Map<String, DataBaseConnInfo>> DBConnectionMap;
     public static CoreConfig coreConfig = new CoreConfig();
-    public static Map<String, List<DataType>> DataTypeMapping;
+    public static Map<String, List<DataType>> DataType;
     public static Map<String, DataTypeMapping> SourceDataTypeMapping;
     public static Map<String, DataTypeMapping> UserDataTypeMapping;
 

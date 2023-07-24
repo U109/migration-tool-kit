@@ -1,6 +1,9 @@
 package com.zzz.migrationtoolkit.entity.taskEntity;
 
 import com.zzz.migrationtoolkit.common.constants.CommonConstant;
+import com.zzz.migrationtoolkit.common.constants.MigrationConstant;
+import com.zzz.migrationtoolkit.common.constants.TaskResultConstant;
+import com.zzz.migrationtoolkit.common.constants.TaskStatusConstant;
 import com.zzz.migrationtoolkit.entity.dataTypeEntity.DataTypeMapping;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationDBConnEntity;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationObj;
@@ -15,7 +18,7 @@ import java.util.*;
  * @description: 迁移任务实体类
  */
 @Data
-public class TaskDetail implements Serializable,Cloneable {
+public class TaskDetail implements Serializable, Cloneable {
 
     //任务id
     private String taskId;
@@ -60,10 +63,40 @@ public class TaskDetail implements Serializable,Cloneable {
 
     private String taskResult;
 
+    /**
+     * 这里标识迁移类型:表结构和表数据
+     * 只迁移表结构
+     * 只迁移表数据
+     * 两者都进行迁移（默认）
+     */
+    private String migrationTableType = MigrationConstant.MIGRATION_DATA;
+
+    private boolean rebuildTable = true;
+
     public TaskDetail() {
         this.taskId = String.valueOf(UUID.randomUUID());
         //默认迁移表
         this.migrationObjTypeList.add(CommonConstant.MIGRATION_OBJ_TABLE);
+    }
+
+    public void resetStatus() {
+        this.setStartTime(null);
+        this.setEndTime(null);
+        setFailMsg("");
+        setTaskResult(TaskResultConstant.STOP_SUCCESS);
+        setTaskStatus(TaskStatusConstant.TASK_NO_START);
+        finishDataCount = 0L;
+        totalCount = 0L;
+        List<Map<String, MigrationObj>> detailMapList = new ArrayList<>();
+        detailMapList.add(this.getTableDetailMap());
+
+        for (Map<String, MigrationObj> objMap : detailMapList) {
+            if (objMap != null) {
+                for (MigrationObj obj : objMap.values()) {
+                    obj.resetStatus();
+                }
+            }
+        }
     }
 
     public void appendFailMsg(String failMsg) {

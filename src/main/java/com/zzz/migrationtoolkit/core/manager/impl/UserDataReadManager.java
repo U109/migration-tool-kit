@@ -2,28 +2,28 @@ package com.zzz.migrationtoolkit.core.manager.impl;
 
 import com.zzz.migrationtoolkit.core.manager.AbstractBaseProcessManager;
 import com.zzz.migrationtoolkit.core.worker.impl.MetaDataReadWorker;
+import com.zzz.migrationtoolkit.core.worker.impl.UserDataReadWorker;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkQueue;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkResultEntity;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 import com.zzz.migrationtoolkit.entity.taskEntity.WorkType;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 /**
  * @author: Zzz
- * @date: 2023/7/4 17:33
+ * @date: 2023/7/24 11:26
  * @description:
  */
-public class MetaDataReadManager extends AbstractBaseProcessManager {
+public class UserDataReadManager  extends AbstractBaseProcessManager {
 
-    public MetaDataReadManager() {
+    public UserDataReadManager() {
     }
 
-    public MetaDataReadManager(TaskDetail taskDetail, ProcessWorkQueue sourceWorkQueue, ProcessWorkQueue targetWorkQueue) {
+    public UserDataReadManager(TaskDetail taskDetail, ProcessWorkQueue sourceWorkQueue, ProcessWorkQueue targetWorkQueue) {
         super(taskDetail, sourceWorkQueue, targetWorkQueue);
         this.workerNum = taskDetail.getCoreConfig().getReadDataThreadSize();
-        this.workType = WorkType.READ_TABLE_METADATA;
+        this.workType = WorkType.READ_TABLE_USERDATA;
     }
 
     @Override
@@ -34,13 +34,13 @@ public class MetaDataReadManager extends AbstractBaseProcessManager {
                 break;
             }
             //定义worker
-            MetaDataReadWorker metaDataReadWorker = new MetaDataReadWorker(taskDetail, getSourceWorkQueue(), getTargetWorkQueue());
-            FutureTask<ProcessWorkResultEntity> futureTask = new FutureTask<ProcessWorkResultEntity>(metaDataReadWorker);
-            workerList.add(metaDataReadWorker);
+            UserDataReadWorker userDataReadWorker = new UserDataReadWorker(taskDetail, getSourceWorkQueue(), getTargetWorkQueue());
+            FutureTask<ProcessWorkResultEntity> futureTask = new FutureTask<ProcessWorkResultEntity>(userDataReadWorker);
+            workerList.add(userDataReadWorker);
             futureTaskList.add(futureTask);
 
             Thread thread = new Thread(futureTask);
-            thread.setName(metaDataReadWorker.getWorkerName(i));
+            thread.setName(userDataReadWorker.getWorkerName(i));
             thread.start();
         }
         String resultMsg = "";
@@ -65,3 +65,4 @@ public class MetaDataReadManager extends AbstractBaseProcessManager {
     }
 
 }
+

@@ -69,7 +69,9 @@ public abstract class AbstractTaskBaseExecutor implements ITaskExecutor {
 
     @Override
     public String startExecutor() {
+
         logger.info(executorName + " start ...");
+
         String returnFlag = CommonConstant.SUCCESS;
 
         if (!executorStop) {

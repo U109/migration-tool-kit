@@ -1,8 +1,10 @@
 package com.zzz.migrationtoolkit.entity.migrationObjEntity;
 
+import com.zzz.migrationtoolkit.common.constants.MigrationConstant;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author: Zzz
@@ -15,5 +17,24 @@ public class MigrationObj implements Serializable {
     String objName;
     String objType;
     String resultMsg;
+    String migrationResult = MigrationConstant.MIGRATION_NO_RESULT;
     boolean isFinish = false;
+
+    Date startTime = MigrationConstant.TASK_DEFAULT_DATE;
+    Date endTime = MigrationConstant.TASK_DEFAULT_DATE;
+
+    public void appendResultMsg(String resultMsg) {
+        if (this.resultMsg != null && this.resultMsg.contains(resultMsg)) {
+            return;
+        }
+        if (this.resultMsg != null && !"".equals(this.resultMsg)) {
+            this.resultMsg += "\n";
+        }
+    }
+
+    public void resetStatus() {
+        setMigrationResult(MigrationConstant.MIGRATION_NO_RESULT);
+        setResultMsg("");
+        isFinish = false;
+    }
 }

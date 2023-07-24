@@ -1,7 +1,9 @@
 package com.zzz.migrationtoolkit.dataBase;
 
 import com.zzz.migrationtoolkit.entity.dataBaseElementEntity.ColumnEntity;
+import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationColumn;
 
+import java.sql.ResultSet;
 import java.util.List;
 
 /**
@@ -16,4 +18,12 @@ public interface IDataBaseExecutor extends AutoCloseable{
     void executeSQL(String executeSQL) throws Exception;
 
     void closeExecutor();
+
+    long getTableDataCount(String countSql);
+
+    ResultSet getResultSet(String sql, int fetchSize);
+
+    List<Object> convertReadDataTypes(List<MigrationColumn> migrationColumnList, ResultSet rs);
+
+    long executeInsertSql(String insertSql, List<List<Object>> dataList, List<MigrationColumn> columnList) throws Exception;
 }

@@ -1,49 +1,51 @@
 package com.zzz.migrationtoolkit.core.manager.impl;
 
 import com.zzz.migrationtoolkit.core.manager.AbstractBaseProcessManager;
-import com.zzz.migrationtoolkit.core.worker.impl.MetaDataReadWorker;
+import com.zzz.migrationtoolkit.core.worker.impl.MetaDataWriteWorker;
+import com.zzz.migrationtoolkit.core.worker.impl.UserDataWriteWorker;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkQueue;
 import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkResultEntity;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 import com.zzz.migrationtoolkit.entity.taskEntity.WorkType;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 /**
  * @author: Zzz
- * @date: 2023/7/4 17:33
+ * @date: 2023/7/24 11:26
  * @description:
  */
-public class MetaDataReadManager extends AbstractBaseProcessManager {
+public class UserDataWriteManager extends AbstractBaseProcessManager {
 
-    public MetaDataReadManager() {
+    public UserDataWriteManager() {
     }
 
-    public MetaDataReadManager(TaskDetail taskDetail, ProcessWorkQueue sourceWorkQueue, ProcessWorkQueue targetWorkQueue) {
+    public UserDataWriteManager(TaskDetail taskDetail, ProcessWorkQueue sourceWorkQueue, ProcessWorkQueue targetWorkQueue) {
         super(taskDetail, sourceWorkQueue, targetWorkQueue);
-        this.workerNum = taskDetail.getCoreConfig().getReadDataThreadSize();
-        this.workType = WorkType.READ_TABLE_METADATA;
+        this.workerNum = taskDetail.getCoreConfig().getWriteDataThreadSize();
+        this.workType = WorkType.WRITE_TABLE_USERDATA;
     }
 
     @Override
-    public ProcessWorkResultEntity call() {
+    public ProcessWorkResultEntity call() throws Exception {
         ProcessWorkResultEntity processWorkResultEntity = new ProcessWorkResultEntity();
         for (int i = 0; i < workerNum; i++) {
             if (stopWork) {
                 break;
             }
             //定义worker
-            MetaDataReadWorker metaDataReadWorker = new MetaDataReadWorker(taskDetail, getSourceWorkQueue(), getTargetWorkQueue());
-            FutureTask<ProcessWorkResultEntity> futureTask = new FutureTask<ProcessWorkResultEntity>(metaDataReadWorker);
-            workerList.add(metaDataReadWorker);
+            UserDataWriteWorker userDataWriteWorker = new UserDataWriteWorker(taskDetail, getSourceWorkQueue(), getTargetWorkQueue());
+            FutureTask<ProcessWorkResultEntity> futureTask = new FutureTask<>(userDataWriteWorker);
+            workerList.add(userDataWriteWorker);
             futureTaskList.add(futureTask);
 
             Thread thread = new Thread(futureTask);
-            thread.setName(metaDataReadWorker.getWorkerName(i));
+            thread.setName(userDataWriteWorker.getWorkerName(i));
             thread.start();
         }
+
         String resultMsg = "";
+
         for (FutureTask<ProcessWorkResultEntity> futureTask : futureTaskList) {
             ProcessWorkResultEntity result = null;
             try {
@@ -55,13 +57,11 @@ public class MetaDataReadManager extends AbstractBaseProcessManager {
             if (result.isNormalFinished()) {
                 returnWorkNum++;
             } else {
-                resultMsg = "".equals(resultMsg) ? "ERROR_READ_OBJ" + " " + result.getResultMsg() : "";
+                resultMsg = "".equals(resultMsg) ? "ERROR_WRITE_OBJ" + " " + result.getResultMsg() : "";
             }
         }
-
         processWorkResultEntity.setNormalFinished(returnWorkNum == workerList.size());
         processWorkResultEntity.setResultMsg(resultMsg);
         return processWorkResultEntity;
     }
-
 }

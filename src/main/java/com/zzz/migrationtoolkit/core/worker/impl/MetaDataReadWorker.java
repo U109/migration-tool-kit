@@ -1,5 +1,7 @@
 package com.zzz.migrationtoolkit.core.worker.impl;
 
+import com.zzz.migrationtoolkit.common.constants.CommonConstant;
+import com.zzz.migrationtoolkit.common.constants.MigrationConstant;
 import com.zzz.migrationtoolkit.core.worker.AbstractProcessWorker;
 import com.zzz.migrationtoolkit.dataBase.DataBaseExecutorFactory;
 import com.zzz.migrationtoolkit.dataBase.IDataBaseExecutor;
@@ -44,20 +46,26 @@ public class MetaDataReadWorker extends AbstractProcessWorker {
             if (processWork.getWorkContentType().equals(WorkContentType.WORK_FINISHED)) {
                 break;
             }
+            //如果仅迁移表数据
+            if (taskDetail.getMigrationTableType().equals(MigrationConstant.MIGRATION_ONLY_USERDATA)) {
+                processWork.setWorkType(WorkType.READ_TABLE_USERDATA);
+                targetWorkQueue.putWork(processWork);
+                continue;
+            }
+
 
             if (dataBaseExecutor == null) {
                 dataBaseExecutor = DataBaseExecutorFactory.getSourceInstance(taskDetail);
             }
             migrationTable = (MigrationTable) processWork.getMigrationObj();
             migrationTable.setResultMsg("");
-//          processWork.setWorkType("READ_TABLE_USERDATA");
-//          targetWorkQueue.putWork(processWork);
-            System.out.println("执行worker");
+
+
             //补充列信息
             migrationTable.setColumnDetailForMigrationTable(dataBaseExecutor);
             processWork.setWorkType(WorkType.WRITE_TABLE_METADATA);
             targetWorkQueue.putWork(processWork);
-            processWorkResultEntity.setResultMsg("SUCCESS");
+            processWorkResultEntity.setResultMsg(CommonConstant.SUCCESS);
         }
         return processWorkResultEntity;
     }

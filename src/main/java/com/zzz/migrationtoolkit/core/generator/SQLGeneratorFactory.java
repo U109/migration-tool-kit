@@ -3,6 +3,7 @@ package com.zzz.migrationtoolkit.core.generator;
 import com.zzz.migrationtoolkit.common.constants.DataBaseConstant;
 import com.zzz.migrationtoolkit.core.generator.impl.MySqlSQLGenerator;
 import com.zzz.migrationtoolkit.core.generator.impl.OracleSQLGenerator;
+import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationTable;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 
 /**
@@ -23,7 +24,7 @@ public class SQLGeneratorFactory {
         return sqlGenerator;
     }
 
-    public ISQLGenerator newSourceInstance(TaskDetail taskDetail) {
+    public static ISQLGenerator newSourceInstance(TaskDetail taskDetail) {
         String dbType = taskDetail.getSourceDataBase().getDbci().getDbType();
         ISQLGenerator sqlGenerator = null;
         if (dbType.equals(DataBaseConstant.MYSQL)) {
@@ -33,5 +34,7 @@ public class SQLGeneratorFactory {
         }
         return sqlGenerator;
     }
+
+
 
 }

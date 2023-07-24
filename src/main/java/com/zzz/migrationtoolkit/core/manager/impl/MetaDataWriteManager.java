@@ -40,7 +40,7 @@ public class MetaDataWriteManager extends AbstractBaseProcessManager {
             futureTaskList.add(futureTask);
 
             Thread thread = new Thread(futureTask);
-            thread.setName(metaDataWriteWorker.getWorkName(i));
+            thread.setName(metaDataWriteWorker.getWorkerName(i));
             thread.start();
         }
 

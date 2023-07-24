@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dbs>
+    <db dbType="MySql">
+        <dt name="bigint"/>
+        <dt name="bigint2" />
+        <dt name="smallint" />
+        <dt name="smallint2" />
+        <dt name="tinyint" />
+        <dt name="tinyint2" />
+        <dt name="mediumint" />
+        <dt name="mediumint2" />
+        <dt name="int"/>
+        <dt name="int2" />
+        <dt name="integer" />
+        <dt name="decimal" />
+        <dt name="dec" />
+        <dt name="float" />
+        <dt name="double" />
+        <dt name="date" />
+        <dt name="datetime" />
+        <dt name="timestamp" />
+        <dt name="time" />
+        <dt name="year" />
+        <dt name="char" />
+        <dt name="varchar" />
+        <dt name="binary" />
+        <dt name="tblob" />
+        <dt name="blob" />
+        <dt name="mblob" />
+        <dt name="lblob" />
+        <dt name="tinytext" />
+        <dt name="text" />
+        <dt name="mediumtext" />
+        <dt name="longtext" />
+        <dt name="enum" />
+        <dt name="set" />
+        <dt name="bool"/>
+        <dt name="bit" />
+    </db>
+</dbs>

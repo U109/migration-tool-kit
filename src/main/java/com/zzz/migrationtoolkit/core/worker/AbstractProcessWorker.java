@@ -41,7 +41,7 @@ public abstract class AbstractProcessWorker implements IProcessWorker {
         return CommonConstant.STOP;
     }
 
-    public String getWorkName(int i) {
+    public String getWorkerName(int i) {
         return taskDetail.getTaskId() + "::" + taskDetail.getTaskName() + "::Thread-[" + i + "]";
     }
 

@@ -47,7 +47,7 @@ public class TableMetaDataMigrationExecutor extends AbstractTaskBaseExecutor {
     public ProcessWorkResultEntity call() {
         boolean resultFlag = true;
 
-        String resultMsg = null;
+        String resultMsg = "";
 
         //启动失败，直接返回
         ProcessWorkResultEntity startManagerResultEntity = startManager();

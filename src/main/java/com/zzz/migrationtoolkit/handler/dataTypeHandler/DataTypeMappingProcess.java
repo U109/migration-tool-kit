@@ -31,7 +31,7 @@ public class DataTypeMappingProcess {
         //初始化用户定制数据库对应类型
         InitContext.UserDataTypeMapping = readSourceDataTypeMapping();
         //初始化指定数据库所有数据类型
-        InitContext.DataTypeMapping = readDataTypeMapping();
+        InitContext.DataType = readDataType();
     }
 
     private static Map<String, DataTypeMapping> readSourceDataTypeMapping() {
@@ -42,7 +42,7 @@ public class DataTypeMappingProcess {
         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
         try {
             docParser = domFactory.newDocumentBuilder();
-            Document doc = docParser.parse(FilePathContent.DATATYPE_MAPPING_PATH);
+            Document doc = docParser.parse(FilePathContent.DATA_TYPE_MAPPING_PATH);
             // 获取根节点
             Element root = (Element) doc.getElementsByTagName("dtms").item(0);
             NodeList dtmList = root.getElementsByTagName("dtm");
@@ -77,7 +77,7 @@ public class DataTypeMappingProcess {
         return dataTypeMappingMap;
     }
 
-    private static Map<String, List<DataType>> readDataTypeMapping() {
+    private static Map<String, List<DataType>> readDataType() {
 
         Map<String, List<DataType>> dataTypeMap = new HashMap<>();
         DocumentBuilder docParser;
@@ -86,7 +86,7 @@ public class DataTypeMappingProcess {
             List<DataType> dataTypeList = new ArrayList<>();
 
             docParser = domFactory.newDocumentBuilder();
-            Document doc = docParser.parse(FilePathContent.DATATYPE_MAPPING_PATH);
+            Document doc = docParser.parse(FilePathContent.DATA_TYPE_PATH);
             // 获取根节点
             Element root = (Element) doc.getElementsByTagName("dbs").item(0);
             NodeList dbList = root.getElementsByTagName("db");

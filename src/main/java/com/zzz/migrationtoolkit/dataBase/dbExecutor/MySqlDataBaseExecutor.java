@@ -1,16 +1,16 @@
 package com.zzz.migrationtoolkit.dataBase.dbExecutor;
 
 import com.zzz.migrationtoolkit.common.utils.CloseObjUtil;
+import com.zzz.migrationtoolkit.core.convert.ISourceDataTypeConvert;
 import com.zzz.migrationtoolkit.core.convert.MySqlToMySqlDataTypeConvert;
 import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.MySqlConnInfo;
 import com.zzz.migrationtoolkit.entity.dataBaseElementEntity.ColumnEntity;
 import com.zzz.migrationtoolkit.entity.dataTypeEntity.DataType;
+import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationColumn;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,16 +23,19 @@ import java.util.List;
 public class MySqlDataBaseExecutor extends AbstractDataBaseExecutor {
 
 
-    private MySqlConnInfo mySqlConnInfo;
-    private MySqlToMySqlDataTypeConvert mySqlToMySqlDataTypeConvert;
+    private Statement statement;
+    private ResultSet rs;
+    private ISourceDataTypeConvert IConvert;
+    private PreparedStatement preparedStatement;
 
-    public MySqlDataBaseExecutor(){
+
+    public MySqlDataBaseExecutor() {
 
     }
-    public MySqlDataBaseExecutor(MySqlConnInfo mySqlConnInfo,MySqlToMySqlDataTypeConvert mySqlToMySqlDataTypeConvert){
+
+    public MySqlDataBaseExecutor(MySqlConnInfo mySqlConnInfo, MySqlToMySqlDataTypeConvert mySqlToMySqlDataTypeConvert) {
         super(mySqlConnInfo);
-        this.mySqlConnInfo = mySqlConnInfo;
-        this.mySqlToMySqlDataTypeConvert = mySqlToMySqlDataTypeConvert;
+        this.IConvert = mySqlToMySqlDataTypeConvert;
     }
 
 
@@ -81,14 +84,76 @@ public class MySqlDataBaseExecutor extends AbstractDataBaseExecutor {
         } catch (Exception e) {
             log.error(e.getMessage());
             throw e;
-        }finally {
+        } finally {
             CloseObjUtil.closeAll(statement);
         }
     }
 
     @Override
     public void closeExecutor() {
+        super.closeExecutor();
+        CloseObjUtil.closeAll(statement, preparedStatement, rs);
+    }
 
+    @Override
+    public ResultSet getResultSet(String sql, int fetchSize) {
+        try {
+            statement = getConnection().createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+            statement.setFetchSize(fetchSize);
+            rs = statement.executeQuery(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
+    @Override
+    public List<Object> convertReadDataTypes(List<MigrationColumn> columnList, ResultSet rs) {
+        return IConvert.convertReadDataTypes(columnList, rs);
+    }
+
+    @Override
+    public long executeInsertSql(String insertSql, List<List<Object>> dataList, List<MigrationColumn> columnList) throws Exception {
+
+
+        try {
+            List<DataType> columnTypeList = new ArrayList<>();
+            for (MigrationColumn columnInfo : columnList) {
+                columnTypeList.add(columnInfo.getDestColumn().getColumnType());
+            }
+            if (connection == null) {
+                connection = getConnection();
+            }
+            preparedStatement = connection.prepareStatement(insertSql);
+
+            for (int i = 0; i < dataList.size(); i++) {
+                List<Object> dataRow = dataList.get(i);
+
+                int columnTypeListSize = columnTypeList.size();
+
+                for (int j = 0; j < columnTypeListSize; j++) {
+                    DataType type = columnTypeList.get(j);
+
+                    int parameterIndex = j + 1;
+                    if (dataRow.get(j) == null) {
+                        preparedStatement.setObject(parameterIndex, null);
+                        continue;
+                    }
+                    IConvert.convertWriteDataTypes(type.getDataTypeName(), preparedStatement, parameterIndex, dataRow, j);
+                }
+                preparedStatement.addBatch();
+                dataList.remove(i--);
+            }
+            preparedStatement.executeBatch();
+            return 0;
+        } catch (Exception e) {
+            log.error("write data error : " + e.getMessage());
+            throw e;
+        } finally {
+            preparedStatement.clearBatch();
+            preparedStatement.clearParameters();
+            preparedStatement.close();
+        }
     }
 
     @Override
