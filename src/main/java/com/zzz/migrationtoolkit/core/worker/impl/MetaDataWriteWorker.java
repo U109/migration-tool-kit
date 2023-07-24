@@ -34,8 +34,8 @@ public class MetaDataWriteWorker extends AbstractProcessWorker {
 
         while (true) {
 
-            String executeSql = "";
-            MigrationTable migrationTable = null;
+            String executeSql;
+            MigrationTable migrationTable;
             try {
                 if (stopWork) {
                     break;

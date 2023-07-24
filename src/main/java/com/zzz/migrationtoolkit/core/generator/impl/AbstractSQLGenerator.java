@@ -40,13 +40,9 @@ public abstract class AbstractSQLGenerator implements ISQLGenerator {
 
     /**
      * 构建列字符串
-     *
-     * @param identifier
-     * @param columnList
-     * @return
      */
     public String makeColumnContract(String identifier, List<MigrationColumn> columnList) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < columnList.size(); i++) {
             sb.append(makeIdentifier(identifier, columnList.get(i).getSourceColumn().getColumnName()));
             if (i < columnList.size() - 1) {
@@ -58,27 +54,18 @@ public abstract class AbstractSQLGenerator implements ISQLGenerator {
 
     /**
      * 获取包围符的字符串
-     *
-     * @param identifier
-     * @param dbName
-     * @param tableName
-     * @return
      */
     public String makeIdentifier(String identifier, String dbName, String tableName) {
-        StringBuffer sb = new StringBuffer();
-        sb.append(makeIdentifier(identifier, dbName)).append(SystemConstant.DOT)
-                .append(makeIdentifier(identifier, tableName));
-        return sb.toString();
+        return makeIdentifier(identifier, dbName) + SystemConstant.DOT +
+                makeIdentifier(identifier, tableName);
     }
 
     public String makeIdentifier(String identifier, String name) {
-        StringBuffer sb = new StringBuffer();
-        sb.append(identifier).append(name).append(identifier);
-        return sb.toString();
+        return identifier + name + identifier;
     }
 
     public String makeIdentifierNoDb(String identifier, String... args) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         if (args == null || args.length == 0) {
             return "";
         }
@@ -91,7 +78,7 @@ public abstract class AbstractSQLGenerator implements ISQLGenerator {
 
 
     public String makeTargetColumnString(String identifier, List<MigrationColumn> columnList) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < columnList.size(); i++) {
             sb.append(makeIdentifier(identifier, columnList.get(i).getDestColumn().getColumnName()));
             if (i < columnList.size() - 1) {

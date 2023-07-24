@@ -68,10 +68,8 @@ public class UserDataWriteWorker extends AbstractProcessWorker {
                     long errDataCount = dataBaseExecutor.executeInsertSql(insertSql, dataList, columnList);
                     //插入成功后更新条数
                     synchronized (UserDataWriteWorker.class) {
-                        String message = "";
                         if (dataCount - errDataCount > 0) {
                             migrationTable.updateSuccessDataCount(dataCount, false, true);
-                            message = Thread.currentThread().getName() + " : insert into " + tableName + " : " + (dataCount - errDataCount) + " datas success!";
                         }
                         if (errDataCount != 0) {
                             migrationTable.updateFailedDataCount(errDataCount, true);
@@ -82,8 +80,6 @@ public class UserDataWriteWorker extends AbstractProcessWorker {
                         migrationTable.updateFailedDataCount(dataCount, true);
                     }
                     e.printStackTrace();
-                } finally {
-                    dataList = null;
                 }
 
             } catch (Exception e) {

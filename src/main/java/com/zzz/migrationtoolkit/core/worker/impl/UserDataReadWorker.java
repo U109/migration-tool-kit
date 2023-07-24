@@ -32,7 +32,7 @@ public class UserDataReadWorker extends AbstractProcessWorker {
     private List<String> sourceTypeList = null;
     private List<String> destTypeList = null;
     //缓存线程
-    private int threadSize = 1;
+    private int threadSize;
 
 
     public UserDataReadWorker(TaskDetail taskDetail, ProcessWorkQueue sourceWorkQueue, ProcessWorkQueue targetWorkQueue) {
@@ -47,10 +47,8 @@ public class UserDataReadWorker extends AbstractProcessWorker {
         ProcessWorkResultEntity processWorkResultEntity = new ProcessWorkResultEntity();
         IDataBaseExecutor dataBaseExecutor = null;
         MigrationTable migrationTable = null;
-        String tableName = "";
-        String condition = "";
-        String dbName = "";
-        int tableNum = 0;
+        String tableName;
+        String dbName;
         while (true) {
             try {
                 if (stopWork) {
@@ -91,8 +89,8 @@ public class UserDataReadWorker extends AbstractProcessWorker {
                 if (totalDataCount == 0) {
                     migrationTable.setFinish(true);
                 } else {
-                    ColumnEntity sourceColumnInfo = null;
-                    ColumnEntity destColumnInfo = null;
+                    ColumnEntity sourceColumnInfo;
+                    ColumnEntity destColumnInfo;
                     sourceTypeList = new ArrayList<>();
                     destTypeList = new ArrayList<>();
                     for (MigrationColumn migrationColumn : columnList) {
@@ -108,7 +106,7 @@ public class UserDataReadWorker extends AbstractProcessWorker {
                     int parallel = threadSize;
 
                     TaskRunner taskRunner = new TaskRunner(parallel);
-                    long start = 0;
+                    long start;
                     long batchSize = totalDataCount / parallel;
                     List<ITask> taskList = new ArrayList<ITask>();
                     for (int i = 0; i < parallel; i++) {
@@ -124,7 +122,6 @@ public class UserDataReadWorker extends AbstractProcessWorker {
                     //等待所有线程执行完毕
                     taskRunner.waitThreadRun(taskList);
                 }
-                tableNum++;
             } catch (Exception e) {
                 if (migrationTable != null) {
                     migrationTable.appendResultMsg(e.getMessage());

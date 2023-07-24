@@ -1,17 +1,14 @@
 package com.zzz.migrationtoolkit.server;
 
-import com.zzz.migrationtoolkit.common.constants.DataBaseConstant;
 import com.zzz.migrationtoolkit.common.constants.FilePathContent;
 import com.zzz.migrationtoolkit.core.coreManager.TaskManager;
 import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
-import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.MySqlConnInfo;
 import com.zzz.migrationtoolkit.entity.dataTypeEntity.DataType;
 import com.zzz.migrationtoolkit.entity.dataTypeEntity.DataTypeMapping;
 import com.zzz.migrationtoolkit.entity.taskEntity.CoreConfig;
 import com.zzz.migrationtoolkit.handler.dataBaseHandler.DataSourceProcess;
 import com.zzz.migrationtoolkit.handler.dataTypeHandler.DataTypeMappingProcess;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
