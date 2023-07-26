@@ -20,8 +20,6 @@ import java.util.Map;
 @Data
 public class TaskPersistence {
 
-    private String folder;
-
     public boolean saveTaskInfo(TaskDetail taskDetail) {
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
@@ -40,7 +38,7 @@ public class TaskPersistence {
     }
 
     public List<TaskDetail> getAllTaskInfo() {
-        File f = new File(folder + File.separator);
+        File f = new File(FilePathContent.TASK_FILE_FOLDER + File.separator);
         File[] fileList = f.listFiles();
 
         List<TaskDetail> taskDetailList = new ArrayList<>();
@@ -48,7 +46,7 @@ public class TaskPersistence {
         assert fileList != null;
         for (File file : fileList) {
             if (file.isFile()) {
-                TaskDetail taskDetail = readTaskInfo(folder + File.separator + file.getName());
+                TaskDetail taskDetail = readTaskInfo(FilePathContent.TASK_FILE_FOLDER + File.separator + file.getName());
                 taskDetailList.add(taskDetail);
             }
         }
