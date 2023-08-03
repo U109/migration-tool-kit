@@ -77,4 +77,7 @@ public class TaskPersistence {
         }
         return taskDetail;
     }
+
+    public void setFolder(String taskPersistenceFolder) {
+    }
 }

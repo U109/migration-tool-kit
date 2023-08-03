@@ -10,16 +10,16 @@ import java.io.Serializable;
  * @description:
  */
 @Data
-public class ProcessWorkResultEntity implements Serializable {
+public class WorkResultEntity implements Serializable {
 
     private boolean isNormalFinished = true;
 
     private String resultMsg = "";
 
-    public ProcessWorkResultEntity() {
+    public WorkResultEntity() {
     }
 
-    public ProcessWorkResultEntity(boolean isNormalFinished, String resultMsg) {
+    public WorkResultEntity(boolean isNormalFinished, String resultMsg) {
         this.isNormalFinished = isNormalFinished;
         this.resultMsg = resultMsg;
     }

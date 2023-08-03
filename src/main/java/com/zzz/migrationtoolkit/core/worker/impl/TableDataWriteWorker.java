@@ -3,7 +3,7 @@ package com.zzz.migrationtoolkit.core.worker.impl;
 import com.zzz.migrationtoolkit.common.constants.MigrationConstant;
 import com.zzz.migrationtoolkit.core.generator.ISQLGenerator;
 import com.zzz.migrationtoolkit.core.generator.SQLGeneratorFactory;
-import com.zzz.migrationtoolkit.core.worker.AbstractProcessWorker;
+import com.zzz.migrationtoolkit.core.worker.AbstractBaseWorker;
 import com.zzz.migrationtoolkit.dataBase.DataBaseExecutorFactory;
 import com.zzz.migrationtoolkit.dataBase.IDataBaseExecutor;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationColumn;
@@ -19,20 +19,20 @@ import java.util.List;
  * @description:
  */
 @Slf4j
-public class UserDataWriteWorker extends AbstractProcessWorker {
+public class TableDataWriteWorker extends AbstractBaseWorker {
 
     private String dbName;
     private String dbType;
 
-    public UserDataWriteWorker(TaskDetail taskDetail, ProcessWorkQueue sourceWorkQueue, ProcessWorkQueue targetWorkQueue) {
+    public TableDataWriteWorker(TaskDetail taskDetail, WorkQueue sourceWorkQueue, WorkQueue targetWorkQueue) {
         super(taskDetail, sourceWorkQueue, targetWorkQueue, "UserDataWriteWorker");
         this.dbName = taskDetail.getTargetDataBase().getDbci().getDbName();
         this.dbType = taskDetail.getTargetDataBase().getDbci().getDbType();
     }
 
     @Override
-    public ProcessWorkResultEntity call() throws Exception {
-        ProcessWorkResultEntity processWorkResultEntity = new ProcessWorkResultEntity();
+    public WorkResultEntity call() throws Exception {
+        WorkResultEntity workResultEntity = new WorkResultEntity();
         IDataBaseExecutor dataBaseExecutor = null;
         MigrationTable migrationTable = null;
         String tableName = "";
@@ -42,7 +42,7 @@ public class UserDataWriteWorker extends AbstractProcessWorker {
                 if (stopWork) {
                     break;
                 }
-                ProcessWorkEntity processWork = this.sourceWorkQueue.takeWork();
+                WorkEntity processWork = this.sourceWorkQueue.takeWork();
                 if (!processWork.getWorkType().equals(WorkType.WRITE_TABLE_USERDATA)) {
                     continue;
                 }
@@ -67,7 +67,7 @@ public class UserDataWriteWorker extends AbstractProcessWorker {
                 try {
                     long errDataCount = dataBaseExecutor.executeInsertSql(insertSql, dataList, columnList);
                     //插入成功后更新条数
-                    synchronized (UserDataWriteWorker.class) {
+                    synchronized (TableDataWriteWorker.class) {
                         if (dataCount - errDataCount > 0) {
                             migrationTable.updateSuccessDataCount(dataCount, false, true);
                         }
@@ -76,21 +76,21 @@ public class UserDataWriteWorker extends AbstractProcessWorker {
                         }
                     }
                 } catch (Exception e) {
-                    synchronized (UserDataWriteWorker.class) {
+                    synchronized (TableDataWriteWorker.class) {
                         migrationTable.updateFailedDataCount(dataCount, true);
                     }
                     e.printStackTrace();
                 }
 
             } catch (Exception e) {
-                synchronized (UserDataWriteWorker.class) {
+                synchronized (TableDataWriteWorker.class) {
                     if (migrationTable != null) {
                         migrationTable.appendResultMsg("write data has error");
                         migrationTable.setMigrationResult(MigrationConstant.MIGRATION_RESULT_FAIL);
                     }
                 }
-                processWorkResultEntity.setResultMsg("write data has error");
-                processWorkResultEntity.setNormalFinished(false);
+                workResultEntity.setResultMsg("write data has error");
+                workResultEntity.setNormalFinished(false);
                 e.printStackTrace();
             } finally {
                 if (dataBaseExecutor != null){
@@ -98,6 +98,6 @@ public class UserDataWriteWorker extends AbstractProcessWorker {
                 }
             }
         }
-        return processWorkResultEntity;
+        return workResultEntity;
     }
 }

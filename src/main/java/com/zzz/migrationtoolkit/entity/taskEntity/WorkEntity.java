@@ -12,7 +12,7 @@ import java.util.List;
  * @description:
  */
 @Data
-public class ProcessWorkEntity implements Serializable {
+public class WorkEntity implements Serializable {
 
     private WorkType workType;
 
@@ -22,10 +22,10 @@ public class ProcessWorkEntity implements Serializable {
     //任务块中封装的数据列表
     private List<List<Object>> dataList;
 
-    public ProcessWorkEntity() {
+    public WorkEntity() {
     }
 
-    public ProcessWorkEntity(WorkType workType, WorkContentType workContentType, MigrationObj migrationObj) {
+    public WorkEntity(WorkType workType, WorkContentType workContentType, MigrationObj migrationObj) {
         this.workType = workType;
         this.workContentType = workContentType;
         this.migrationObj = migrationObj;

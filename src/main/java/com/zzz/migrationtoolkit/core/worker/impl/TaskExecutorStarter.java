@@ -1,9 +1,9 @@
 package com.zzz.migrationtoolkit.core.worker.impl;
 
-import com.zzz.migrationtoolkit.core.manager.AbstractBaseProcessManager;
+import com.zzz.migrationtoolkit.core.manager.AbstractBaseManager;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationObj;
-import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkEntity;
-import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkResultEntity;
+import com.zzz.migrationtoolkit.entity.taskEntity.WorkEntity;
+import com.zzz.migrationtoolkit.entity.taskEntity.WorkResultEntity;
 import com.zzz.migrationtoolkit.entity.taskEntity.WorkContentType;
 import com.zzz.migrationtoolkit.entity.taskEntity.WorkType;
 import lombok.Data;
@@ -17,13 +17,13 @@ import java.util.concurrent.Callable;
  * @description:
  */
 @Data
-public class TaskExecutorStarter implements Callable<ProcessWorkResultEntity> {
+public class TaskExecutorStarter implements Callable<WorkResultEntity> {
 
     private String starterName;
     //需要拆分的内容
     private Map<String, MigrationObj> detailMap;
     //下一个流程管理器
-    private AbstractBaseProcessManager manager;
+    private AbstractBaseManager manager;
 
     private WorkType workType;
 
@@ -34,7 +34,7 @@ public class TaskExecutorStarter implements Callable<ProcessWorkResultEntity> {
     public TaskExecutorStarter() {
     }
 
-    public TaskExecutorStarter(Map<String, MigrationObj> detailMap, AbstractBaseProcessManager manager, WorkType workType, WorkContentType workContentType) {
+    public TaskExecutorStarter(Map<String, MigrationObj> detailMap, AbstractBaseManager manager, WorkType workType, WorkContentType workContentType) {
         this.detailMap = detailMap;
         this.manager = manager;
         this.workContentType = workContentType;
@@ -43,15 +43,15 @@ public class TaskExecutorStarter implements Callable<ProcessWorkResultEntity> {
 
     //任务分发
     @Override
-    public ProcessWorkResultEntity call() throws Exception {
-        ProcessWorkResultEntity result = new ProcessWorkResultEntity();
+    public WorkResultEntity call() throws Exception {
+        WorkResultEntity result = new WorkResultEntity();
         //差分任务，进行封装
         for (MigrationObj migrationObj : detailMap.values()) {
             if (isStop) {
                 break;
             }
             //起始队列中放入任务块
-            manager.getSourceWorkQueue().putWork(new ProcessWorkEntity(workType, workContentType, migrationObj));
+            manager.getSourceWorkQueue().putWork(new WorkEntity(workType, workContentType, migrationObj));
         }
         //正常结束，需要向队列中添加完成标记
         if (!isStop) {

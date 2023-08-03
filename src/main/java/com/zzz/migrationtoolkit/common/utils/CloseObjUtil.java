@@ -13,6 +13,7 @@ public class CloseObjUtil {
                 try {
                     arg.close();
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }

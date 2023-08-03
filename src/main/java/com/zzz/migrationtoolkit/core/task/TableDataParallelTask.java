@@ -16,7 +16,7 @@ import java.util.List;
  * @description:
  */
 @Slf4j
-public class ExpDataParallaTask implements ITask<Long> {
+public class TableDataParallelTask implements ITask<Long> {
 
     private String sql;
     private MigrationTable migrationTable;
@@ -24,11 +24,11 @@ public class ExpDataParallaTask implements ITask<Long> {
     private int fetchSize = 0;
     private int commitSize = 0;
     private boolean stopWork;
-    private ProcessWorkQueue targetWorkQueue;
+    private WorkQueue targetWorkQueue;
 
 
-    public ExpDataParallaTask(String sql, MigrationTable migrationTable, TaskDetail taskDetail,
-                              boolean stopWork, ProcessWorkQueue targetWorkQueue) {
+    public TableDataParallelTask(String sql, MigrationTable migrationTable, TaskDetail taskDetail,
+                                 boolean stopWork, WorkQueue targetWorkQueue) {
         this.sql = sql;
         this.migrationTable = migrationTable;
         this.taskDetail = taskDetail;
@@ -84,16 +84,16 @@ public class ExpDataParallaTask implements ITask<Long> {
     }
 
     private void putData(List<List<Object>> cacheList) {
-        ProcessWorkEntity processWorkEntity = new ProcessWorkEntity();
-        processWorkEntity.setWorkType(WorkType.WRITE_TABLE_USERDATA);
-        processWorkEntity.setWorkContentType(WorkContentType.TABLE_STARTED);
-        processWorkEntity.setMigrationObj(migrationTable);
+        WorkEntity workEntity = new WorkEntity();
+        workEntity.setWorkType(WorkType.WRITE_TABLE_USERDATA);
+        workEntity.setWorkContentType(WorkContentType.TABLE_STARTED);
+        workEntity.setMigrationObj(migrationTable);
 
         List<List<Object>> subList = new ArrayList<>(cacheList.subList(0, cacheList.size()));
 
-        processWorkEntity.setDataList(subList);
+        workEntity.setDataList(subList);
 
-        targetWorkQueue.putWork(processWorkEntity);
+        targetWorkQueue.putWork(workEntity);
 
         cacheList.clear();
     }

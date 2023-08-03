@@ -14,7 +14,6 @@ import java.util.List;
  */
 public interface ISQLGenerator {
 
-
     String getTableCreateSQL(DataBaseConnInfo destDbci, MigrationTable migrationTable, TaskDetail taskDetail);
 
     String dropTargetTable(String tableName, String dbName);

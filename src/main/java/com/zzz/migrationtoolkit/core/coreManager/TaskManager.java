@@ -1,7 +1,7 @@
 package com.zzz.migrationtoolkit.core.coreManager;
 
 import com.zzz.migrationtoolkit.core.coreManager.context.TaskContext;
-import com.zzz.migrationtoolkit.core.executor.TaskExecutorManager;
+import com.zzz.migrationtoolkit.core.executor.ExecutorManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +20,7 @@ public class TaskManager {
      */
     public static TaskContext taskContext;
 
-    public static Map<String, TaskExecutorManager> taskExecutorContextMap = new HashMap<>();
+    public static Map<String, ExecutorManager> taskExecutorContextMap = new HashMap<>();
 
     public TaskManager() {
         taskContext = new TaskContext();

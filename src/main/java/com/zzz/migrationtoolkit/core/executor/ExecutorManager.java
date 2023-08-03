@@ -4,10 +4,10 @@ import com.zzz.migrationtoolkit.common.constants.CommonConstant;
 import com.zzz.migrationtoolkit.common.constants.TaskResultConstant;
 import com.zzz.migrationtoolkit.common.constants.TaskStatusConstant;
 import com.zzz.migrationtoolkit.core.coreManager.context.TaskCache;
-import com.zzz.migrationtoolkit.core.executor.impl.AbstractTaskBaseExecutor;
-import com.zzz.migrationtoolkit.core.executor.impl.tableExecutor.TableMetaDataMigrationExecutor;
+import com.zzz.migrationtoolkit.core.executor.impl.AbstractBaseExecutor;
+import com.zzz.migrationtoolkit.core.executor.impl.tableExecutor.TableStructureExecutor;
 import com.zzz.migrationtoolkit.core.executor.impl.tableExecutor.TableUserDataMigrationExecutor;
-import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkResultEntity;
+import com.zzz.migrationtoolkit.entity.taskEntity.WorkResultEntity;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import java.util.concurrent.FutureTask;
  */
 @Data
 @Slf4j
-public class TaskExecutorManager implements Runnable {
+public class ExecutorManager implements Runnable {
 
     private String taskExecutorManagerId;
     private String taskExecutorManagerName;
@@ -31,22 +31,22 @@ public class TaskExecutorManager implements Runnable {
     /**
      * 执行任务所有执行器
      */
-    private List<AbstractTaskBaseExecutor> executorList;
+    private List<AbstractBaseExecutor> executorList;
     /**
      * 一级执行器
      */
-    private TableMetaDataMigrationExecutor tableMetaDataMigrationExecutor;
-    protected FutureTask<ProcessWorkResultEntity> tableMetaDataFutureTask;
+    private TableStructureExecutor tableStructureExecutor;
+    protected FutureTask<WorkResultEntity> tableMetaDataFutureTask;
 
     private TableUserDataMigrationExecutor tableUserDataMigrationExecutor;
-    protected FutureTask<ProcessWorkResultEntity> tableUserDataFutureTask;
+    protected FutureTask<WorkResultEntity> tableUserDataFutureTask;
 
     private boolean executorStop = false;
 
-    public TaskExecutorManager() {
+    public ExecutorManager() {
     }
 
-    public TaskExecutorManager(TaskDetail taskDetail) {
+    public ExecutorManager(TaskDetail taskDetail) {
         this.taskDetail = taskDetail;
         this.taskExecutorManagerId = taskDetail.getTaskId();
         this.taskExecutorManagerName = "{" + taskDetail + " executorManager}";
@@ -67,8 +67,8 @@ public class TaskExecutorManager implements Runnable {
         List<String> kinds = taskDetail.getMigrationObjTypeList();
         if (kinds.contains(CommonConstant.MIGRATION_OBJ_TABLE)) {
             //表迁移类型：结构、数据
-            tableMetaDataMigrationExecutor = new TableMetaDataMigrationExecutor(taskDetail);
-            addToExecutorList(tableMetaDataMigrationExecutor);
+            tableStructureExecutor = new TableStructureExecutor(taskDetail);
+            addToExecutorList(tableStructureExecutor);
 
             tableUserDataMigrationExecutor = new TableUserDataMigrationExecutor(taskDetail);
             addToExecutorList(tableUserDataMigrationExecutor, true);
@@ -80,7 +80,7 @@ public class TaskExecutorManager implements Runnable {
      *
      * @param executor 需要注册的执行器
      */
-    private void addToExecutorList(AbstractTaskBaseExecutor executor) {
+    private void addToExecutorList(AbstractBaseExecutor executor) {
         addToExecutorList(executor, false);
     }
 
@@ -90,12 +90,12 @@ public class TaskExecutorManager implements Runnable {
      * @param executor  需要注册的执行器
      * @param isCascade 是否缓存
      */
-    private void addToExecutorList(AbstractTaskBaseExecutor executor, boolean isCascade) {
+    private void addToExecutorList(AbstractBaseExecutor executor, boolean isCascade) {
         if (executorList == null) {
             executorList = new ArrayList<>();
         }
         if (executorList.size() > 0) {
-            AbstractTaskBaseExecutor preExecutor = executorList.get(executorList.size() - 1);
+            AbstractBaseExecutor preExecutor = executorList.get(executorList.size() - 1);
             executor.setPreExecutor(preExecutor);
             preExecutor.setNextExecutor(executor);
             if (isCascade) {
@@ -121,8 +121,8 @@ public class TaskExecutorManager implements Runnable {
             log.info("TaskExecutorManager starting...");
         }
         //一级执行器启动
-        if (tableMetaDataMigrationExecutor != null && !executorStop) {
-            startFlag = CommonConstant.SUCCESS.equals(tableMetaDataMigrationExecutor.startExecutor());
+        if (tableStructureExecutor != null && !executorStop) {
+            startFlag = CommonConstant.SUCCESS.equals(tableStructureExecutor.startExecutor());
         }
         //启动数据迁移执行器
         if (tableUserDataMigrationExecutor != null && startFlag && !executorStop) {
@@ -130,11 +130,11 @@ public class TaskExecutorManager implements Runnable {
         }
 
         //一级执行器返回结果
-        if (tableMetaDataMigrationExecutor != null && startFlag && !executorStop) {
-            if (CommonConstant.SUCCESS.equals(tableMetaDataMigrationExecutor.waitExecutor())) {
-                log.info("migration " + tableMetaDataMigrationExecutor.getExecutorType() + " success !");
+        if (tableStructureExecutor != null && startFlag && !executorStop) {
+            if (CommonConstant.SUCCESS.equals(tableStructureExecutor.waitExecutor())) {
+                log.info("migration " + tableStructureExecutor.getExecutorType() + " success !");
             } else {
-                log.error("migration " + tableMetaDataMigrationExecutor.getExecutorType() + " fail !");
+                log.error("migration " + tableStructureExecutor.getExecutorType() + " fail !");
             }
         }
 
@@ -165,7 +165,7 @@ public class TaskExecutorManager implements Runnable {
         String returnMsg = CommonConstant.RETURN_CODE_OK;
         executorStop = true;
 
-        for (AbstractTaskBaseExecutor executor : executorList) {
+        for (AbstractBaseExecutor executor : executorList) {
             String stopResultMsg = executor.stopExecutor();
             if (!CommonConstant.RETURN_CODE_OK.equals(stopResultMsg)) {
                 if (CommonConstant.RETURN_CODE_OK.equals(returnMsg)) {

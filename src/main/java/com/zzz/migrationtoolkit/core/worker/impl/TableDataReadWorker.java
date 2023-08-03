@@ -3,10 +3,10 @@ package com.zzz.migrationtoolkit.core.worker.impl;
 import com.zzz.migrationtoolkit.common.constants.MigrationConstant;
 import com.zzz.migrationtoolkit.core.generator.ISQLGenerator;
 import com.zzz.migrationtoolkit.core.generator.SQLGeneratorFactory;
-import com.zzz.migrationtoolkit.core.task.ExpDataParallaTask;
+import com.zzz.migrationtoolkit.core.task.TableDataParallelTask;
 import com.zzz.migrationtoolkit.core.task.ITask;
 import com.zzz.migrationtoolkit.core.task.TaskRunner;
-import com.zzz.migrationtoolkit.core.worker.AbstractProcessWorker;
+import com.zzz.migrationtoolkit.core.worker.AbstractBaseWorker;
 import com.zzz.migrationtoolkit.dataBase.DataBaseExecutorFactory;
 import com.zzz.migrationtoolkit.dataBase.IDataBaseExecutor;
 import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
@@ -26,35 +26,35 @@ import java.util.List;
  * @description:
  */
 @Slf4j
-public class UserDataReadWorker extends AbstractProcessWorker {
+public class TableDataReadWorker extends AbstractBaseWorker {
 
     private DataBaseConnInfo destDbci;
-    private List<String> sourceTypeList = null;
-    private List<String> destTypeList = null;
     //缓存线程
-    private int threadSize;
+    private final int threadSize;
 
 
-    public UserDataReadWorker(TaskDetail taskDetail, ProcessWorkQueue sourceWorkQueue, ProcessWorkQueue targetWorkQueue) {
+    public TableDataReadWorker(TaskDetail taskDetail, WorkQueue sourceWorkQueue, WorkQueue targetWorkQueue) {
         super(taskDetail, sourceWorkQueue, targetWorkQueue, "UserDataWriteWorker");
         this.destDbci = taskDetail.getTargetDataBase().getDbci();
         this.threadSize = taskDetail.getCoreConfig().getReadDataThreadSize();
     }
 
     @Override
-    public ProcessWorkResultEntity call() throws Exception {
+    public WorkResultEntity call() throws Exception {
 
-        ProcessWorkResultEntity processWorkResultEntity = new ProcessWorkResultEntity();
+        WorkResultEntity workResultEntity = new WorkResultEntity();
         IDataBaseExecutor dataBaseExecutor = null;
         MigrationTable migrationTable = null;
         String tableName;
         String dbName;
         while (true) {
+            List<String> destTypeList = null;
+            List<String> sourceTypeList = null;
             try {
                 if (stopWork) {
                     break;
                 }
-                ProcessWorkEntity processWork = this.sourceWorkQueue.takeWork();
+                WorkEntity processWork = this.sourceWorkQueue.takeWork();
                 if (!processWork.getWorkType().equals(WorkType.READ_TABLE_USERDATA)) {
                     continue;
                 }
@@ -115,7 +115,7 @@ public class UserDataReadWorker extends AbstractProcessWorker {
                             batchSize = totalDataCount - start;
                         }
                         String sql = sqlGenerator.getSourceLimitSelectSql(readDataSql, start, batchSize);
-                        ITask<Long> task = new ExpDataParallaTask(sql, migrationTable, taskDetail, stopWork, targetWorkQueue);
+                        ITask<Long> task = new TableDataParallelTask(sql, migrationTable, taskDetail, stopWork, targetWorkQueue);
                         taskRunner.syncRun(task);
                         taskList.add(task);
                     }
@@ -126,19 +126,19 @@ public class UserDataReadWorker extends AbstractProcessWorker {
                 if (migrationTable != null) {
                     migrationTable.appendResultMsg(e.getMessage());
                 }
-                processWorkResultEntity.setResultMsg("read data has error !");
-                processWorkResultEntity.setNormalFinished(false);
+                workResultEntity.setResultMsg("read data has error !");
+                workResultEntity.setNormalFinished(false);
                 log.error(e.getMessage());
                 e.printStackTrace();
             } finally {
-                if (dataBaseExecutor != null){
+                if (dataBaseExecutor != null) {
                     dataBaseExecutor.closeExecutor();
                 }
                 sourceTypeList = null;
                 destTypeList = null;
             }
         }
-        return processWorkResultEntity;
+        return workResultEntity;
     }
 
 

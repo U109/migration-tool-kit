@@ -2,35 +2,32 @@ package com.zzz.migrationtoolkit.core.worker.impl;
 
 import com.zzz.migrationtoolkit.common.constants.CommonConstant;
 import com.zzz.migrationtoolkit.common.constants.MigrationConstant;
-import com.zzz.migrationtoolkit.core.worker.AbstractProcessWorker;
+import com.zzz.migrationtoolkit.core.worker.AbstractBaseWorker;
 import com.zzz.migrationtoolkit.dataBase.DataBaseExecutorFactory;
 import com.zzz.migrationtoolkit.dataBase.IDataBaseExecutor;
-import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationObj;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationTable;
 import com.zzz.migrationtoolkit.entity.taskEntity.*;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author: Zzz
  * @date: 2023/7/4 17:50
  * @description:
  */
-public class MetaDataReadWorker extends AbstractProcessWorker {
+public class TableStructureReadWorker extends AbstractBaseWorker {
 
-    public MetaDataReadWorker(TaskDetail taskDetail, ProcessWorkQueue sourceWorkQueue, ProcessWorkQueue targetWorkQueue) {
+    public TableStructureReadWorker(TaskDetail taskDetail, WorkQueue sourceWorkQueue, WorkQueue targetWorkQueue) {
         super(taskDetail, sourceWorkQueue, targetWorkQueue, "MetaDataReadWorker");
     }
 
     @Override
-    public ProcessWorkResultEntity call() throws Exception {
+    public WorkResultEntity call() throws Exception {
 
-        ProcessWorkResultEntity processWorkResultEntity = new ProcessWorkResultEntity();
+        WorkResultEntity workResultEntity = new WorkResultEntity();
         IDataBaseExecutor dataBaseExecutor = null;
 
         while (true) {
             //任务块
-            ProcessWorkEntity processWork = null;
+            WorkEntity processWork = null;
             //迁移表对象
             MigrationTable migrationTable = null;
 
@@ -65,8 +62,8 @@ public class MetaDataReadWorker extends AbstractProcessWorker {
             migrationTable.setColumnDetailForMigrationTable(dataBaseExecutor);
             processWork.setWorkType(WorkType.WRITE_TABLE_METADATA);
             targetWorkQueue.putWork(processWork);
-            processWorkResultEntity.setResultMsg(CommonConstant.SUCCESS);
+            workResultEntity.setResultMsg(CommonConstant.SUCCESS);
         }
-        return processWorkResultEntity;
+        return workResultEntity;
     }
 }

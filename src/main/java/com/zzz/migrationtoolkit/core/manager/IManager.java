@@ -1,6 +1,6 @@
 package com.zzz.migrationtoolkit.core.manager;
 
-import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkResultEntity;
+import com.zzz.migrationtoolkit.entity.taskEntity.WorkResultEntity;
 
 import java.util.concurrent.Callable;
 
@@ -9,7 +9,7 @@ import java.util.concurrent.Callable;
  * @date: 2023/7/4 17:11
  * @description:
  */
-public interface IProcessManager extends Callable<ProcessWorkResultEntity> {
+public interface IManager extends Callable<WorkResultEntity> {
 
     //启动worker
     public String startWorker();

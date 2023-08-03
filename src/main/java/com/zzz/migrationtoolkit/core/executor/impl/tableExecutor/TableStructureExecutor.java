@@ -1,10 +1,10 @@
 package com.zzz.migrationtoolkit.core.executor.impl.tableExecutor;
 
-import com.zzz.migrationtoolkit.core.executor.impl.AbstractTaskBaseExecutor;
-import com.zzz.migrationtoolkit.core.manager.impl.MetaDataReadManager;
-import com.zzz.migrationtoolkit.core.manager.impl.MetaDataWriteManager;
+import com.zzz.migrationtoolkit.core.executor.impl.AbstractBaseExecutor;
+import com.zzz.migrationtoolkit.core.manager.impl.TableStructureReadManager;
+import com.zzz.migrationtoolkit.core.manager.impl.TableStructureWriteManager;
 import com.zzz.migrationtoolkit.core.worker.impl.TaskExecutorStarter;
-import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkResultEntity;
+import com.zzz.migrationtoolkit.entity.taskEntity.WorkResultEntity;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 import com.zzz.migrationtoolkit.entity.taskEntity.WorkContentType;
 import com.zzz.migrationtoolkit.entity.taskEntity.WorkType;
@@ -14,20 +14,20 @@ import com.zzz.migrationtoolkit.entity.taskEntity.WorkType;
  * @date: 2023/7/4 16:45
  * @description:
  */
-public class TableMetaDataMigrationExecutor extends AbstractTaskBaseExecutor {
+public class TableStructureExecutor extends AbstractBaseExecutor {
 
 
-    public TableMetaDataMigrationExecutor() {
+    public TableStructureExecutor() {
     }
 
-    public TableMetaDataMigrationExecutor(TaskDetail taskDetail) {
+    public TableStructureExecutor(TaskDetail taskDetail) {
         super(taskDetail);
         super.executorType = "TableMetaDataExecutor";
         super.executorName = taskDetail + "--[表结构执行器]";
         //初始化读表结构   TODO 这里source放置的null，target放置中转队列的目的
-        this.readProcessManager = new MetaDataReadManager(taskDetail, null, this.readToWriteExecutorQueue);
+        this.readProcessManager = new TableStructureReadManager(taskDetail, null, this.readToWriteExecutorQueue);
         //初始化写Manager
-        this.writeProcessManager = new MetaDataWriteManager(taskDetail, this.readToWriteExecutorQueue, null);
+        this.writeProcessManager = new TableStructureWriteManager(taskDetail, this.readToWriteExecutorQueue, null);
     }
 
     @Override
@@ -42,20 +42,20 @@ public class TableMetaDataMigrationExecutor extends AbstractTaskBaseExecutor {
      * 启动表结构迁移
      */
     @Override
-    public ProcessWorkResultEntity call() {
+    public WorkResultEntity call() {
         boolean resultFlag = true;
 
         String resultMsg = "";
 
         //启动失败，直接返回
-        ProcessWorkResultEntity startManagerResultEntity = startManager();
+        WorkResultEntity startManagerResultEntity = startManager();
         if (startManagerResultEntity != null) {
             return startManagerResultEntity;
         }
         //等待两个流程返回结果
         //读取元数据Manager返回结果，所有的源数据已经读取完毕，结束该manager下所有线程
         try {
-            ProcessWorkResultEntity result = readFutureTask.get();
+            WorkResultEntity result = readFutureTask.get();
             //记录返回的结果标志位，true标识正常
             resultFlag = result.isNormalFinished();
             //记录返回错误消息
@@ -68,7 +68,7 @@ public class TableMetaDataMigrationExecutor extends AbstractTaskBaseExecutor {
         }
         //写入元数据Manager返回结果，所有的源数据已经读取完毕，结束该manager下所有线程
         try {
-            ProcessWorkResultEntity result = writeFutureTask.get();
+            WorkResultEntity result = writeFutureTask.get();
             //记录返回的结果标志位，true标识正常
             resultFlag = result.isNormalFinished();
             //记录返回错误消息
@@ -83,7 +83,7 @@ public class TableMetaDataMigrationExecutor extends AbstractTaskBaseExecutor {
                 this.nextExecutor.getReadProcessManager().finishedQueue();
             }
         }
-        return new ProcessWorkResultEntity(resultFlag, resultMsg);
+        return new WorkResultEntity(resultFlag, resultMsg);
     }
 }
 

@@ -3,7 +3,7 @@ package com.zzz.migrationtoolkit.core.scheduler;
 import com.zzz.migrationtoolkit.common.constants.TaskStatusConstant;
 import com.zzz.migrationtoolkit.core.coreManager.TaskManager;
 import com.zzz.migrationtoolkit.core.coreManager.context.TaskCache;
-import com.zzz.migrationtoolkit.core.executor.TaskExecutorManager;
+import com.zzz.migrationtoolkit.core.executor.ExecutorManager;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,7 +17,7 @@ import java.util.Map;
 @Slf4j
 public class TaskScheduler {
 
-    private static Map<String, TaskExecutorManager> taskExecutorContext = TaskManager.taskExecutorContextMap;
+    private static Map<String, ExecutorManager> taskExecutorContext = TaskManager.taskExecutorContextMap;
 
     /**
      * 启动任务
@@ -29,12 +29,12 @@ public class TaskScheduler {
         //更新任务状态
         TaskCache.updateTaskDetail(taskId, TaskStatusConstant.TASK_STARTING, null, null);
         //创建任务执行器管理者，用来启动任务
-        TaskExecutorManager taskExecutorManager = new TaskExecutorManager(taskDetail);
+        ExecutorManager executorManager = new ExecutorManager(taskDetail);
         //更新任务执行器管理器中最新执行器
-        taskExecutorContext.put(taskDetail.getTaskId(), taskExecutorManager);
+        taskExecutorContext.put(taskDetail.getTaskId(), executorManager);
         //启动执行器管理者
-        Thread taskExecutorThread = new Thread(taskExecutorManager);
-        taskExecutorThread.setName(taskExecutorManager.getTaskExecutorManagerName());
+        Thread taskExecutorThread = new Thread(executorManager);
+        taskExecutorThread.setName(executorManager.getTaskExecutorManagerName());
         taskExecutorThread.start();
         try {
             //等待任务执行器线程（taskExecutorThread）执行完毕。

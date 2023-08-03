@@ -1,7 +1,7 @@
 package com.zzz.migrationtoolkit.core.worker;
 
 import com.zzz.migrationtoolkit.common.constants.CommonConstant;
-import com.zzz.migrationtoolkit.entity.taskEntity.ProcessWorkQueue;
+import com.zzz.migrationtoolkit.entity.taskEntity.WorkQueue;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 import lombok.Data;
 
@@ -11,10 +11,10 @@ import lombok.Data;
  * @description:
  */
 @Data
-public abstract class AbstractProcessWorker implements IProcessWorker {
+public abstract class AbstractBaseWorker implements IWorker {
 
-    protected ProcessWorkQueue sourceWorkQueue;
-    protected ProcessWorkQueue targetWorkQueue;
+    protected WorkQueue sourceWorkQueue;
+    protected WorkQueue targetWorkQueue;
     protected TaskDetail taskDetail;
     protected String workerType;
     protected boolean stopWork = false;
@@ -22,10 +22,10 @@ public abstract class AbstractProcessWorker implements IProcessWorker {
     protected String sourceDBType;
     protected String targetDBType;
 
-    public AbstractProcessWorker() {
+    public AbstractBaseWorker() {
     }
 
-    public AbstractProcessWorker(TaskDetail taskDetail, ProcessWorkQueue sourceWorkQueue, ProcessWorkQueue targetWorkQueue
+    public AbstractBaseWorker(TaskDetail taskDetail, WorkQueue sourceWorkQueue, WorkQueue targetWorkQueue
             , String workerType) {
         this.sourceWorkQueue = sourceWorkQueue;
         this.targetWorkQueue = targetWorkQueue;

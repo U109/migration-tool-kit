@@ -9,24 +9,23 @@ import java.util.concurrent.BlockingQueue;
  * @date: 2023/7/4 17:05
  * @description:
  */
-public class ProcessWorkQueue implements Serializable {
+public class WorkQueue implements Serializable {
 
-    private BlockingQueue<ProcessWorkEntity> queue;
+    private final BlockingQueue<WorkEntity> queue;
 
-    public ProcessWorkQueue(int workQueueSize) {
-        this.queue = new ArrayBlockingQueue<ProcessWorkEntity>(workQueueSize);
+    public WorkQueue(int workQueueSize) {
+        this.queue = new ArrayBlockingQueue<>(workQueueSize);
     }
 
-    public String putWork(ProcessWorkEntity entity) {
+    public void putWork(WorkEntity entity) {
         try {
             queue.put(entity);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return "ok";
     }
 
-    public ProcessWorkEntity takeWork() throws Exception {
+    public WorkEntity takeWork() throws Exception {
         return queue.take();
     }
 
