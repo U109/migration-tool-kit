@@ -1,9 +1,8 @@
 package com.zzz.migrationtoolkit.dataBase.dbExecutor;
 
 import com.zzz.migrationtoolkit.common.utils.CloseObjUtil;
-import com.zzz.migrationtoolkit.core.convert.ISourceDataTypeConvert;
-import com.zzz.migrationtoolkit.core.convert.MySqlToMySqlDataTypeConvert;
-import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.MySqlConnInfo;
+import com.zzz.migrationtoolkit.dataBase.convert.ISourceDataTypeConvert;
+import com.zzz.migrationtoolkit.dataBase.convert.MySqlToMySqlDataTypeConvert;
 import com.zzz.migrationtoolkit.entity.dataBaseElementEntity.ColumnEntity;
 import com.zzz.migrationtoolkit.entity.dataTypeEntity.DataType;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationColumn;

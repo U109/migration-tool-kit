@@ -1,11 +1,10 @@
 package com.zzz.migrationtoolkit.core.worker.impl;
 
-import com.zzz.migrationtoolkit.core.generator.ISQLGenerator;
-import com.zzz.migrationtoolkit.core.generator.SQLGeneratorFactory;
+import com.zzz.migrationtoolkit.dataBase.generator.ISQLGenerator;
+import com.zzz.migrationtoolkit.dataBase.generator.SQLGeneratorFactory;
 import com.zzz.migrationtoolkit.core.worker.AbstractBaseWorker;
 import com.zzz.migrationtoolkit.dataBase.DataBaseExecutorFactory;
 import com.zzz.migrationtoolkit.dataBase.IDataBaseExecutor;
-import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationTable;
 import com.zzz.migrationtoolkit.entity.taskEntity.*;
 import lombok.extern.slf4j.Slf4j;

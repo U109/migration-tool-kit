@@ -2,7 +2,7 @@ package com.zzz.migrationtoolkit.server;
 
 import com.zzz.migrationtoolkit.common.constants.FilePathContent;
 import com.zzz.migrationtoolkit.core.coreManager.TaskManager;
-import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
+import com.zzz.migrationtoolkit.entity.dataSourceEmtity.DataSourceProperties;
 import com.zzz.migrationtoolkit.entity.dataTypeEntity.DataType;
 import com.zzz.migrationtoolkit.entity.dataTypeEntity.DataTypeMapping;
 import com.zzz.migrationtoolkit.entity.taskEntity.CoreConfig;
@@ -22,7 +22,7 @@ import java.util.Properties;
  */
 public class InitContext {
 
-    public static Map<String, Map<String, DataBaseConnInfo>> DBConnectionMap;
+    public static Map<String, Map<String, DataSourceProperties>> DataSourceMap;
     public static CoreConfig coreConfig = new CoreConfig();
     public static Map<String, List<DataType>> DataType;
     public static Map<String, DataTypeMapping> SourceDataTypeMapping;

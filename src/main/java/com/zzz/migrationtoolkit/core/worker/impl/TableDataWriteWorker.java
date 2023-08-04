@@ -1,8 +1,8 @@
 package com.zzz.migrationtoolkit.core.worker.impl;
 
 import com.zzz.migrationtoolkit.common.constants.MigrationConstant;
-import com.zzz.migrationtoolkit.core.generator.ISQLGenerator;
-import com.zzz.migrationtoolkit.core.generator.SQLGeneratorFactory;
+import com.zzz.migrationtoolkit.dataBase.generator.ISQLGenerator;
+import com.zzz.migrationtoolkit.dataBase.generator.SQLGeneratorFactory;
 import com.zzz.migrationtoolkit.core.worker.AbstractBaseWorker;
 import com.zzz.migrationtoolkit.dataBase.DataBaseExecutorFactory;
 import com.zzz.migrationtoolkit.dataBase.IDataBaseExecutor;

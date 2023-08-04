@@ -1,11 +1,9 @@
 package com.zzz.migrationtoolkit.handler.dataBaseHandler;
 
-import com.zzz.migrationtoolkit.common.constants.DataBaseConstant;
 import com.zzz.migrationtoolkit.common.constants.FilePathContent;
 import com.zzz.migrationtoolkit.common.vo.ConnectionVO;
-import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
-import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.MySqlConnInfo;
-import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo;
+import com.zzz.migrationtoolkit.common.vo.DataSourceVO;
+import com.zzz.migrationtoolkit.entity.dataSourceEmtity.*;
 import com.zzz.migrationtoolkit.server.InitContext;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
@@ -23,9 +21,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +35,7 @@ import java.util.Map;
 public class DataSourceProcess {
 
     public static void initDBConnections() {
-        InitContext.DBConnectionMap = readDataBaseConnection();
+        InitContext.DataSourceMap = readDataSourceFromXML();
     }
 
 
@@ -49,13 +44,13 @@ public class DataSourceProcess {
      *
      * @return Map
      */
-    private static Map<String, Map<String, DataBaseConnInfo>> readDataBaseConnection() {
-        /**
-         *         |-- nameA:DataBaseInfo
+    private static Map<String, Map<String, DataSourceProperties>> readDataSourceFromXML() {
+        /*
+         *         |-- nameA:DataSourceProperties
          *  Oracle |
-         *         |-- nameB:DataBaseInfo
+         *         |-- nameB:DataSourceProperties
          */
-        Map<String, Map<String, DataBaseConnInfo>> result = new HashMap<>();
+        Map<String, Map<String, DataSourceProperties>> result = new HashMap<>();
         DocumentBuilder docParser;
         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
         try {
@@ -63,15 +58,13 @@ public class DataSourceProcess {
             Document doc = docParser.parse(FilePathContent.TASK_DB_CONNECTION);
             // 获取根节点
             Element root = (Element) doc.getElementsByTagName("dbs").item(0);
-
             NodeList dbList = root.getElementsByTagName("db");
-
             for (int i = 0; i < dbList.getLength(); i++) {
                 Element dbElement = (Element) dbList.item(i);
                 // 数据库连接标识
                 String dbType = dbElement.getAttribute("id");
                 String connName = dbElement.getAttribute("name");
-                String clazzName = dbElement.getAttribute("class");
+                String driverPath = dbElement.getAttribute("driverPath");
                 // 获取数据库连接实体对象的属性Set方法和相应的值
                 Map<String, String> attrValueMap = new HashMap<>();
                 NodeList childNodes = dbElement.getChildNodes();
@@ -84,16 +77,16 @@ public class DataSourceProcess {
                         attrValueMap.put(nodeName, nodeValue);
                     }
                 }
-                DataBaseConnInfo dbci = (DataBaseConnInfo) xmlToObj(clazzName, attrValueMap);
-                dbci.setDbType(dbType);
+                DataSourceProperties dataSourceProperties = xmlToObj(driverPath, attrValueMap);
+                dataSourceProperties.setDbType(dbType);
                 //计算如果不存在
                 if (result.containsKey(dbType)) {
-                    Map<String, DataBaseConnInfo> baseConnInfoMap = result.get(dbType);
-                    baseConnInfoMap.put(connName, dbci);
+                    Map<String, DataSourceProperties> dataSourceMap = result.get(dbType);
+                    dataSourceMap.put(connName, dataSourceProperties);
                 } else {
-                    Map<String, DataBaseConnInfo> dbMap = new HashMap<>();
-                    dbMap.put(connName, dbci);
-                    result.put(dbType, dbMap);
+                    Map<String, DataSourceProperties> dataSourceMap = new HashMap<>();
+                    dataSourceMap.put(connName, dataSourceProperties);
+                    result.put(dbType, dataSourceMap);
                 }
             }
         } catch (ParserConfigurationException | IOException | SAXException e) {
@@ -103,21 +96,19 @@ public class DataSourceProcess {
     }
 
 
-    private static Object xmlToObj(String clazzName, Map<String, String> attrValueMap) {
-        Object obj = null;
-        Class<?> clazz = null;
-        try {
-            clazz = Class.forName(clazzName);
-            obj = clazz.getDeclaredConstructor().newInstance();
-            //对象赋值
-            for (Map.Entry<String, String> entry : attrValueMap.entrySet()) {
-                String setMethod = "set" + entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().substring(1);
-                clazz.getDeclaredMethod(setMethod, String.class).invoke(obj, entry.getValue());
-            }
-        } catch (Exception e) {
-            log.error("initContext error :: " + e.getMessage());
-        }
-        return obj;
+    private static DataSourceProperties xmlToObj(String driverPath, Map<String, String> attrValueMap) {
+        DataSourceProperties properties = new DataSourceProperties();
+        String dbName = attrValueMap.get("dbName");
+        String url = dbName + attrValueMap.get("host") + ":" + attrValueMap.get("port") +
+                "/" + attrValueMap.get("dbName");
+        properties.setUrl(url);
+        properties.setUsername(attrValueMap.get("username"));
+        properties.setPassword(attrValueMap.get("password"));
+        properties.setDriverPath(driverPath);
+        properties.setDbName(dbName);
+        properties.setDriverClassName(attrValueMap.get("dbDriver"));
+        properties.setSchemaName(dbName);
+        return properties;
     }
 
     /**
@@ -128,19 +119,7 @@ public class DataSourceProcess {
      * @throws Exception 异常
      */
     public static boolean testConnection(ConnectionVO connectionVO) throws Exception {
-
-        String dbType = connectionVO.getDbtype();
-        Connection connection = null;
-        if (DataBaseConstant.MYSQL.equals(dbType)) {
-            MySqlConnInfo connInfo = new MySqlConnInfo(connectionVO);
-            Class.forName(connInfo.getDbDriver());
-            connection = DriverManager.getConnection(connInfo.getUrl(), connInfo.getUsername(), connInfo.getPassword());
-        } else if (DataBaseConstant.ORACLE.equals(dbType)) {
-            OracleConnInfo connInfo = new OracleConnInfo(connectionVO);
-            Class.forName(connInfo.getDbDriver());
-            connection = DriverManager.getConnection(connInfo.getUrl(), connInfo.getUsername(), connInfo.getPassword());
-        }
-        return connection != null;
+        return false;
     }
 
     /**
@@ -148,40 +127,31 @@ public class DataSourceProcess {
      *
      * @param connection connection
      */
-    public static void writeDataBaseConnection(ConnectionVO connection) throws Exception {
+    public static void writeDBConnectionXML(ConnectionVO connection) throws Exception {
 
         //判断name是否已存在
-        Map<String, DataBaseConnInfo> dataBaseConnInfoMap = InitContext.DBConnectionMap.get(connection.getDbtype());
+        Map<String, DataSourceProperties> dataSourceMap = InitContext.DataSourceMap.get(connection.getDbtype());
 
-        if (dataBaseConnInfoMap.containsKey(connection.getConnname())) {
+        if (dataSourceMap.containsKey(connection.getName())) {
             throw new RuntimeException("该名称已存在，请更换！");
         }
-
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(FilePathContent.TASK_DB_CONNECTION);
         // 获取根元素
         Element rootElement = doc.getDocumentElement();
-        String className = "com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity." + connection.getDbtype() + "ConnInfo";
+        String driverPath = "src/main/resources/drivers/" + connection.getDriverPath();
         // 创建 <db> 元素并设置属性
         Element dbElement = doc.createElement("db");
         dbElement.setAttribute("id", connection.getDbtype());
-        dbElement.setAttribute("name", connection.getConnname());
-        dbElement.setAttribute("class", className);
+        dbElement.setAttribute("name", connection.getName());
+        dbElement.setAttribute("driverPath", driverPath);
         //设置子标签
         Element dbDriverElement = doc.createElement("dbDriver");
-        //反射获取属性值
-        String driverName = connection.getDbtype().toUpperCase() + "_DB_DRIVER";
-        Field dbDriverField = DataBaseConstant.class.getField(driverName);
-        //此处是静态变量，所以不需要实例对象，因此传入的参数为 null
-        String dbDriverValue = (String) dbDriverField.get(null);
-        dbDriverElement.setTextContent(dbDriverValue);
+        dbDriverElement.setTextContent("com.mysql.cj.jdbc.Driver");
         Element dbUrlElement = doc.createElement("dbUrl");
-        String urlName = connection.getDbtype().toUpperCase() + "_DB_URL";
-        Field dbUrlField = DataBaseConstant.class.getField(urlName);
-        String dbUrlValue = (String) dbUrlField.get(null);
-        dbUrlElement.setTextContent(dbUrlValue);
+        dbUrlElement.setTextContent("jdbc:mysql://");
         Element hostElement = doc.createElement("host");
         hostElement.setTextContent(connection.getHost());
         Element portElement = doc.createElement("port");
@@ -218,24 +188,27 @@ public class DataSourceProcess {
 
     }
 
-    public static List<DataBaseConnInfo> getDataBaseConnectionInfo() {
-        List<DataBaseConnInfo> dataBaseConnInfoList = new ArrayList<>();
-        for (Map.Entry<String, Map<String, DataBaseConnInfo>> listEntry : InitContext.DBConnectionMap.entrySet()) {
-            Map<String, DataBaseConnInfo> dataBaseConnInfoMap = listEntry.getValue();
-            for (Map.Entry<String, DataBaseConnInfo> dataBaseConnInfoEntry : dataBaseConnInfoMap.entrySet()) {
-                DataBaseConnInfo dataBaseConnInfo = dataBaseConnInfoEntry.getValue();
-                //因为对象有改动，需要使用新对象来存储变化，避免污染原来的数据
-                DataBaseConnInfo resultDataBaseConnInfo = new DataBaseConnInfo(dataBaseConnInfo);
-                //解析出来的databaseConnInfo是没有connName属性的
-                String connName = dataBaseConnInfoEntry.getKey();
+    public static List<DataSourceVO> getDataSourceList() {
+        List<DataSourceVO> dataSourceList = new ArrayList<>();
 
-                resultDataBaseConnInfo.setConnName(connName);
+        for (Map.Entry<String, Map<String, DataSourceProperties>> listEntry : InitContext.DataSourceMap.entrySet()) {
+            Map<String, DataSourceProperties> dataSourceMap = listEntry.getValue();
+            for (Map.Entry<String, DataSourceProperties> dataSourceEntry : dataSourceMap.entrySet()) {
+                DataSourceProperties dataSourceProperties = dataSourceEntry.getValue();
+                //解析出来的databaseConnInfo是没有connName属性的
+                String connName = dataSourceEntry.getKey();
                 //前端需要dbName/Schema
-                String dataName = dataBaseConnInfo.getDbName() + "/" + dataBaseConnInfo.getSchema();
-                resultDataBaseConnInfo.setDbName(dataName);
-                dataBaseConnInfoList.add(resultDataBaseConnInfo);
+                String dataName = dataSourceProperties.getDbName() + "/" + dataSourceProperties.getSchemaName();
+                DataSourceVO dataSourceVO = new DataSourceVO();
+                dataSourceVO.setConnName(connName);
+                dataSourceVO.setUrl(dataSourceProperties.getUrl());
+                dataSourceVO.setDbName(dataName);
+                dataSourceVO.setDriverName(dataSourceProperties.getDriverClassName());
+                dataSourceVO.setUsername(dataSourceProperties.getUsername());
+                dataSourceVO.setPassword(dataSourceProperties.getPassword());
+                dataSourceList.add(dataSourceVO);
             }
         }
-        return dataBaseConnInfoList;
+        return dataSourceList;
     }
 }

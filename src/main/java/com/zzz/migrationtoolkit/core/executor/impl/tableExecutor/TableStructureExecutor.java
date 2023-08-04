@@ -16,10 +16,6 @@ import com.zzz.migrationtoolkit.entity.taskEntity.WorkType;
  */
 public class TableStructureExecutor extends AbstractBaseExecutor {
 
-
-    public TableStructureExecutor() {
-    }
-
     public TableStructureExecutor(TaskDetail taskDetail) {
         super(taskDetail);
         super.executorType = "TableMetaDataExecutor";

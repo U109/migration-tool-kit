@@ -16,9 +16,6 @@ import com.zzz.migrationtoolkit.entity.taskEntity.WorkType;
  */
 public class TableUserDataMigrationExecutor extends AbstractBaseExecutor {
 
-    public TableUserDataMigrationExecutor() {
-    }
-
     public TableUserDataMigrationExecutor(TaskDetail taskDetail) {
         super(taskDetail);
         executorType = "TableUserDataExecutor";

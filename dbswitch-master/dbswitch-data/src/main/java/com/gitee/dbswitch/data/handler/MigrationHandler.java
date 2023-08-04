@@ -89,21 +89,11 @@ public class MigrationHandler implements Supplier<Long> {
     // 日志输出字符串使用
     private String tableNameMapString;
 
-    public static MigrationHandler createInstance(TableDescription td,
-                                                  DbswichProperties properties,
-                                                  Integer sourcePropertiesIndex,
-                                                  CloseableDataSource sds,
-                                                  CloseableDataSource tds,
-                                                  Set<String> targetExistTables) {
+    public static MigrationHandler createInstance(TableDescription td, DbswichProperties properties, Integer sourcePropertiesIndex, CloseableDataSource sds, CloseableDataSource tds, Set<String> targetExistTables) {
         return new MigrationHandler(td, properties, sourcePropertiesIndex, sds, tds, targetExistTables);
     }
 
-    private MigrationHandler(TableDescription td,
-                             DbswichProperties properties,
-                             Integer sourcePropertiesIndex,
-                             CloseableDataSource sds,
-                             CloseableDataSource tds,
-                             Set<String> targetExistTables) {
+    private MigrationHandler(TableDescription td, DbswichProperties properties, Integer sourcePropertiesIndex, CloseableDataSource sds, CloseableDataSource tds, Set<String> targetExistTables) {
         this.sourceSchemaName = td.getSchemaName();
         this.sourceTableName = td.getTableName();
         this.properties = properties;
@@ -118,16 +108,13 @@ public class MigrationHandler implements Supplier<Long> {
         this.targetExistTables = targetExistTables;
         // 获取映射转换后新的表名
         this.targetSchemaName = properties.getTarget().getTargetSchema();
-        this.targetTableName = PatterNameUtils.getFinalName(td.getTableName(),
-                sourceProperties.getRegexTableMapper());
+        this.targetTableName = PatterNameUtils.getFinalName(td.getTableName(), sourceProperties.getRegexTableMapper());
 
         if (StringUtils.isEmpty(this.targetTableName)) {
             throw new RuntimeException("表名的映射规则配置有误，不能将[" + this.sourceTableName + "]映射为空");
         }
 
-        this.tableNameMapString = String.format("%s.%s --> %s.%s",
-                td.getSchemaName(), td.getTableName(),
-                targetSchemaName, targetTableName);
+        this.tableNameMapString = String.format("%s.%s --> %s.%s", td.getSchemaName(), td.getTableName(), targetSchemaName, targetTableName);
     }
 
     public void interrupt() {
@@ -140,32 +127,22 @@ public class MigrationHandler implements Supplier<Long> {
 
         this.sourceProductType = DatabaseAwareUtils.getDatabaseTypeByDataSource(sourceDataSource);
         this.targetProductType = DatabaseAwareUtils.getDatabaseTypeByDataSource(targetDataSource);
-        this.sourceMetaDataService = new MetaDataByDataSourceServiceImpl(sourceDataSource,
-                sourceProductType);
+        this.sourceMetaDataService = new MetaDataByDataSourceServiceImpl(sourceDataSource, sourceProductType);
 
         // 读取源表的表及字段元数据
-        this.sourceTableRemarks = sourceMetaDataService
-                .getTableRemark(sourceSchemaName, sourceTableName);
-        this.sourceColumnDescriptions = sourceMetaDataService
-                .queryTableColumnMeta(sourceSchemaName, sourceTableName);
-        this.sourcePrimaryKeys = sourceMetaDataService
-                .queryTablePrimaryKeys(sourceSchemaName, sourceTableName);
+        this.sourceTableRemarks = sourceMetaDataService.getTableRemark(sourceSchemaName, sourceTableName);
+        this.sourceColumnDescriptions = sourceMetaDataService.queryTableColumnMeta(sourceSchemaName, sourceTableName);
+        this.sourcePrimaryKeys = sourceMetaDataService.queryTablePrimaryKeys(sourceSchemaName, sourceTableName);
 
         // 根据表的列名映射转换准备目标端表的字段信息
-        this.targetColumnDescriptions = sourceColumnDescriptions.stream()
-                .map(column -> {
-                    String newName = PatterNameUtils.getFinalName(
-                            column.getFieldName(),
-                            sourceProperties.getRegexColumnMapper());
-                    ColumnDescription description = column.copy();
-                    description.setFieldName(newName);
-                    description.setLabelName(newName);
-                    return description;
-                }).collect(Collectors.toList());
-        this.targetPrimaryKeys = sourcePrimaryKeys.stream()
-                .map(name ->
-                        PatterNameUtils.getFinalName(name, sourceProperties.getRegexColumnMapper())
-                ).collect(Collectors.toList());
+        this.targetColumnDescriptions = sourceColumnDescriptions.stream().map(column -> {
+            String newName = PatterNameUtils.getFinalName(column.getFieldName(), sourceProperties.getRegexColumnMapper());
+            ColumnDescription description = column.copy();
+            description.setFieldName(newName);
+            description.setLabelName(newName);
+            return description;
+        }).collect(Collectors.toList());
+        this.targetPrimaryKeys = sourcePrimaryKeys.stream().map(name -> PatterNameUtils.getFinalName(name, sourceProperties.getRegexColumnMapper())).collect(Collectors.toList());
 
         // 打印表名与字段名的映射关系
         List<String> columnMapperPairs = new ArrayList<>();
@@ -177,15 +154,10 @@ public class MigrationHandler implements Supplier<Long> {
                 columnMapperPairs.add(String.format("%s --> %s", sourceColumnName, targetColumnName));
                 mapChecker.put(sourceColumnName, targetColumnName);
             } else {
-                columnMapperPairs.add(String.format(
-                        "%s --> %s",
-                        sourceColumnName,
-                        String.format("<!Field(%s) is Deleted>", (i + 1))
-                ));
+                columnMapperPairs.add(String.format("%s --> %s", sourceColumnName, String.format("<!Field(%s) is Deleted>", (i + 1))));
             }
         }
-        log.info("Mapping relation : \ntable mapper :\n\t{}  \ncolumn mapper :\n\t{} ",
-                tableNameMapString, String.join("\n\t", columnMapperPairs));
+        log.info("Mapping relation : \ntable mapper :\n\t{}  \ncolumn mapper :\n\t{} ", tableNameMapString, String.join("\n\t", columnMapperPairs));
         Set<String> valueSet = new HashSet<>(mapChecker.values());
         if (valueSet.size() <= 0) {
             throw new RuntimeException("字段映射配置有误，禁止通过映射将表所有的字段都删除!");
@@ -200,8 +172,7 @@ public class MigrationHandler implements Supplier<Long> {
             log.info("task job is interrupted!");
             throw new RuntimeException("task is interrupted");
         }
-        IDatabaseWriter writer = DatabaseWriterFactory.createDatabaseWriter(
-                targetDataSource, properties.getTarget().getWriterEngineInsert());
+        IDatabaseWriter writer = DatabaseWriterFactory.createDatabaseWriter(targetDataSource, properties.getTarget().getWriterEngineInsert());
 
         if (properties.getTarget().getTargetDrop()) {
       /*
@@ -211,25 +182,14 @@ public class MigrationHandler implements Supplier<Long> {
        */
 
             try {
-                DatabaseOperatorFactory.createDatabaseOperator(targetDataSource)
-                        .dropTable(targetSchemaName, targetTableName);
+                DatabaseOperatorFactory.createDatabaseOperator(targetDataSource).dropTable(targetSchemaName, targetTableName);
                 log.info("Target Table {}.{} is exits, drop it now !", targetSchemaName, targetTableName);
             } catch (Exception e) {
                 log.info("Target Table {}.{} is not exits, create it!", targetSchemaName, targetTableName);
             }
 
             // 生成建表语句并创建
-            List<String> sqlCreateTable = sourceMetaDataService.getDDLCreateTableSQL(
-                    targetProductType,
-                    targetColumnDescriptions.stream()
-                            .filter(column -> StringUtils.hasLength(column.getFieldName()))
-                            .collect(Collectors.toList()),
-                    targetPrimaryKeys,
-                    targetSchemaName,
-                    targetTableName,
-                    sourceTableRemarks,
-                    properties.getTarget().getCreateTableAutoIncrement()
-            );
+            List<String> sqlCreateTable = sourceMetaDataService.getDDLCreateTableSQL(targetProductType, targetColumnDescriptions.stream().filter(column -> StringUtils.hasLength(column.getFieldName())).collect(Collectors.toList()), targetPrimaryKeys, targetSchemaName, targetTableName, sourceTableRemarks, properties.getTarget().getCreateTableAutoIncrement());
 
             JdbcTemplate targetJdbcTemplate = new JdbcTemplate(targetDataSource);
             for (String sql : sqlCreateTable) {
@@ -238,8 +198,7 @@ public class MigrationHandler implements Supplier<Long> {
             }
 
             // 如果只想创建表，这里直接返回
-            if (null != properties.getTarget().getOnlyCreate()
-                    && properties.getTarget().getOnlyCreate()) {
+            if (null != properties.getTarget().getOnlyCreate() && properties.getTarget().getOnlyCreate()) {
                 return 0L;
             }
 
@@ -251,8 +210,7 @@ public class MigrationHandler implements Supplier<Long> {
             return doFullCoverSynchronize(writer);
         } else {
             // 对于只想创建表的情况，不提供后续的变化量数据同步功能
-            if (null != properties.getTarget().getOnlyCreate()
-                    && properties.getTarget().getOnlyCreate()) {
+            if (null != properties.getTarget().getOnlyCreate() && properties.getTarget().getOnlyCreate()) {
                 return 0L;
             }
 
@@ -263,17 +221,7 @@ public class MigrationHandler implements Supplier<Long> {
 
             if (!targetExistTables.contains(targetTableName)) {
                 // 当目标端不存在该表时，则生成建表语句并创建
-                List<String> sqlCreateTable = sourceMetaDataService.getDDLCreateTableSQL(
-                        targetProductType,
-                        targetColumnDescriptions.stream()
-                                .filter(column -> StringUtils.hasLength(column.getFieldName()))
-                                .collect(Collectors.toList()),
-                        targetPrimaryKeys,
-                        targetSchemaName,
-                        targetTableName,
-                        sourceTableRemarks,
-                        properties.getTarget().getCreateTableAutoIncrement()
-                );
+                List<String> sqlCreateTable = sourceMetaDataService.getDDLCreateTableSQL(targetProductType, targetColumnDescriptions.stream().filter(column -> StringUtils.hasLength(column.getFieldName())).collect(Collectors.toList()), targetPrimaryKeys, targetSchemaName, targetTableName, sourceTableRemarks, properties.getTarget().getCreateTableAutoIncrement());
 
                 JdbcTemplate targetJdbcTemplate = new JdbcTemplate(targetDataSource);
                 for (String sql : sqlCreateTable) {
@@ -295,10 +243,8 @@ public class MigrationHandler implements Supplier<Long> {
                 IMetaDataByDatasourceService metaDataByDatasourceService = new MetaDataByDataSourceServiceImpl(targetDataSource, targetProductType);
                 List<String> dbTargetPks = metaDataByDatasourceService.queryTablePrimaryKeys(targetSchemaName, targetTableName);
 
-                if (!targetPrimaryKeys.isEmpty() && !dbTargetPks.isEmpty()  && targetPrimaryKeys.containsAll(dbTargetPks) && dbTargetPks.containsAll(targetPrimaryKeys)) {
-                    if (targetProductType == ProductTypeEnum.MYSQL
-                            && !DatabaseAwareUtils.isMysqlInnodbStorageEngine(
-                            targetSchemaName, targetTableName, targetDataSource)) {
+                if (!targetPrimaryKeys.isEmpty() && !dbTargetPks.isEmpty() && targetPrimaryKeys.containsAll(dbTargetPks) && dbTargetPks.containsAll(targetPrimaryKeys)) {
+                    if (targetProductType == ProductTypeEnum.MYSQL && !DatabaseAwareUtils.isMysqlInnodbStorageEngine(targetSchemaName, targetTableName, targetDataSource)) {
                         return doFullCoverSynchronize(writer);
                     } else {
                         return doIncreaseSynchronize(writer);
@@ -334,18 +280,14 @@ public class MigrationHandler implements Supplier<Long> {
         writer.prepareWrite(targetSchemaName, targetTableName, targetFields);
 
         // 清空目的端表的数据
-        IDatabaseOperator targetOperator = DatabaseOperatorFactory
-                .createDatabaseOperator(writer.getDataSource());
+        IDatabaseOperator targetOperator = DatabaseOperatorFactory.createDatabaseOperator(writer.getDataSource());
         targetOperator.truncateTableData(targetSchemaName, targetTableName);
 
         // 查询源端数据并写入目的端
-        IDatabaseOperator sourceOperator = DatabaseOperatorFactory
-                .createDatabaseOperator(sourceDataSource);
+        IDatabaseOperator sourceOperator = DatabaseOperatorFactory.createDatabaseOperator(sourceDataSource);
         sourceOperator.setFetchSize(BATCH_SIZE);
 
-        StatementResultSet srs = sourceOperator.queryTableData(
-                sourceSchemaName, sourceTableName, sourceFields
-        );
+        StatementResultSet srs = sourceOperator.queryTableData(sourceSchemaName, sourceTableName, sourceFields);
 
         List<Object[]> cache = new LinkedList<>();
         long cacheBytes = 0;
@@ -362,8 +304,7 @@ public class MigrationHandler implements Supplier<Long> {
                     try {
                         record[i - 1] = rs.getObject(i);
                     } catch (Exception e) {
-                        log.warn("!!! Read data from table [ {} ] use function ResultSet.getObject() error",
-                                tableNameMapString, e);
+                        log.warn("!!! Read data from table [ {} ] use function ResultSet.getObject() error", tableNameMapString, e);
                         record[i - 1] = null;
                     }
                 }
@@ -375,8 +316,7 @@ public class MigrationHandler implements Supplier<Long> {
 
                 if (cache.size() >= BATCH_SIZE || cacheBytes >= MAX_CACHE_BYTES_SIZE) {
                     long ret = writer.write(targetFields, cache);
-                    log.info("[FullCoverSync] handle table [{}] data count: {}, the batch bytes sie: {}",
-                            tableNameMapString, ret, BytesUnitUtils.bytesSizeToHuman(cacheBytes));
+                    log.info("[FullCoverSync] handle table [{}] data count: {}, the batch bytes sie: {}", tableNameMapString, ret, BytesUnitUtils.bytesSizeToHuman(cacheBytes));
                     cache.clear();
                     totalBytes += cacheBytes;
                     cacheBytes = 0;
@@ -385,14 +325,12 @@ public class MigrationHandler implements Supplier<Long> {
 
             if (cache.size() > 0) {
                 long ret = writer.write(targetFields, cache);
-                log.info("[FullCoverSync] handle table [{}] data count: {}, last batch bytes sie: {}",
-                        tableNameMapString, ret, BytesUnitUtils.bytesSizeToHuman(cacheBytes));
+                log.info("[FullCoverSync] handle table [{}] data count: {}, last batch bytes sie: {}", tableNameMapString, ret, BytesUnitUtils.bytesSizeToHuman(cacheBytes));
                 cache.clear();
                 totalBytes += cacheBytes;
             }
 
-            log.info("[FullCoverSync] handle table [{}] total data count:{}, total bytes={}",
-                    tableNameMapString, totalCount, BytesUnitUtils.bytesSizeToHuman(totalBytes));
+            log.info("[FullCoverSync] handle table [{}] total data count:{}, total bytes={}", tableNameMapString, totalCount, BytesUnitUtils.bytesSizeToHuman(totalBytes));
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
@@ -435,8 +373,7 @@ public class MigrationHandler implements Supplier<Long> {
 
         TaskParamEntity param = taskBuilder.build();
 
-        IDatabaseSynchronize synchronizer = DatabaseSynchronizeFactory
-                .createDatabaseWriter(writer.getDataSource());
+        IDatabaseSynchronize synchronizer = DatabaseSynchronizeFactory.createDatabaseWriter(writer.getDataSource());
         synchronizer.prepare(targetSchemaName, targetTableName, targetFields, targetPrimaryKeys);
 
         IDatabaseChangeCalculator calculator = new ChangeCalculatorService();
@@ -488,8 +425,7 @@ public class MigrationHandler implements Supplier<Long> {
                     log.info("task job is interrupted!");
                     throw new RuntimeException("task is interrupted");
                 }
-                if (cacheInsert.size() >= BATCH_SIZE || cacheUpdate.size() >= BATCH_SIZE
-                        || cacheDelete.size() >= BATCH_SIZE || cacheBytes >= MAX_CACHE_BYTES_SIZE) {
+                if (cacheInsert.size() >= BATCH_SIZE || cacheUpdate.size() >= BATCH_SIZE || cacheDelete.size() >= BATCH_SIZE || cacheBytes >= MAX_CACHE_BYTES_SIZE) {
                     if (cacheDelete.size() > 0) {
                         doDelete(fields);
                     }
@@ -502,8 +438,7 @@ public class MigrationHandler implements Supplier<Long> {
                         doUpdate(fields);
                     }
 
-                    log.info("[IncreaseSync] Handle table [{}] data one batch size: {}",
-                            tableNameMapString, BytesUnitUtils.bytesSizeToHuman(cacheBytes));
+                    log.info("[IncreaseSync] Handle table [{}] data one batch size: {}", tableNameMapString, BytesUnitUtils.bytesSizeToHuman(cacheBytes));
                     cacheBytes = 0;
                 }
             }
@@ -522,8 +457,7 @@ public class MigrationHandler implements Supplier<Long> {
                     doUpdate(fields);
                 }
 
-                log.info("[IncreaseSync] Handle table [{}] total count: {}, Insert:{},Update:{},Delete:{} ",
-                        tableNameMapString, countTotal, countInsert, countUpdate, countDelete);
+                log.info("[IncreaseSync] Handle table [{}] total count: {}, Insert:{},Update:{},Delete:{} ", tableNameMapString, countTotal, countInsert, countUpdate, countDelete);
             }
 
             private void doInsert(List<String> fields) {

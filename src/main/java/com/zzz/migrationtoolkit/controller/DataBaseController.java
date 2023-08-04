@@ -1,8 +1,8 @@
 package com.zzz.migrationtoolkit.controller;
 
 import com.zzz.migrationtoolkit.common.vo.ConnectionVO;
+import com.zzz.migrationtoolkit.common.vo.DataSourceVO;
 import com.zzz.migrationtoolkit.common.vo.ResultMessage;
-import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
 import com.zzz.migrationtoolkit.service.DataBaseService;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,7 +49,7 @@ public class DataBaseController {
     }
 
     @GetMapping("/getDataBaseConnInfoList")
-    public ResultMessage<List<DataBaseConnInfo>> getDataBaseConnectionInfo() {
+    public ResultMessage<List<DataSourceVO>> getDataBaseConnectionInfo() {
         return dataBaseService.getDataBaseConnectionInfo();
     }
 

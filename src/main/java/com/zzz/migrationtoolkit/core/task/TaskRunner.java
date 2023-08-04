@@ -12,7 +12,7 @@ import java.util.concurrent.*;
  */
 public class TaskRunner {
 
-    private int maxThreads;
+    private final int maxThreads;
 
     private Map<ITask, Future<Long>> taskFutureMap = new HashMap<>();
 

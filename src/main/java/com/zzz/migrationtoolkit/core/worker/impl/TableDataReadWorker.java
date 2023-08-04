@@ -1,20 +1,23 @@
 package com.zzz.migrationtoolkit.core.worker.impl;
 
 import com.zzz.migrationtoolkit.common.constants.MigrationConstant;
-import com.zzz.migrationtoolkit.core.generator.ISQLGenerator;
-import com.zzz.migrationtoolkit.core.generator.SQLGeneratorFactory;
+import com.zzz.migrationtoolkit.common.utils.DataSourceUtil;
+import com.zzz.migrationtoolkit.dataBase.generator.ISQLGenerator;
+import com.zzz.migrationtoolkit.dataBase.generator.SQLGeneratorFactory;
 import com.zzz.migrationtoolkit.core.task.TableDataParallelTask;
 import com.zzz.migrationtoolkit.core.task.ITask;
 import com.zzz.migrationtoolkit.core.task.TaskRunner;
 import com.zzz.migrationtoolkit.core.worker.AbstractBaseWorker;
 import com.zzz.migrationtoolkit.dataBase.DataBaseExecutorFactory;
 import com.zzz.migrationtoolkit.dataBase.IDataBaseExecutor;
-import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
 import com.zzz.migrationtoolkit.entity.dataBaseElementEntity.ColumnEntity;
+import com.zzz.migrationtoolkit.entity.dataSourceEmtity.CloseableDataSource;
+import com.zzz.migrationtoolkit.entity.dataSourceEmtity.DataSourceProperties;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationColumn;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationTable;
 import com.zzz.migrationtoolkit.entity.taskEntity.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,16 +31,18 @@ import java.util.List;
 @Slf4j
 public class TableDataReadWorker extends AbstractBaseWorker {
 
-    private DataBaseConnInfo destDbci;
+    private DataSourceProperties properties;
     //缓存线程
     private final int threadSize;
 
 
     public TableDataReadWorker(TaskDetail taskDetail, WorkQueue sourceWorkQueue, WorkQueue targetWorkQueue) {
         super(taskDetail, sourceWorkQueue, targetWorkQueue, "UserDataWriteWorker");
-        this.destDbci = taskDetail.getTargetDataBase().getDbci();
+        this.properties = taskDetail.getSourceDataBase().getProperties();
         this.threadSize = taskDetail.getCoreConfig().getReadDataThreadSize();
+        JdbcTemplate targetJdbcTemplate = new JdbcTemplate(DataSourceUtil.createDataSource(properties));
     }
+
 
     @Override
     public WorkResultEntity call() throws Exception {
@@ -67,7 +72,7 @@ public class TableDataReadWorker extends AbstractBaseWorker {
                 migrationTable = (MigrationTable) processWork.getMigrationObj();
 
                 tableName = migrationTable.getSourceTable().getTableName();
-                dbName = taskDetail.getSourceDataBase().getDbci().getDbName();
+                dbName = properties.getDbName();
                 //只迁移数据情况
                 if (taskDetail.getMigrationTableType().equals(MigrationConstant.MIGRATION_ONLY_METADATA)) {
                     //因为只迁移了表数据，导致没有执行表结构迁移，所以taskDetail的表列信息是空的

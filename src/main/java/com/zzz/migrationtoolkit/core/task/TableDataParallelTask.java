@@ -18,13 +18,13 @@ import java.util.List;
 @Slf4j
 public class TableDataParallelTask implements ITask<Long> {
 
-    private String sql;
-    private MigrationTable migrationTable;
-    private TaskDetail taskDetail;
+    private final String sql;
+    private final MigrationTable migrationTable;
+    private final TaskDetail taskDetail;
     private int fetchSize = 0;
     private int commitSize = 0;
-    private boolean stopWork;
-    private WorkQueue targetWorkQueue;
+    private final boolean stopWork;
+    private final WorkQueue targetWorkQueue;
 
 
     public TableDataParallelTask(String sql, MigrationTable migrationTable, TaskDetail taskDetail,
@@ -70,7 +70,7 @@ public class TableDataParallelTask implements ITask<Long> {
                     cacheSize = 0;
                 }
             }
-            if (cacheList != null && cacheList.size() > 0) {
+            if (cacheList.size() > 0) {
                 putData(cacheList);
             }
             if (errorDataNum != 0) {

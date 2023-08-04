@@ -1,7 +1,7 @@
 package com.zzz.migrationtoolkit.core.coreManager.context;
 
 import com.zzz.migrationtoolkit.common.constants.CommonConstant;
-import com.zzz.migrationtoolkit.core.persistence.TaskPersistence;
+import com.zzz.migrationtoolkit.common.utils.TaskPersistenceUtil;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 
 import java.util.Hashtable;
@@ -19,12 +19,12 @@ public class TaskCache {
 
     private static Hashtable<String, TaskDetail> taskCache;
 
-    private static TaskPersistence taskPersistence;
+    private static TaskPersistenceUtil taskPersistenceUtil;
 
     public synchronized static void updateTaskDetail(String taskId, String taskStatus, String taskResult, Integer deskMigrationObjCount) {
         TaskDetail taskDetail = findTask(taskId);
         taskDetail.updateTaskDetail(taskStatus, taskResult, deskMigrationObjCount);
-        taskPersistence.saveTaskInfo(taskDetail);
+        taskPersistenceUtil.saveTaskInfo(taskDetail);
     }
 
     public static TaskDetail findTask(String taskId) {
@@ -35,7 +35,7 @@ public class TaskCache {
         TaskDetail taskDetail = task.clone();
         taskDetail.setFailMsg("");
         taskCache.put(taskDetail.getTaskId(), taskDetail);
-        taskPersistence.saveTaskInfo(taskDetail);
+        taskPersistenceUtil.saveTaskInfo(taskDetail);
     }
 
     public synchronized String init(String taskPersistenceFolder){
@@ -44,10 +44,10 @@ public class TaskCache {
             if (taskCache == null){
                 taskCache = new Hashtable<>();
             }
-            taskPersistence = new TaskPersistence();
-            taskPersistence.setFolder(taskPersistenceFolder);
+            taskPersistenceUtil = new TaskPersistenceUtil();
+            taskPersistenceUtil.setFolder(taskPersistenceFolder);
 
-            List<TaskDetail> allTaskInfo = taskPersistence.getAllTaskInfo();
+            List<TaskDetail> allTaskInfo = taskPersistenceUtil.getAllTaskInfo();
 
             for (TaskDetail taskDetail : allTaskInfo) {
                 taskCache.put(taskDetail.getTaskId(),taskDetail);

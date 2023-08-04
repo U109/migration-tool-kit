@@ -1,7 +1,7 @@
 package com.zzz.migrationtoolkit.dataBase;
 
 import com.zzz.migrationtoolkit.common.utils.ReflectUtil;
-import com.zzz.migrationtoolkit.core.convert.ConvertFactory;
+import com.zzz.migrationtoolkit.dataBase.convert.ConvertFactory;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
 
 /**
@@ -16,7 +16,7 @@ public class DataBaseExecutorFactory {
 
     public static IDataBaseExecutor getSourceInstance(TaskDetail taskDetail) {
         String className = "com.zzz.migrationtoolkit.dataBase.dbExecutor." +
-                taskDetail.getSourceDataBase().getDbci().getDbType() + "DataBaseExecutor";
+                taskDetail.getSourceDataBase().getProperties().getDbType() + "DataBaseExecutor";
 
         Object obj = ReflectUtil.getObjByClass(className, taskDetail.getSourceDataBase().getDbci(),
                 ConvertFactory.getSourceInstance(taskDetail.getSourceDataBase().getDbci().getDbType(),

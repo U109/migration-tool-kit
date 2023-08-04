@@ -1,6 +1,7 @@
 package com.zzz.migrationtoolkit.entity.migrationObjEntity;
 
-import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
+import com.zzz.migrationtoolkit.entity.dataSourceEmtity.CloseableDataSource;
+import com.zzz.migrationtoolkit.entity.dataSourceEmtity.DataSourceProperties;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -23,7 +24,7 @@ public class MigrationDBConnEntity implements Serializable {
      */
     String databaseFlag;
 
-    DataBaseConnInfo dbci;
+    DataSourceProperties properties;
 
     public MigrationDBConnEntity() {
     }

@@ -43,9 +43,6 @@ public class ExecutorManager implements Runnable {
 
     private boolean executorStop = false;
 
-    public ExecutorManager() {
-    }
-
     public ExecutorManager(TaskDetail taskDetail) {
         this.taskDetail = taskDetail;
         this.taskExecutorManagerId = taskDetail.getTaskId();
@@ -69,7 +66,6 @@ public class ExecutorManager implements Runnable {
             //表迁移类型：结构、数据
             tableStructureExecutor = new TableStructureExecutor(taskDetail);
             addToExecutorList(tableStructureExecutor);
-
             tableUserDataMigrationExecutor = new TableUserDataMigrationExecutor(taskDetail);
             addToExecutorList(tableUserDataMigrationExecutor, true);
         }

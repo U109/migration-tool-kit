@@ -1,9 +1,6 @@
 package com.zzz.migrationtoolkit.dataBase;
 
 import com.zzz.migrationtoolkit.common.constants.DataBaseConstant;
-import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.DataBaseConnInfo;
-import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.MySqlConnInfo;
-import com.zzz.migrationtoolkit.entity.dataBaseConnInfoEntity.OracleConnInfo;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
