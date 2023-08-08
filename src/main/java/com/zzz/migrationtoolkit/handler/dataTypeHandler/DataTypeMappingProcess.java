@@ -47,7 +47,7 @@ public class DataTypeMappingProcess {
             Element root = (Element) doc.getElementsByTagName("dtms").item(0);
             NodeList dtmList = root.getElementsByTagName("dtm");
 
-            DataTypeMapping dtm = new DataTypeMapping();
+            DataTypeMapping dtm;
             for (int i = 0; i < dtmList.getLength(); i++) {
                 Element dtmElement = (Element) dtmList.item(i);
                 String key = dtmElement.getAttribute("id");

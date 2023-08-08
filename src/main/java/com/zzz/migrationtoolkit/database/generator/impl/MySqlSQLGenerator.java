@@ -1,7 +1,7 @@
-package com.zzz.migrationtoolkit.dataBase.generator.impl;
+package com.zzz.migrationtoolkit.database.generator.impl;
 
 import com.zzz.migrationtoolkit.common.constants.SystemConstant;
-import com.zzz.migrationtoolkit.entity.dataBaseElementEntity.ColumnEntity;
+import com.zzz.migrationtoolkit.entity.databaseElementEntity.ColumnEntity;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationColumn;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationTable;
 import com.zzz.migrationtoolkit.entity.taskEntity.TaskDetail;
@@ -19,7 +19,7 @@ public class MySqlSQLGenerator extends AbstractSQLGenerator {
     private static final String IDENTIFIER = "`";
 
     @Override
-    public String getTableCreateSQL(DataBaseConnInfo destDbci, MigrationTable migrationTable, TaskDetail taskDetail) {
+    public String getTableCreateSQL(MigrationTable migrationTable, TaskDetail taskDetail) {
         List<MigrationColumn> columnList = migrationTable.getMigrationColumnList();
         String tableName = migrationTable.getDestTable().getTableName();
 

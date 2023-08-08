@@ -16,9 +16,6 @@ import java.util.concurrent.FutureTask;
  */
 public class UserDataWriteManager extends AbstractBaseManager {
 
-    public UserDataWriteManager() {
-    }
-
     public UserDataWriteManager(TaskDetail taskDetail, WorkQueue sourceWorkQueue, WorkQueue targetWorkQueue) {
         super(taskDetail, sourceWorkQueue, targetWorkQueue);
         this.workerNum = taskDetail.getCoreConfig().getWriteDataThreadSize();

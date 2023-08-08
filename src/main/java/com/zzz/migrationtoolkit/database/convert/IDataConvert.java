@@ -1,4 +1,4 @@
-package com.zzz.migrationtoolkit.dataBase.convert;
+package com.zzz.migrationtoolkit.database.convert;
 
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationColumn;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * @date: 2023/7/10 17:46
  * @description:
  */
-public interface ISourceDataTypeConvert {
+public interface IDataConvert {
     List<Object> convertReadDataTypes(List<MigrationColumn> columnList, ResultSet rs);
 
     void convertWriteDataTypes(String dataTypeName, PreparedStatement preparedStatement, int parameterIndex, List<Object> dataRow, int j) throws SQLException;

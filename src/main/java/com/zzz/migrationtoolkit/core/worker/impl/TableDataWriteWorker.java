@@ -1,11 +1,12 @@
 package com.zzz.migrationtoolkit.core.worker.impl;
 
 import com.zzz.migrationtoolkit.common.constants.MigrationConstant;
-import com.zzz.migrationtoolkit.dataBase.generator.ISQLGenerator;
-import com.zzz.migrationtoolkit.dataBase.generator.SQLGeneratorFactory;
+import com.zzz.migrationtoolkit.database.DataBaseExecutorFactory;
+import com.zzz.migrationtoolkit.database.SQLGeneratorFactory;
+import com.zzz.migrationtoolkit.database.generator.ISQLGenerator;
 import com.zzz.migrationtoolkit.core.worker.AbstractBaseWorker;
-import com.zzz.migrationtoolkit.dataBase.DataBaseExecutorFactory;
-import com.zzz.migrationtoolkit.dataBase.IDataBaseExecutor;
+import com.zzz.migrationtoolkit.database.executor.IDataBaseExecutor;
+import com.zzz.migrationtoolkit.entity.dataSourceEmtity.DataSourceProperties;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationColumn;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationTable;
 import com.zzz.migrationtoolkit.entity.taskEntity.*;
@@ -21,13 +22,13 @@ import java.util.List;
 @Slf4j
 public class TableDataWriteWorker extends AbstractBaseWorker {
 
-    private String dbName;
-    private String dbType;
+    private final String dbName;
+    private final DataSourceProperties properties;
 
     public TableDataWriteWorker(TaskDetail taskDetail, WorkQueue sourceWorkQueue, WorkQueue targetWorkQueue) {
         super(taskDetail, sourceWorkQueue, targetWorkQueue, "UserDataWriteWorker");
-        this.dbName = taskDetail.getTargetDataBase().getDbci().getDbName();
-        this.dbType = taskDetail.getTargetDataBase().getDbci().getDbType();
+        this.dbName = taskDetail.getTargetDataBase().getProperties().getDbName();
+        this.properties = taskDetail.getTargetDataBase().getProperties();
     }
 
     @Override
@@ -50,14 +51,14 @@ public class TableDataWriteWorker extends AbstractBaseWorker {
                     break;
                 }
                 if (dataBaseExecutor == null) {
-                    dataBaseExecutor = DataBaseExecutorFactory.getDestInstance(taskDetail);
+                    dataBaseExecutor = DataBaseExecutorFactory.getDatabaseInstance(properties.getDbType());
                 }
                 migrationTable = (MigrationTable) processWork.getMigrationObj();
 
                 List<MigrationColumn> columnList = migrationTable.getMigrationColumnList();
                 List<List<Object>> dataList = processWork.getDataList();
 
-                ISQLGenerator sqlGenerator = SQLGeneratorFactory.newDestInstance(taskDetail);
+                ISQLGenerator sqlGenerator = SQLGeneratorFactory.getDatabaseInstance(properties.getDbType());
 
                 String insertSql = sqlGenerator.getTargetDataInsertSql(migrationTable, dbName);
                 log.info("insert data sql : " + insertSql);

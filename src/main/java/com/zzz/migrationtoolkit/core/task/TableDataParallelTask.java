@@ -1,7 +1,6 @@
 package com.zzz.migrationtoolkit.core.task;
 
-import com.zzz.migrationtoolkit.dataBase.DataBaseExecutorFactory;
-import com.zzz.migrationtoolkit.dataBase.IDataBaseExecutor;
+import com.zzz.migrationtoolkit.database.executor.IDataBaseExecutor;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationTable;
 import com.zzz.migrationtoolkit.entity.taskEntity.*;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +40,7 @@ public class TableDataParallelTask implements ITask<Long> {
 
     @Override
     public Long call() throws Exception {
-        IDataBaseExecutor dataBaseExecutor = DataBaseExecutorFactory.getSourceInstance(taskDetail);
+        IDataBaseExecutor dataBaseExecutor = DataBaseExeFactory.getSourceInstance(taskDetail);
         //记录错误数
         long errorDataNum = 0;
         //记录已经读取的数据条数

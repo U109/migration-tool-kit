@@ -1,4 +1,4 @@
-package com.zzz.migrationtoolkit.entity.dataBaseElementEntity;
+package com.zzz.migrationtoolkit.entity.databaseElementEntity;
 
 import lombok.Data;
 

@@ -1,6 +1,6 @@
-package com.zzz.migrationtoolkit.dataBase;
+package com.zzz.migrationtoolkit.database.executor;
 
-import com.zzz.migrationtoolkit.entity.dataBaseElementEntity.ColumnEntity;
+import com.zzz.migrationtoolkit.entity.databaseElementEntity.ColumnEntity;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationColumn;
 
 import java.sql.ResultSet;

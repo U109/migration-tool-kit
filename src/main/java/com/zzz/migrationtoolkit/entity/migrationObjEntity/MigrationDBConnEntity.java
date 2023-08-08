@@ -1,6 +1,5 @@
 package com.zzz.migrationtoolkit.entity.migrationObjEntity;
 
-import com.zzz.migrationtoolkit.entity.dataSourceEmtity.CloseableDataSource;
 import com.zzz.migrationtoolkit.entity.dataSourceEmtity.DataSourceProperties;
 import lombok.Data;
 

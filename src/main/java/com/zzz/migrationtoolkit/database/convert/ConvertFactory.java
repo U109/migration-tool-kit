@@ -1,4 +1,4 @@
-package com.zzz.migrationtoolkit.dataBase.convert;
+package com.zzz.migrationtoolkit.database.convert;
 
 import com.zzz.migrationtoolkit.common.utils.ReflectUtil;
 

@@ -3,8 +3,9 @@ package com.zzz.migrationtoolkit.core.worker.impl;
 import com.zzz.migrationtoolkit.common.constants.CommonConstant;
 import com.zzz.migrationtoolkit.common.constants.MigrationConstant;
 import com.zzz.migrationtoolkit.core.worker.AbstractBaseWorker;
-import com.zzz.migrationtoolkit.dataBase.DataBaseExecutorFactory;
-import com.zzz.migrationtoolkit.dataBase.IDataBaseExecutor;
+import com.zzz.migrationtoolkit.database.DataBaseExecutorFactory;
+import com.zzz.migrationtoolkit.database.executor.IDataBaseExecutor;
+import com.zzz.migrationtoolkit.entity.dataSourceEmtity.DataSourceProperties;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationTable;
 import com.zzz.migrationtoolkit.entity.taskEntity.*;
 
@@ -15,8 +16,11 @@ import com.zzz.migrationtoolkit.entity.taskEntity.*;
  */
 public class TableStructureReadWorker extends AbstractBaseWorker {
 
+    private final DataSourceProperties properties;
+
     public TableStructureReadWorker(TaskDetail taskDetail, WorkQueue sourceWorkQueue, WorkQueue targetWorkQueue) {
         super(taskDetail, sourceWorkQueue, targetWorkQueue, "MetaDataReadWorker");
+        this.properties = taskDetail.getSourceDataBase().getProperties();
     }
 
     @Override
@@ -52,7 +56,7 @@ public class TableStructureReadWorker extends AbstractBaseWorker {
 
 
             if (dataBaseExecutor == null) {
-                dataBaseExecutor = DataBaseExecutorFactory.getSourceInstance(taskDetail);
+                dataBaseExecutor = DataBaseExecutorFactory.getDatabaseInstance(properties.getDbType());
             }
             migrationTable = (MigrationTable) processWork.getMigrationObj();
             migrationTable.setResultMsg("");

@@ -16,9 +16,6 @@ import java.util.concurrent.FutureTask;
  */
 public class TableStructureReadManager extends AbstractBaseManager {
 
-    public TableStructureReadManager() {
-    }
-
     public TableStructureReadManager(TaskDetail taskDetail, WorkQueue sourceWorkQueue, WorkQueue targetWorkQueue) {
         super(taskDetail, sourceWorkQueue, targetWorkQueue);
         this.workerNum = taskDetail.getCoreConfig().getReadDataThreadSize();

@@ -1,10 +1,11 @@
 package com.zzz.migrationtoolkit.core.worker.impl;
 
-import com.zzz.migrationtoolkit.dataBase.generator.ISQLGenerator;
-import com.zzz.migrationtoolkit.dataBase.generator.SQLGeneratorFactory;
+import com.zzz.migrationtoolkit.database.DataBaseExecutorFactory;
+import com.zzz.migrationtoolkit.database.SQLGeneratorFactory;
+import com.zzz.migrationtoolkit.database.generator.ISQLGenerator;
 import com.zzz.migrationtoolkit.core.worker.AbstractBaseWorker;
-import com.zzz.migrationtoolkit.dataBase.DataBaseExecutorFactory;
-import com.zzz.migrationtoolkit.dataBase.IDataBaseExecutor;
+import com.zzz.migrationtoolkit.database.executor.IDataBaseExecutor;
+import com.zzz.migrationtoolkit.entity.dataSourceEmtity.DataSourceProperties;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationTable;
 import com.zzz.migrationtoolkit.entity.taskEntity.*;
 import lombok.extern.slf4j.Slf4j;
@@ -17,11 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TableStructureWriteWorker extends AbstractBaseWorker {
 
-    private DataBaseConnInfo destDbci;
+    private final DataSourceProperties properties;
 
     public TableStructureWriteWorker(TaskDetail taskDetail, WorkQueue sourceWorkQueue, WorkQueue targetWorkQueue) {
         super(taskDetail, sourceWorkQueue, targetWorkQueue, "MetaDataWriteWorker");
-        this.destDbci = taskDetail.getTargetDataBase().getDbci();
+        this.properties = taskDetail.getTargetDataBase().getProperties();
     }
 
     @Override
@@ -54,20 +55,20 @@ public class TableStructureWriteWorker extends AbstractBaseWorker {
                 migrationTable = (MigrationTable) processWork.getMigrationObj();
 
                 if (dataBaseExecutor == null) {
-                    dataBaseExecutor = DataBaseExecutorFactory.getDestInstance(taskDetail);
+                    dataBaseExecutor = DataBaseExecutorFactory.getDatabaseInstance(properties.getDbType());
                 }
 
-                ISQLGenerator sqlGenerator = SQLGeneratorFactory.newDestInstance(taskDetail);
+                ISQLGenerator sqlGenerator = SQLGeneratorFactory.getDatabaseInstance(properties.getDbType());
                 //重建表操作
                 if (taskDetail.isRebuildTable()) {
-                    executeSql = sqlGenerator.dropTargetTable(migrationTable.getDestTable().getTableName(), destDbci.getDbName());
+                    executeSql = sqlGenerator.dropTargetTable(migrationTable.getDestTable().getTableName(), properties.getDbName());
                     log.info("rebuild table : " + executeSql);
                     //串行执行drop，防止系统锁表
                     synchronized (TableStructureWriteWorker.class) {
                         dataBaseExecutor.executeSQL(executeSql);
                     }
                 }
-                executeSql = sqlGenerator.getTableCreateSQL(destDbci, migrationTable, taskDetail);
+                executeSql = sqlGenerator.getTableCreateSQL(migrationTable, taskDetail);
                 log.info("create table : " + executeSql);
                 dataBaseExecutor.executeSQL(executeSql);
 

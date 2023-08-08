@@ -1,4 +1,4 @@
-package com.zzz.migrationtoolkit.dataBase.generator;
+package com.zzz.migrationtoolkit.database.generator;
 
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationColumn;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationTable;
@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface ISQLGenerator {
 
-    String getTableCreateSQL(DataBaseConnInfo destDbci, MigrationTable migrationTable, TaskDetail taskDetail);
+    String getTableCreateSQL(MigrationTable migrationTable, TaskDetail taskDetail);
 
     String dropTargetTable(String tableName, String dbName);
 

@@ -1,8 +1,6 @@
-package com.zzz.migrationtoolkit.dataBase.dbExecutor;
+package com.zzz.migrationtoolkit.database.executor;
 
 import com.zzz.migrationtoolkit.common.utils.CloseObjUtil;
-import com.zzz.migrationtoolkit.dataBase.ConnectionManager;
-import com.zzz.migrationtoolkit.dataBase.IDataBaseExecutor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
@@ -17,8 +15,6 @@ import java.sql.Statement;
 @Slf4j
 public abstract class AbstractDataBaseExecutor implements IDataBaseExecutor {
 
-    public DataBaseConnInfo dataBaseConnInfo;
-
     public Connection connection;
 
     public AbstractDataBaseExecutor() {
@@ -26,7 +22,7 @@ public abstract class AbstractDataBaseExecutor implements IDataBaseExecutor {
     }
 
     public AbstractDataBaseExecutor(DataBaseConnInfo dbci) {
-        this.dataBaseConnInfo = dbci;
+
         try {
             this.connection = ConnectionManager.getConnection(dataBaseConnInfo);
         } catch (Exception e) {

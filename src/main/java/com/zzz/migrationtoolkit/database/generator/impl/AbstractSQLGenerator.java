@@ -1,9 +1,9 @@
-package com.zzz.migrationtoolkit.dataBase.generator.impl;
+package com.zzz.migrationtoolkit.database.generator.impl;
 
 import com.zzz.migrationtoolkit.common.constants.ColumnConstant;
 import com.zzz.migrationtoolkit.common.constants.SystemConstant;
-import com.zzz.migrationtoolkit.dataBase.generator.ISQLGenerator;
-import com.zzz.migrationtoolkit.entity.dataBaseElementEntity.ColumnEntity;
+import com.zzz.migrationtoolkit.database.generator.ISQLGenerator;
+import com.zzz.migrationtoolkit.entity.databaseElementEntity.ColumnEntity;
 import com.zzz.migrationtoolkit.entity.dataTypeEntity.DataType;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationColumn;
 

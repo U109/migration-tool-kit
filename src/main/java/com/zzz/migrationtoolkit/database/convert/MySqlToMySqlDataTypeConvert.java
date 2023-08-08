@@ -1,7 +1,7 @@
-package com.zzz.migrationtoolkit.dataBase.convert;
+package com.zzz.migrationtoolkit.database.convert;
 
 import com.zzz.migrationtoolkit.common.constants.ColumnConstant;
-import com.zzz.migrationtoolkit.entity.dataBaseElementEntity.ColumnEntity;
+import com.zzz.migrationtoolkit.entity.databaseElementEntity.ColumnEntity;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationColumn;
 
 import java.sql.Blob;
@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author zhangzhongzhen
  */
-public class MySqlToMySqlDataTypeConvert implements ISourceDataTypeConvert {
+public class MySqlToMySqlDataTypeConvert implements IDataConvert {
     @Override
     public List<Object> convertReadDataTypes(List<MigrationColumn> columnList, ResultSet rs) {
         int colCount = columnList.size();

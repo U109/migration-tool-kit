@@ -16,9 +16,6 @@ import java.util.concurrent.FutureTask;
  */
 public class TableStructureWriteManager extends AbstractBaseManager {
 
-    public TableStructureWriteManager() {
-    }
-
     public TableStructureWriteManager(TaskDetail taskDetail, WorkQueue sourceWorkQueue, WorkQueue targetWorkQueue) {
         super(taskDetail, sourceWorkQueue, targetWorkQueue);
         this.workerNum = taskDetail.getCoreConfig().getWriteDataThreadSize();

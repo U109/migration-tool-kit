@@ -1,4 +1,4 @@
-package com.zzz.migrationtoolkit.dataBase.generator.impl;
+package com.zzz.migrationtoolkit.database.generator.impl;
 
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationColumn;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationTable;

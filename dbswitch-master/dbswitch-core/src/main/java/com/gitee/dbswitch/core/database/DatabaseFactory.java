@@ -36,8 +36,7 @@ import java.util.concurrent.Callable;
  */
 public final class DatabaseFactory {
 
-  private static final Map<ProductTypeEnum, Callable<AbstractDatabase>> DATABASE_MAPPER
-      = new HashMap<ProductTypeEnum, Callable<AbstractDatabase>>() {
+  private static final Map<ProductTypeEnum, Callable<AbstractDatabase>> DATABASE_MAPPER  = new HashMap<ProductTypeEnum, Callable<AbstractDatabase>>() {
 
     private static final long serialVersionUID = 9202705534880971997L;
 

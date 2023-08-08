@@ -1,9 +1,9 @@
 package com.zzz.migrationtoolkit.entity.migrationObjEntity;
 
 import com.zzz.migrationtoolkit.common.constants.MigrationConstant;
-import com.zzz.migrationtoolkit.dataBase.IDataBaseExecutor;
-import com.zzz.migrationtoolkit.entity.dataBaseElementEntity.ColumnEntity;
-import com.zzz.migrationtoolkit.entity.dataBaseElementEntity.TableEntity;
+import com.zzz.migrationtoolkit.database.executor.IDataBaseExecutor;
+import com.zzz.migrationtoolkit.entity.databaseElementEntity.ColumnEntity;
+import com.zzz.migrationtoolkit.entity.databaseElementEntity.TableEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

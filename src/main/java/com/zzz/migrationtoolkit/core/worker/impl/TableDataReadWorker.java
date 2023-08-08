@@ -1,23 +1,20 @@
 package com.zzz.migrationtoolkit.core.worker.impl;
 
 import com.zzz.migrationtoolkit.common.constants.MigrationConstant;
-import com.zzz.migrationtoolkit.common.utils.DataSourceUtil;
-import com.zzz.migrationtoolkit.dataBase.generator.ISQLGenerator;
-import com.zzz.migrationtoolkit.dataBase.generator.SQLGeneratorFactory;
+import com.zzz.migrationtoolkit.database.DataBaseExecutorFactory;
+import com.zzz.migrationtoolkit.database.SQLGeneratorFactory;
+import com.zzz.migrationtoolkit.database.generator.ISQLGenerator;
 import com.zzz.migrationtoolkit.core.task.TableDataParallelTask;
 import com.zzz.migrationtoolkit.core.task.ITask;
 import com.zzz.migrationtoolkit.core.task.TaskRunner;
 import com.zzz.migrationtoolkit.core.worker.AbstractBaseWorker;
-import com.zzz.migrationtoolkit.dataBase.DataBaseExecutorFactory;
-import com.zzz.migrationtoolkit.dataBase.IDataBaseExecutor;
-import com.zzz.migrationtoolkit.entity.dataBaseElementEntity.ColumnEntity;
-import com.zzz.migrationtoolkit.entity.dataSourceEmtity.CloseableDataSource;
+import com.zzz.migrationtoolkit.database.executor.IDataBaseExecutor;
+import com.zzz.migrationtoolkit.entity.databaseElementEntity.ColumnEntity;
 import com.zzz.migrationtoolkit.entity.dataSourceEmtity.DataSourceProperties;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationColumn;
 import com.zzz.migrationtoolkit.entity.migrationObjEntity.MigrationTable;
 import com.zzz.migrationtoolkit.entity.taskEntity.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,16 +28,14 @@ import java.util.List;
 @Slf4j
 public class TableDataReadWorker extends AbstractBaseWorker {
 
-    private DataSourceProperties properties;
+    private final DataSourceProperties properties;
     //缓存线程
     private final int threadSize;
-
 
     public TableDataReadWorker(TaskDetail taskDetail, WorkQueue sourceWorkQueue, WorkQueue targetWorkQueue) {
         super(taskDetail, sourceWorkQueue, targetWorkQueue, "UserDataWriteWorker");
         this.properties = taskDetail.getSourceDataBase().getProperties();
         this.threadSize = taskDetail.getCoreConfig().getReadDataThreadSize();
-        JdbcTemplate targetJdbcTemplate = new JdbcTemplate(DataSourceUtil.createDataSource(properties));
     }
 
 
@@ -67,7 +62,7 @@ public class TableDataReadWorker extends AbstractBaseWorker {
                     break;
                 }
                 if (dataBaseExecutor == null) {
-                    dataBaseExecutor = DataBaseExecutorFactory.getSourceInstance(taskDetail);
+                    dataBaseExecutor = DataBaseExecutorFactory.getDatabaseInstance(properties.getDbType());
                 }
                 migrationTable = (MigrationTable) processWork.getMigrationObj();
 
@@ -82,7 +77,7 @@ public class TableDataReadWorker extends AbstractBaseWorker {
                     }
                 }
                 List<MigrationColumn> columnList = migrationTable.getMigrationColumnList();
-                ISQLGenerator sqlGenerator = SQLGeneratorFactory.newSourceInstance(taskDetail);
+                ISQLGenerator sqlGenerator = SQLGeneratorFactory.getDatabaseInstance(properties.getDbType());
                 String readDataSql = sqlGenerator.getSourceDataSelectSql(tableName, dbName, columnList);
                 log.info("select data sql : " + readDataSql);
                 //查询数据总量
