@@ -4,7 +4,7 @@ import com.zzz.migrationtoolkit.common.constants.DataBaseConstant;
 import com.zzz.migrationtoolkit.common.vo.ConnectionVO;
 import com.zzz.migrationtoolkit.common.vo.DataSourceVO;
 import com.zzz.migrationtoolkit.common.vo.ResultMessage;
-import com.zzz.migrationtoolkit.handler.dataBaseHandler.DataSourceProcess;
+import com.zzz.migrationtoolkit.handler.databaseHandler.DataSourceProcess;
 import com.zzz.migrationtoolkit.server.InitContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

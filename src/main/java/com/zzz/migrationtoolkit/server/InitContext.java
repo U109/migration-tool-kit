@@ -6,7 +6,7 @@ import com.zzz.migrationtoolkit.entity.dataSourceEmtity.DataSourceProperties;
 import com.zzz.migrationtoolkit.entity.dataTypeEntity.DataType;
 import com.zzz.migrationtoolkit.entity.dataTypeEntity.DataTypeMapping;
 import com.zzz.migrationtoolkit.entity.taskEntity.CoreConfig;
-import com.zzz.migrationtoolkit.handler.dataBaseHandler.DataSourceProcess;
+import com.zzz.migrationtoolkit.handler.databaseHandler.DataSourceProcess;
 import com.zzz.migrationtoolkit.handler.dataTypeHandler.DataTypeMappingProcess;
 
 import java.io.FileInputStream;

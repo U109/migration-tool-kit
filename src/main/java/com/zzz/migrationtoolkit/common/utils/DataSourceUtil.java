@@ -72,8 +72,45 @@ public final class DataSourceUtil {
     );
     ds.setDataSource(dataSource);
 
-    return new WrapHikariDataSource(ds, urlClassLoader);
+    return new WrapHikariDataSource(ds);
   }
+
+  public static CloseableDataSource createDataSource2(DataSourceProperties properties) {
+    Properties parameters = new Properties();
+    HikariDataSource hikariDataSource = new HikariDataSource();
+    hikariDataSource.setPoolName(properties.getDbType() + "_Source_DB_Connection");
+    hikariDataSource.setJdbcUrl(properties.getUrl());
+    if (properties.getDriverClassName().contains("oracle")) {
+      hikariDataSource.setConnectionTestQuery("SELECT 'Hello' from DUAL");
+      // https://blog.csdn.net/qq_20960159/article/details/78593936
+      System.getProperties().setProperty("oracle.jdbc.J2EE13Compliant", "true");
+      // Oracle在通过jdbc连接的时候需要添加一个参数来设置是否获取注释
+      parameters.put("remarksReporting", "true");
+    } else if (properties.getDriverClassName().contains("db2")) {
+      hikariDataSource.setConnectionTestQuery("SELECT 1 FROM SYSIBM.SYSDUMMY1");
+    } else {
+      hikariDataSource.setConnectionTestQuery("SELECT 1");
+    }
+    hikariDataSource.setMaximumPoolSize(MAX_THREAD_COUNT);
+    hikariDataSource.setMinimumIdle(MAX_THREAD_COUNT);
+    hikariDataSource.setMaxLifetime(properties.getMaxLifeTime());
+    hikariDataSource.setConnectionTimeout(properties.getConnectionTimeout());
+    hikariDataSource.setIdleTimeout(MAX_TIMEOUT_MS);
+
+    hikariDataSource.setJdbcUrl(properties.getUrl());
+    hikariDataSource.setDriverClassName(properties.getDriverClassName());
+    hikariDataSource.setUsername(properties.getUsername());
+    hikariDataSource.setPassword(properties.getPassword());
+    // 设置连接时区
+//    hikariDataSource.addDataSourceProperty("serverTimezone", "时区名称");
+    // 设置字符集
+//    hikariDataSource.addDataSourceProperty("characterEncoding", "字符集名称");
+
+    return new WrapHikariDataSource(hikariDataSource);
+  }
+
+
+
 
   public static CloseableDataSource createCommonDataSource(String jdbcUrl, String driverClass, String driverPath,
       String username, String password) {

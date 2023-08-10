@@ -1,6 +1,6 @@
 package com.zzz.migrationtoolkit;
 
-import com.zzz.migrationtoolkit.handler.dataBaseHandler.DataSourceProcess;
+import com.zzz.migrationtoolkit.handler.databaseHandler.DataSourceProcess;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

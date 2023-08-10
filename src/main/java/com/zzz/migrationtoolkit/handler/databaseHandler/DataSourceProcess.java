@@ -1,4 +1,4 @@
-package com.zzz.migrationtoolkit.handler.dataBaseHandler;
+package com.zzz.migrationtoolkit.handler.databaseHandler;
 
 import com.zzz.migrationtoolkit.common.constants.FilePathContent;
 import com.zzz.migrationtoolkit.common.vo.ConnectionVO;

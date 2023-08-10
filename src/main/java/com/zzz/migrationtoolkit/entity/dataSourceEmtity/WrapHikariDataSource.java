@@ -19,11 +19,8 @@ import java.util.logging.Logger;
 public class WrapHikariDataSource implements CloseableDataSource {
 
   private final HikariDataSource hikariDataSource;
-  private final URLClassLoader urlClassLoader;
-
-  public WrapHikariDataSource(HikariDataSource hikariDataSource, URLClassLoader urlClassLoader) {
+  public WrapHikariDataSource(HikariDataSource hikariDataSource) {
     this.hikariDataSource = Objects.requireNonNull(hikariDataSource);
-    this.urlClassLoader = Objects.requireNonNull(urlClassLoader);
   }
 
   @Override
@@ -74,10 +71,5 @@ public class WrapHikariDataSource implements CloseableDataSource {
   @Override
   public void close() {
     hikariDataSource.close();
-    try {
-      urlClassLoader.close();
-    } catch (IOException e) {
-      log.warn(e.getMessage(), e);
-    }
   }
 }
