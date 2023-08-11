@@ -1,7 +1,7 @@
 server:
   port: 9090
 
-mtk:
-  database:
-    source:
-    target:
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
