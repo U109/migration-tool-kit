@@ -3,7 +3,7 @@ package com.zzz.migration.core.executor;
 import com.zzz.migration.common.constants.CommonConstant;
 import com.zzz.migration.common.constants.TaskResultConstant;
 import com.zzz.migration.common.constants.TaskStatusConstant;
-import com.zzz.migration.core.coreManager.context.TaskCache;
+import com.zzz.migration.core.cache.TaskCache;
 import com.zzz.migration.core.executor.impl.AbstractBaseExecutor;
 import com.zzz.migration.core.executor.impl.tableExecutor.TableStructureExecutor;
 import com.zzz.migration.core.executor.impl.tableExecutor.TableUserDataMigrationExecutor;

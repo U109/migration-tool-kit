@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 public class DataBaseService {
 
-    public ResultMessage<List<String>> dataBaseType() {
+    public ResultMessage<List<String>> getDataBaseType() {
         List<String> databaseList = Arrays.asList(DataBaseConstant.database);
         return new ResultMessage<List<String>>().success(databaseList);
     }

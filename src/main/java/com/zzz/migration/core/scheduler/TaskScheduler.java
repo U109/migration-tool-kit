@@ -1,13 +1,13 @@
 package com.zzz.migration.core.scheduler;
 
 import com.zzz.migration.common.constants.TaskStatusConstant;
-import com.zzz.migration.core.coreManager.TaskManager;
-import com.zzz.migration.core.coreManager.context.TaskCache;
+import com.zzz.migration.core.cache.TaskCache;
 import com.zzz.migration.core.executor.ExecutorManager;
 import com.zzz.migration.entity.taskEntity.TaskDetail;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -19,7 +19,7 @@ import java.util.Map;
 @Component
 public class TaskScheduler {
 
-    private static final Map<String, ExecutorManager> TASK_EXECUTOR_CONTEXT = TaskManager.taskExecutorContextMap;
+    private static final Map<String, ExecutorManager> TASK_EXECUTOR_CONTEXT = new HashMap<>();
 
     /**
      * 启动任务

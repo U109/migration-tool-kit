@@ -25,16 +25,7 @@ import java.util.Map;
 @Slf4j
 public class DataTypeMappingProcess {
 
-    public static void initDataTypeMapping() {
-        //初始化源数据类型对应表
-        InitContext.SourceDataTypeMapping = readSourceDataTypeMapping();
-        //初始化用户定制数据库对应类型
-        InitContext.UserDataTypeMapping = readSourceDataTypeMapping();
-        //初始化指定数据库所有数据类型
-        InitContext.DataType = readDataType();
-    }
-
-    private static Map<String, DataTypeMapping> readSourceDataTypeMapping() {
+    public static Map<String, DataTypeMapping> readSourceDataTypeMapping() {
         Map<String, DataTypeMapping> dataTypeMappingMap = new HashMap<>();
         Map<String, DataTypeMapped> dataTypeMappedMap = new HashMap<>();
 
@@ -77,7 +68,7 @@ public class DataTypeMappingProcess {
         return dataTypeMappingMap;
     }
 
-    private static Map<String, List<DataType>> readDataType() {
+    public static Map<String, List<DataType>> readDataType() {
 
         Map<String, List<DataType>> dataTypeMap = new HashMap<>();
         DocumentBuilder docParser;

@@ -1,5 +1,7 @@
 package com.zzz.migration.server;
 
+import com.zzz.migration.common.constants.FilePathContent;
+import com.zzz.migration.core.cache.TaskCache;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -17,5 +19,6 @@ public class InitRunner implements CommandLineRunner {
     public void run(String... args){
         log.info("initRunner start");
         InitContext.initContext();
+        TaskCache.init(FilePathContent.TASK_FILE_FOLDER);
     }
 }

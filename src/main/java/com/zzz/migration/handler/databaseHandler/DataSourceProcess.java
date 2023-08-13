@@ -34,8 +34,8 @@ import java.util.Map;
 @Slf4j
 public class DataSourceProcess {
 
-    public static void initDBConnections() {
-        InitContext.DataSourceMap = readDataSourceFromXML();
+    public static void initDataBaseConnections() {
+
     }
 
 
@@ -44,7 +44,7 @@ public class DataSourceProcess {
      *
      * @return Map
      */
-    private static Map<String, Map<String, DataSourceProperties>> readDataSourceFromXML() {
+    public static Map<String, Map<String, DataSourceProperties>> readDataSourceFromXml() {
         /*
          *         |-- nameA:DataSourceProperties
          *  Oracle |

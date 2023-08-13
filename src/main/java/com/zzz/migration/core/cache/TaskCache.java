@@ -1,4 +1,4 @@
-package com.zzz.migration.core.coreManager.context;
+package com.zzz.migration.core.cache;
 
 import com.zzz.migration.common.constants.CommonConstant;
 import com.zzz.migration.common.utils.TaskPersistenceUtil;
@@ -38,7 +38,7 @@ public class TaskCache {
         taskPersistenceUtil.saveTaskInfo(taskDetail);
     }
 
-    public synchronized String init(String taskPersistenceFolder){
+    public static String init(String taskPersistenceFolder){
         String returnMsg = CommonConstant.RETURN_CODE_OK;
         try{
             if (taskCache == null){

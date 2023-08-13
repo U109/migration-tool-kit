@@ -18,7 +18,7 @@ import javax.annotation.Resource;
  */
 @Api(tags = {"迁移管理接口"})
 @RestController
-@RequestMapping(value = SwaggerConfig.API_PREFIX_MIGRATION)
+@RequestMapping(SwaggerConfig.API_PREFIX_MIGRATION)
 public class MigrationController {
 
     @Resource
@@ -28,5 +28,7 @@ public class MigrationController {
     public ResultMessage<String> startMigration(@PathVariable("taskId") String taskId){
         return  migrationService.startMigration(taskId);
     }
+
+
 
 }

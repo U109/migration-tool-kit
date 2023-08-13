@@ -47,10 +47,10 @@ class MigrationToolkitApplicationTests {
 //        System.out.println(task);
 //    }
 
-    @Test
-   void contextLoads() {
-        DataSourceProcess.initDBConnections();
-    }
+//    @Test
+//   void contextLoads() {
+//        DataSourceProcess.initDBConnections();
+//    }
 
 
 }

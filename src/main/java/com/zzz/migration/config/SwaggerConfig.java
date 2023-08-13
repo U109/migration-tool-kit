@@ -26,6 +26,7 @@ import java.util.List;
 public class SwaggerConfig {
 
     public static final String API_PREFIX_MIGRATION = "/migration";
+    public static final String API_PREFIX_DATABASE = "/database";
     private static final String API_DEFAULT_PACKAGE = "com.zzz.migration.controller";
 
     private ApiInfo createApiInfo() {

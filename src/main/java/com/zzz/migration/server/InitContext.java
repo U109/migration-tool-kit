@@ -1,7 +1,6 @@
 package com.zzz.migration.server;
 
 import com.zzz.migration.common.constants.FilePathContent;
-import com.zzz.migration.core.coreManager.TaskManager;
 import com.zzz.migration.entity.dataSourceEmtity.DataSourceProperties;
 import com.zzz.migration.entity.dataTypeEntity.DataType;
 import com.zzz.migration.entity.dataTypeEntity.DataTypeMapping;
@@ -29,12 +28,14 @@ public class InitContext {
     public static Map<String, DataTypeMapping> UserDataTypeMapping;
 
     public static void initContext() {
-        DataSourceProcess.initDBConnections();
-        DataTypeMappingProcess.initDataTypeMapping();
+        DataSourceMap = DataSourceProcess.readDataSourceFromXml();
+        //初始化源数据类型对应表
+        SourceDataTypeMapping = DataTypeMappingProcess.readSourceDataTypeMapping();
+        //初始化用户定制数据库对应类型
+        UserDataTypeMapping = DataTypeMappingProcess.readSourceDataTypeMapping();
+        //初始化指定数据库所有数据类型
+        DataType = DataTypeMappingProcess.readDataType();
         initCoreConfig();
-        TaskManager taskManager = new TaskManager();
-        taskManager.initTaskContext();
-        taskManager.getTaskCache();
     }
 
     private static void initCoreConfig() {

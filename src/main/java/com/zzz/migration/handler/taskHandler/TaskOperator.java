@@ -1,7 +1,6 @@
 package com.zzz.migration.handler.taskHandler;
 
-import com.zzz.migration.core.coreManager.context.TaskCache;
-import com.zzz.migration.core.scheduler.TaskScheduler;
+import com.zzz.migration.core.cache.TaskCache;
 import com.zzz.migration.entity.taskEntity.TaskDetail;
 
 /**
