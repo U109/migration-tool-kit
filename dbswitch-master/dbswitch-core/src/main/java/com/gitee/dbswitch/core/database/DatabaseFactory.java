@@ -36,27 +36,12 @@ import java.util.concurrent.Callable;
  */
 public final class DatabaseFactory {
 
-  private static final Map<ProductTypeEnum, Callable<AbstractDatabase>> DATABASE_MAPPER  = new HashMap<ProductTypeEnum, Callable<AbstractDatabase>>() {
-
+  private static final Map<ProductTypeEnum, Callable<AbstractDatabase>> DATABASE_MAPPER = new HashMap<ProductTypeEnum, Callable<AbstractDatabase>>() {
     private static final long serialVersionUID = 9202705534880971997L;
-
     {
       put(ProductTypeEnum.MYSQL, DatabaseMysqlImpl::new);
-      put(ProductTypeEnum.MARIADB, DatabaseMariaDBImpl::new);
       put(ProductTypeEnum.ORACLE, DatabaseOracleImpl::new);
-      put(ProductTypeEnum.SQLSERVER2000, DatabaseSqlserver2000Impl::new);
       put(ProductTypeEnum.SQLSERVER, DatabaseSqlserverImpl::new);
-      put(ProductTypeEnum.POSTGRESQL, DatabasePostgresImpl::new);
-      put(ProductTypeEnum.GREENPLUM, DatabaseGreenplumImpl::new);
-      put(ProductTypeEnum.DB2, DatabaseDB2Impl::new);
-      put(ProductTypeEnum.DM, DatabaseDmImpl::new);
-      put(ProductTypeEnum.SYBASE, DatabaseSybaseImpl::new);
-      put(ProductTypeEnum.KINGBASE, DatabaseKingbaseImpl::new);
-      put(ProductTypeEnum.OSCAR, DatabaseOscarImpl::new);
-      put(ProductTypeEnum.GBASE8A, DatabaseGbase8aImpl::new);
-      put(ProductTypeEnum.SYBASE, DatabaseSybaseImpl::new);
-      put(ProductTypeEnum.HIVE, DatabaseHiveImpl::new);
-      put(ProductTypeEnum.SQLITE3, DatabaseSqliteImpl::new);
     }
   };
 

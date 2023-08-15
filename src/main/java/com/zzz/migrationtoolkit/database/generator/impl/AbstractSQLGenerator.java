@@ -16,7 +16,6 @@ import java.util.List;
  */
 public abstract class AbstractSQLGenerator implements ISQLGenerator {
 
-
     public String getFieldDefinition(ColumnEntity column) {
         StringBuilder sb = new StringBuilder();
         String columnName = column.getColumnName();
