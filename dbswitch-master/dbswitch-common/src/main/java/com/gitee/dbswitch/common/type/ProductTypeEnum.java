@@ -98,7 +98,7 @@ public enum ProductTypeEnum {
   SYBASE(15),
   ;
 
-  private int index;
+  private final int index;
 
   ProductTypeEnum(int idx) {
     this.index = idx;
