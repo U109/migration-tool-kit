@@ -3,11 +3,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.zzz</groupId>
-    <artifactId>MigrationToolkit</artifactId>
+    <artifactId>DataRun</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>MigrationToolkit</name>
-    <description>MigrationToolkit</description>
+    <name>DataRun</name>
+    <description>DataRun</description>
     <properties>
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -81,7 +81,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                    <mainClass>com.zzz.migration.MigrationToolkitApplication</mainClass>
+                    <mainClass>com.zzz.migration.DataRunApplication</mainClass>
                     <skip>true</skip>
                 </configuration>
                 <executions>

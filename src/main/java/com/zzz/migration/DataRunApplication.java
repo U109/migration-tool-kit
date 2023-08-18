@@ -12,10 +12,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @ComponentScan("com.zzz")
 @EnableSwagger2
 @SpringBootApplication(exclude= {DataSourceAutoConfiguration.class})
-public class MigrationToolkitApplication {
+public class DataRunApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MigrationToolkitApplication.class, args);
+        SpringApplication.run(DataRunApplication.class, args);
     }
 
 }

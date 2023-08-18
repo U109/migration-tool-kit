@@ -33,7 +33,7 @@ build/
 .vscode/
 
 ### migrationtoolkit-ui ###
-/migrationtoolkit-ui/node_modules
-/migrationtoolkit-ui/package-lock.json
+/DataRun-ui/node_modules
+/DataRun-ui/package-lock.json
 
 /resources/task
