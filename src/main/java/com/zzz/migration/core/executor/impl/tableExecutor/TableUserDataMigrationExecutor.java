@@ -57,6 +57,7 @@ public class TableUserDataMigrationExecutor extends AbstractBaseExecutor {
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
+            //TODO 为什么要防止停止写的manager
             writeProcessManager.finishedQueue();
         }
         //写入元数据Manager返回结果，所有的源数据已经读取完毕，结束该manager下所有线程

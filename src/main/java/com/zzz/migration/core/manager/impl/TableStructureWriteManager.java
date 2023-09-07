@@ -29,7 +29,7 @@ public class TableStructureWriteManager extends AbstractBaseManager {
             if (stopWork) {
                 break;
             }
-            //定义worker
+            //定义worker，此时写里面的sourceWorkQueue就是readToWriteExecutorQueue中转队列，里面被读塞进了任务快，此时getTargetWorkQueue为null
             TableStructureWriteWorker tableStructureWriteWorker = new TableStructureWriteWorker(taskDetail, getSourceWorkQueue(), getTargetWorkQueue());
             FutureTask<WorkResultEntity> futureTask = new FutureTask<>(tableStructureWriteWorker);
             workerList.add(tableStructureWriteWorker);

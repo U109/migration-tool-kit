@@ -36,6 +36,7 @@ public class TaskExecutorStarter implements Callable<WorkResultEntity> {
 
     public TaskExecutorStarter(Map<String, MigrationObj> detailMap, AbstractBaseManager manager, WorkType workType, WorkContentType workContentType) {
         this.detailMap = detailMap;
+        //这里的manager只可能是readManager
         this.manager = manager;
         this.workContentType = workContentType;
         this.workType = workType;

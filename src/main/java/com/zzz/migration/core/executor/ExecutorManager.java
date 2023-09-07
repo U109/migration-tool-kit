@@ -101,6 +101,7 @@ public class ExecutorManager implements Runnable {
                 executor.getReadProcessManager().setSourceWorkQueue(executor.getSourceExecutorQueue());
                 //初始化前一个执行器
                 preExecutor.setTargetExecutorQueue(executor.getSourceExecutorQueue());
+                //设置写manager的target队列不为空，例如TableStructureWriteManager中的getTargetWorkQueue()
                 preExecutor.getWriteProcessManager().setTargetWorkQueue(executor.getSourceExecutorQueue());
             }
         }

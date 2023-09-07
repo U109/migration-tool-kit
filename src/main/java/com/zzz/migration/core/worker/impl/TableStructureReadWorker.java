@@ -65,6 +65,8 @@ public class TableStructureReadWorker extends AbstractBaseWorker {
 
             //补充列信息
             migrationTable.setColumnDetailForMigrationTable(dataBaseExecutor);
+
+            //进行设置写任务块
             processWork.setWorkType(WorkType.WRITE_TABLE_METADATA);
             targetWorkQueue.putWork(processWork);
             workResultEntity.setResultMsg(CommonConstant.SUCCESS);

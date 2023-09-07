@@ -20,7 +20,7 @@ public class TableStructureExecutor extends AbstractBaseExecutor {
         super(taskDetail);
         super.executorType = "TableMetaDataExecutor";
         super.executorName = taskDetail + "--[表结构执行器]";
-        //初始化读表结构   TODO 这里source放置的null，target放置中转队列的目的
+        //初始化读表结构   这里source放置的null是为了进行Read队列的初始化，也就是说在一开始的时候，只有sourceWorkQueue被initStarter分配了任务块， target放置中转队列的目的
         this.readProcessManager = new TableStructureReadManager(taskDetail, null, this.readToWriteExecutorQueue);
         //初始化写Manager
         this.writeProcessManager = new TableStructureWriteManager(taskDetail, this.readToWriteExecutorQueue, null);
@@ -60,6 +60,7 @@ public class TableStructureExecutor extends AbstractBaseExecutor {
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
+            //TODO 为什么要关停写Manager
             writeProcessManager.finishedQueue();
         }
         //写入元数据Manager返回结果，所有的源数据已经读取完毕，结束该manager下所有线程

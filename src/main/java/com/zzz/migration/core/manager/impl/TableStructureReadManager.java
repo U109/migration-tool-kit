@@ -29,7 +29,7 @@ public class TableStructureReadManager extends AbstractBaseManager {
             if (stopWork) {
                 break;
             }
-            //定义worker
+            //定义worker，这里的targetWorkQueue就是readToWriteExecutorQueue中转队列
             TableStructureReadWorker tableStructureReadWorker = new TableStructureReadWorker(taskDetail, getSourceWorkQueue(), getTargetWorkQueue());
             FutureTask<WorkResultEntity> futureTask = new FutureTask<WorkResultEntity>(tableStructureReadWorker);
             workerList.add(tableStructureReadWorker);

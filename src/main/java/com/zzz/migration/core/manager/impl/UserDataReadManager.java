@@ -14,7 +14,7 @@ import java.util.concurrent.FutureTask;
  * @date: 2023/7/24 11:26
  * @description:
  */
-public class UserDataReadManager  extends AbstractBaseManager {
+public class UserDataReadManager extends AbstractBaseManager {
 
     public UserDataReadManager(TaskDetail taskDetail, WorkQueue sourceWorkQueue, WorkQueue targetWorkQueue) {
         super(taskDetail, sourceWorkQueue, targetWorkQueue);
